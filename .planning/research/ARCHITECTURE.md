@@ -1,114 +1,116 @@
-# Architecture Research
+# Pesquisa de Arquitetura
 
-**Domain:** Multi-tenant catalog/storefront micro-SaaS (Next.js + Supabase), reseller admin panel + public no-auth storefront
-**Researched:** 2026-07-10
-**Confidence:** MEDIUM (patterns are standard/well-documented; specific plan-tier limits verified against current Supabase docs)
+**Domínio:** Micro-SaaS de catálogo/vitrine multi-tenant (Next.js + Supabase), painel admin de revendedor + vitrine pública sem autenticação
+**Pesquisado em:** 2026-07-10
+**Confiança:** MÉDIA (padrões são padrão/bem documentados; limites específicos de tier de plano verificados contra a documentação atual do Supabase)
 
-## Standard Architecture
+## Arquitetura Padrão
 
-### System Overview
+### Visão Geral do Sistema
 
 ```
 ┌───────────────────────────────────────────────────────────────────────┐
-│                         BROWSER (2 audiences)                         │
+│                         NAVEGADOR (2 públicos)                        │
 │  ┌───────────────────┐             ┌────────────────────────────┐     │
-│  │  Reseller (admin)  │             │  Cliente final (público)   │     │
-│  │  authenticated     │             │  no auth, mobile-first     │     │
+│  │  Revendedor (admin) │             │  Cliente final (público)   │     │
+│  │  autenticado        │             │  sem auth, mobile-first    │     │
 │  └─────────┬──────────┘             └──────────────┬─────────────┘    │
 ├────────────┼─────────────────────────────────────────┼────────────────┤
-│            ▼            NEXT.JS APP ROUTER            ▼               │
+│            ▼         NEXT.JS APP ROUTER                ▼               │
 │  ┌────────────────────┐               ┌─────────────────────────┐    │
 │  │ /admin/**           │               │ /loja/[slug]/**         │    │
 │  │ (route group,       │               │ (route group,           │    │
-│  │  protected)         │               │  PUBLIC — no middleware │    │
-│  │ - middleware checks │               │  auth check ever)       │    │
-│  │   Supabase session  │               │ - server-rendered       │    │
-│  │ - Server Actions for│               │ - filters via URL       │    │
-│  │   CRUD writes       │               │   query params          │    │
+│  │  protegido)         │               │  PÚBLICO — nenhum       │    │
+│  │ - middleware checa  │               │  middleware de auth     │    │
+│  │   sessão do Supabase│               │  jamais)                │    │
+│  │ - Server Actions    │               │ - renderizado no servidor│   │
+│  │   para escritas CRUD│               │ - filtros via parâmetros│    │
+│  │                     │               │   de URL                │    │
 │  └──────────┬──────────┘               └────────────┬─────────────┘  │
 ├─────────────┼───────────────────────────────────────┼────────────────┤
-│             ▼              SUPABASE (single project)  ▼               │
+│             ▼         SUPABASE (projeto único)        ▼               │
 │  ┌───────────────────────────────────────────────────────────────┐   │
-│  │  Postgres (RLS enforced on every table)                        │   │
+│  │  Postgres (RLS aplicado em cada tabela)                        │   │
 │  │  stores | products | product_sizes | store_settings | events   │   │
 │  ├───────────────────────────────────────────────────────────────┤   │
-│  │  Auth (email/senha only — reseller identities)                 │   │
+│  │  Auth (apenas email/senha — identidades de revendedor)          │   │
 │  ├───────────────────────────────────────────────────────────────┤   │
-│  │  Storage (bucket: product-images, public read, owner write)    │   │
+│  │  Storage (bucket: product-images, leitura pública, escrita owner)│  │
 │  └───────────────────────────────────────────────────────────────┘   │
 ├─────────────────────────────────────────────────────────────────────┤
-│  WhatsApp (wa.me deep link) — client-side only, no server round-trip│
+│  WhatsApp (link profundo wa.me) — apenas client-side, sem round-trip│
+│  para o servidor                                                    │
 └───────────────────────────────────────────────────────────────────────┘
 ```
 
-### Component Responsibilities
+### Responsabilidades dos Componentes
 
-| Component | Responsibility | Typical Implementation |
+| Componente | Responsabilidade | Implementação Típica |
 |-----------|----------------|------------------------|
-| Admin Auth | Reseller signup/login, session, gate `/admin/**` | Supabase Auth (email/password), Next.js middleware scoped ONLY to `/admin` path prefix |
-| Data Model (Postgres + RLS) | Single source of truth for stores, products, sizes/stock, settings, events; enforces per-reseller isolation | Supabase Postgres, one shared schema, `store_id`/`owner_id` FK on every tenant table, RLS policy per table |
-| Product CRUD | Create/edit/delete products, mark sizes sold-out, manage photos | Next.js Server Actions writing via Supabase client (authenticated, RLS-scoped to `auth.uid()`) |
-| Media Pipeline | Accept uploads, compress, store, serve fast | Client-side compression (browser-image-compression or canvas resize) before upload → Supabase Storage bucket → `next/image` with remote loader |
-| Store Config | WhatsApp number, message template, branding (logo, cor, frase) | Single `store_settings` row per store, same RLS pattern as products |
-| Public Storefront Renderer | Resolve slug → render products, filters, pagination, no auth | Server Component, fetch with **no-store** (see Data Flow), Supabase **anon key** + public SELECT policy |
-| WhatsApp Deep Link Generator | Build `wa.me`/`api.whatsapp.com` URL with encoded, templated message | Pure client-side function, runs on button click, no backend call needed |
-| Metrics/Events | Track pageviews, product views, WhatsApp clicks | Lightweight `events` table, fire-and-forget insert (client → Supabase anon insert policy, or a thin API route) |
-| Slug + QR | Unique slug per store, QR code for the public URL | Slug uniqueness check as a Postgres unique constraint + realtime-ish validation on save; QR generated client-side (`qrcode` lib) from the resolved URL |
+| Auth do Admin | Cadastro/login do revendedor, sessão, protege `/admin/**` | Supabase Auth (email/senha), middleware do Next.js escopado APENAS ao prefixo de caminho `/admin` |
+| Modelo de Dados (Postgres + RLS) | Fonte única de verdade para lojas, produtos, tamanhos/estoque, configurações, eventos; aplica isolamento por revendedor | Supabase Postgres, um schema compartilhado, FK `store_id`/`owner_id` em toda tabela de tenant, política RLS por tabela |
+| CRUD de Produtos | Criar/editar/excluir produtos, marcar tamanhos esgotados, gerenciar fotos | Server Actions do Next.js escrevendo via cliente Supabase (autenticado, escopado por RLS a `auth.uid()`) |
+| Pipeline de Mídia | Aceitar uploads, comprimir, armazenar, servir rápido | Compressão no lado do cliente (browser-image-compression ou redimensionamento via canvas) antes do upload → bucket do Supabase Storage → `next/image` com loader remoto |
+| Configuração da Loja | Número de WhatsApp, template de mensagem, branding (logo, cor, frase) | Uma única linha `store_settings` por loja, mesmo padrão RLS que produtos |
+| Renderizador da Vitrine Pública | Resolver slug → renderizar produtos, filtros, paginação, sem auth | Server Component, fetch com **no-store** (ver Fluxo de Dados), Supabase com **chave anon** + política pública de SELECT |
+| Gerador de Link Profundo do WhatsApp | Construir URL `wa.me`/`api.whatsapp.com` com mensagem codificada e templatizada | Função pura client-side, roda no clique do botão, sem chamada de backend necessária |
+| Métricas/Eventos | Rastrear pageviews, visualizações de produto, cliques no WhatsApp | Tabela `events` leve, inserção fire-and-forget (cliente → política de inserção anon do Supabase, ou uma rota de API fina) |
+| Slug + QR | Slug único por loja, QR code para a URL pública | Verificação de unicidade de slug como uma constraint única do Postgres + validação quase em tempo real ao salvar; QR gerado no lado do cliente (lib `qrcode`) a partir da URL resolvida |
 
-## Recommended Project Structure
+## Estrutura de Projeto Recomendada
 
 ```
 src/
 ├── app/
-│   ├── (admin)/                # authenticated tree — middleware matcher targets this only
-│   │   ├── layout.tsx          # session check, redirect to /login if none
+│   ├── (admin)/                # árvore autenticada — matcher do middleware mira só nesta
+│   │   ├── layout.tsx          # checagem de sessão, redireciona para /login se não houver
 │   │   ├── dashboard/page.tsx
-│   │   ├── produtos/           # CRUD screens
-│   │   ├── loja/page.tsx       # store settings (branding, WhatsApp)
-│   │   └── login/page.tsx      # NOT behind middleware (public entry to admin)
+│   │   ├── produtos/           # telas de CRUD
+│   │   ├── loja/page.tsx       # configurações da loja (branding, WhatsApp)
+│   │   └── login/page.tsx      # NÃO fica atrás do middleware (entrada pública para o admin)
 │   ├── loja/
 │   │   └── [slug]/
-│   │       ├── page.tsx        # public storefront — NEVER touched by admin middleware
-│   │       └── loading.tsx     # skeleton loader (per PITFALLS: skeleton before content)
+│   │       ├── page.tsx        # vitrine pública — NUNCA tocada pelo middleware do admin
+│   │       └── loading.tsx     # skeleton loader (conforme PITFALLS: skeleton antes do conteúdo)
 │   └── api/
-│       └── events/route.ts     # optional thin endpoint for metrics insert
+│       └── events/route.ts     # endpoint fino opcional para inserção de métricas
 ├── lib/
 │   ├── supabase/
-│   │   ├── server.ts           # server client (cookies-based, respects RLS as authed user)
-│   │   ├── admin-actions.ts    # server actions for product/store CRUD
-│   │   └── public-client.ts    # anon-key client for storefront reads (no cookies needed)
+│   │   ├── server.ts           # cliente servidor (baseado em cookies, respeita RLS como usuário autenticado)
+│   │   ├── admin-actions.ts    # server actions para CRUD de produto/loja
+│   │   └── public-client.ts    # cliente com chave anon para leituras da vitrine (sem cookies necessários)
 │   ├── whatsapp/
-│   │   └── build-link.ts       # template substitution + encodeURIComponent, unit-testable
+│   │   └── build-link.ts       # substituição de template + encodeURIComponent, testável unitariamente
 │   └── slug/
-│       └── validate.ts         # slug format + uniqueness check
+│       └── validate.ts         # formato de slug + verificação de unicidade
 ├── components/
-│   ├── admin/                  # CRUD forms, image uploader, toasts
-│   └── storefront/             # ProductCard, SizePicker, FilterBar, OrderButton
-└── middleware.ts                # matcher: only /admin/:path* — explicit exclusion of /loja
+│   ├── admin/                  # formulários CRUD, uploader de imagem, toasts
+│   └── storefront/              # ProductCard, SizePicker, FilterBar, OrderButton
+└── middleware.ts                # matcher: apenas /admin/:path* — exclusão explícita de /loja
 ```
 
-### Structure Rationale
+### Justificativa da Estrutura
 
-- **`(admin)` route group:** isolates every authenticated screen under one middleware matcher. This makes the "public route must never see auth middleware" constraint a structural guarantee, not a runtime check that can be forgotten in one file.
-- **`loja/[slug]` outside any protected group:** the public storefront literally cannot be caught by the admin middleware's matcher pattern, closing off the single most catastrophic failure mode named in the project's own alerts (auth middleware intercepting the public route).
-- **Separate `public-client.ts` vs `server.ts` for Supabase:** the storefront should never construct a client that carries the admin session/cookies — using the anon key explicitly for public reads keeps the two trust boundaries structurally distinct, not just policy-distinct.
-- **`lib/whatsapp/build-link.ts` as a pure, isolated function:** this is the single highest-value function in the whole product (per PROJECT.md's "Core Value" and alert #1). Isolating it lets it be unit-tested directly against the accents/special-character/encoding requirements without spinning up a browser.
+- **Grupo de rotas `(admin)`:** isola cada tela autenticada sob um único matcher de middleware. Isso torna a restrição "a rota pública nunca deve ver middleware de auth" uma garantia estrutural, não uma checagem em tempo de execução que pode ser esquecida em um arquivo.
+- **`loja/[slug]` fora de qualquer grupo protegido:** a vitrine pública literalmente não pode ser capturada pelo padrão do matcher do middleware de admin, fechando o modo de falha mais catastrófico citado nos próprios alertas do projeto (middleware de auth interceptando a rota pública).
+- **`public-client.ts` separado de `server.ts` para o Supabase:** a vitrine nunca deve construir um cliente que carregue a sessão/cookies do admin — usar a chave anon explicitamente para leituras públicas mantém as duas fronteiras de confiança estruturalmente distintas, não só distintas por política.
+- **`lib/whatsapp/build-link.ts` como uma função pura e isolada:** esta é a função de maior valor em todo o produto (conforme o "Core Value" e o alerta #1 do PROJECT.md). Isolá-la permite que seja testada unitariamente diretamente contra os requisitos de acentos/caracteres especiais/codificação sem precisar subir um navegador.
 
-## Architectural Patterns
+## Padrões Arquiteturais
 
-### Pattern 1: Shared-schema multi-tenancy with RLS-enforced isolation
+### Padrão 1: Multi-tenancy de schema compartilhado com isolamento aplicado por RLS
 
-**What:** One Postgres schema, one set of tables (`stores`, `products`, `product_sizes`, `store_settings`, `events`), every tenant-owned table carries `store_id`. RLS policies do the isolation, not application code.
-**When to use:** Always, at this scale (dozens to low-hundreds of resellers). Schema-per-tenant or database-per-tenant is a scaling pattern for very large, isolation-sensitive tenants (e.g. enterprise compliance) — irrelevant here.
-**Trade-offs:** Simpler migrations, simpler admin dashboard queries, cheaper on Supabase's free tier. Cost: every query and every new table needs its RLS policy reviewed — a missed policy is a data leak, not just a bug.
+**O quê:** Um schema Postgres, um conjunto de tabelas (`stores`, `products`, `product_sizes`, `store_settings`, `events`), cada tabela pertencente a um tenant carrega `store_id`. Políticas RLS fazem o isolamento, não o código da aplicação.
+**Quando usar:** Sempre, nesta escala (dezenas a poucas centenas de revendedores). Schema-por-tenant ou banco-por-tenant é um padrão de escalonamento para tenants muito grandes e sensíveis a isolamento (ex.: compliance corporativo) — irrelevante aqui.
+**Trade-offs:** Migrations mais simples, queries de dashboard admin mais simples, mais barato no tier gratuito do Supabase. Custo: toda query e toda nova tabela precisa ter sua política RLS revisada — uma política ausente é um vazamento de dados, não apenas um bug.
 
-**Example (conceptual policy shape):**
+**Exemplo (formato conceitual de política):**
 ```sql
--- Admin write/read: owner only
+-- Escrita/leitura admin: apenas o proprietário
 create policy "owner_full_access" on products
   for all using (store_id in (select id from stores where owner_id = auth.uid()));
 
--- Public read: only published stores, only active products
+-- Leitura pública: apenas lojas publicadas, apenas produtos ativos
 create policy "public_read_active_products" on products
   for select to anon
   using (
@@ -117,140 +119,140 @@ create policy "public_read_active_products" on products
   );
 ```
 
-### Pattern 2: Slug-resolved public rendering, no session in the loop
+### Padrão 2: Renderização pública resolvida por slug, sem sessão no meio do caminho
 
-**What:** The public storefront resolves `[slug]` → `store_id` via a single indexed lookup, then queries products scoped to that `store_id` using the Supabase **anon key** (not the admin's session). No cookies, no auth check, no redirect logic on this path at all.
-**When to use:** Any route explicitly required to work for anonymous users, especially one reached via shared links where auth friction directly kills conversion (this project's stated Core Value).
-**Trade-offs:** Requires discipline to keep this route's data access strictly to the public RLS policy (never accidentally import the authenticated admin Supabase client into a component reachable from `/loja/[slug]`).
+**O quê:** A vitrine pública resolve `[slug]` → `store_id` via uma única consulta indexada, depois consulta produtos escopados àquele `store_id` usando a **chave anon** do Supabase (não a sessão do admin). Sem cookies, sem checagem de auth, sem lógica de redirect nesse caminho de forma alguma.
+**Quando usar:** Qualquer rota explicitamente exigida a funcionar para usuários anônimos, especialmente uma acessada via links compartilhados onde atrito de auth mata diretamente a conversão (o Core Value declarado deste projeto).
+**Trade-offs:** Requer disciplina para manter o acesso a dados dessa rota estritamente na política RLS pública (nunca importar acidentalmente o cliente Supabase autenticado do admin em um componente alcançável a partir de `/loja/[slug]`).
 
-### Pattern 3: Mutation-triggered freshness instead of background polling
+### Padrão 3: Frescor disparado por mutação em vez de polling em segundo plano
 
-**What:** Rather than a cache-expiry timer or a websocket subscription, the admin write itself (server action that flips a size to "esgotado") is the trigger for freshness. Two viable implementations, in order of recommendation for this project's scale:
-1. **No cache on the public route at all** (`fetch(..., { cache: 'no-store' })` / route segment `export const dynamic = 'force-dynamic'`). Every storefront page view queries Postgres directly. At tens of stores and realistic public traffic (shared links opened by individual customers, not sustained load), this is trivially within Supabase free-tier limits and gives true real-time freshness with zero extra plumbing.
-2. **On-demand `revalidateTag`/`revalidatePath`** called at the end of every stock-affecting server action, with the storefront page tagged accordingly. Adds a caching layer back in (useful once traffic grows enough that DB read volume matters) but reintroduces a class of bugs (forgetting to tag a mutation path) that pattern 1 avoids entirely.
-**When to use:** Start with (1). Move to (2) only when Supabase read volume/latency becomes a measured problem — not preemptively.
-**Trade-offs:** Supabase Realtime (websocket subscriptions pushing Postgres changes to open browser tabs) was considered and rejected for MVP: it solves a problem this product doesn't have (a customer staring at an already-open tab waiting for stock to change), while adding connection lifecycle management, reconnect handling, and a new class of client-side bugs. Revisit only if a future feature needs live multi-viewer presence (e.g. "3 pessoas vendo agora").
+**O quê:** Em vez de um timer de expiração de cache ou uma subscrição websocket, a própria escrita do admin (a server action que marca um tamanho como "esgotado") é o gatilho para o frescor. Duas implementações viáveis, em ordem de recomendação para a escala deste projeto:
+1. **Nenhum cache na rota pública, de forma alguma** (`fetch(..., { cache: 'no-store' })` / segmento de rota `export const dynamic = 'force-dynamic'`). Cada visualização da página da vitrine consulta o Postgres diretamente. Na escala de dezenas de lojas e tráfego público realista (links compartilhados abertos por clientes individuais, não carga sustentada), isso está trivialmente dentro dos limites do tier gratuito do Supabase e dá frescor real em tempo real com zero infraestrutura extra.
+2. **`revalidateTag`/`revalidatePath` sob demanda** chamado ao final de toda server action que afeta estoque, com a página da vitrine marcada correspondentemente. Adiciona uma camada de cache de volta (útil uma vez que o tráfego cresça o suficiente para que o volume de leitura no BD importe) mas reintroduz uma classe de bugs (esquecer de marcar um caminho de mutação) que o padrão 1 evita completamente.
+**Quando usar:** Comece com (1). Mude para (2) apenas quando o volume/latência de leitura do Supabase se tornar um problema medido — não preemptivamente.
+**Trade-offs:** O Supabase Realtime (subscrições websocket empurrando mudanças do Postgres para abas de navegador abertas) foi considerado e rejeitado para o MVP: resolve um problema que este produto não tem (um cliente olhando para uma aba já aberta esperando o estoque mudar), enquanto adiciona gerenciamento de ciclo de vida de conexão, tratamento de reconexão, e uma nova classe de bugs no lado do cliente. Revisitar apenas se uma funcionalidade futura precisar de presença multi-visualizador ao vivo (ex.: "3 pessoas vendo agora").
 
-## Data Flow
+## Fluxo de Dados
 
-### Admin write → public read (the critical path for the stock-sync requirement)
+### Escrita do admin → leitura pública (o caminho crítico para o requisito de sincronização de estoque)
 
 ```
-Reseller marks size "esgotado" in /admin/produtos
-    ↓ (Server Action, authenticated Supabase client, RLS: owner_id = auth.uid())
+Revendedor marca tamanho "esgotado" em /admin/produtos
+    ↓ (Server Action, cliente Supabase autenticado, RLS: owner_id = auth.uid())
 UPDATE product_sizes SET status = 'esgotado' WHERE id = ...
     ↓
-Postgres commit (single source of truth)
+Commit no Postgres (fonte única de verdade)
     ↓
-Toast confirms save (per PITFALLS #9: immediate visual feedback, never silent)
+Toast confirma o salvamento (conforme PITFALLS #9: feedback visual imediato, nunca silencioso)
     ↓
-[No cache layer — see Pattern 3]
+[Sem camada de cache — ver Padrão 3]
     ↓
-Next request to /loja/[slug] (anywhere, anyone) queries Postgres directly
-    ↓ (anon key, RLS: public_read_active_products policy)
-Storefront re-renders with correct, current stock state
+Próxima requisição a /loja/[slug] (de qualquer lugar, qualquer pessoa) consulta o Postgres diretamente
+    ↓ (chave anon, RLS: política public_read_active_products)
+Vitrine re-renderiza com o estado de estoque correto e atual
 ```
 
-This satisfies "delay of seconds, never minutes" by construction — there is no intermediate cache to go stale, because there is no cache. If read load ever requires introducing one, it must be paired with `revalidateTag` fired from the exact same server action, not decoupled.
+Isso satisfaz "atraso de segundos, nunca minutos" por construção — não há camada intermediária de cache para ficar obsoleta, porque não há cache. Se o volume de leitura algum dia exigir a introdução de um, ele deve ser pareado com `revalidateTag` disparado a partir da mesma server action, não desacoplado.
 
-### Order flow (the actual conversion — no backend round-trip)
+### Fluxo de pedido (a conversão real — sem round-trip para o backend)
 
 ```
-Cliente seleciona tamanho disponível (client-side state only)
+Cliente seleciona tamanho disponível (apenas estado client-side)
     ↓
 Clica "Pedir agora"
     ↓
 lib/whatsapp/build-link.ts:
-  - substitutes {modelo}/{solado}/{tamanho}/{preço} into store's message template
-  - encodeURIComponent(message)
-  - builds https://wa.me/<numero>?text=<encoded>
+  - substitui {modelo}/{solado}/{tamanho}/{preço} no template de mensagem da loja
+  - encodeURIComponent(mensagem)
+  - constrói https://wa.me/<numero>?text=<encoded>
     ↓
-window.location / <a href> opens WhatsApp (app or web)
-    ↓ (fire-and-forget, non-blocking)
+window.location / <a href> abre o WhatsApp (app ou web)
+    ↓ (fire-and-forget, não-bloqueante)
 POST /api/events { type: 'whatsapp_click', store_id, product_id }
 ```
 
-Deliberately no server dependency between "size selected" and "WhatsApp opens" — this is a pure client computation. This matters because the reseller may be offline and the customer's network may be poor; the one flow the product cannot fail on must not depend on a round-trip succeeding.
+Deliberadamente sem dependência de servidor entre "tamanho selecionado" e "WhatsApp abre" — isso é uma computação puramente client-side. Isso importa porque o revendedor pode estar offline e a rede do cliente pode ser ruim; o único fluxo que o produto não pode falhar não deve depender de um round-trip bem-sucedido.
 
-### Key Data Flows
+### Fluxos de Dados Principais
 
-1. **Admin CRUD → Storage:** Image upload compresses client-side first (respects the 5MB pre-upload guidance in PROJECT.md), then goes to Supabase Storage bucket `product-images` (public-read, owner-write via RLS-equivalent Storage policies). Product row stores the resulting public URL(s); `next/image` handles responsive serving.
-2. **Metrics:** Storefront pageviews and WhatsApp clicks insert into an `events` table via a public-insert-only RLS policy (or a thin `/api/events` route if you want to keep insert logic server-side and validated). Admin dashboard aggregates this table with owner-scoped RLS reads — no separate analytics service needed at this scale.
+1. **CRUD Admin → Storage:** O upload de imagem comprime no lado do cliente primeiro (respeita a orientação de 5MB pré-upload do PROJECT.md), depois vai para o bucket `product-images` do Supabase Storage (leitura pública, escrita owner via políticas de Storage equivalentes a RLS). A linha do produto armazena a(s) URL(s) pública(s) resultante(s); `next/image` cuida da entrega responsiva.
+2. **Métricas:** Pageviews da vitrine e cliques no WhatsApp inserem em uma tabela `events` via uma política RLS de inserção pública somente (ou uma rota fina `/api/events` se você quiser manter a lógica de inserção server-side e validada). O dashboard admin agrega essa tabela com leituras escopadas por RLS ao owner — nenhum serviço de analytics separado necessário nesta escala.
 
-## Scaling Considerations
+## Considerações de Escalonamento
 
-| Scale | Architecture Adjustments |
+| Escala | Ajustes de Arquitetura |
 |-------|--------------------------|
-| 0-1k storefront views/day (this project's actual near-term target: dozens of resellers) | No-cache SSR on `/loja/[slug]` (Pattern 3, option 1). Supabase free tier. Single shared schema. No queue, no background jobs. |
-| 1k-100k views/day | Introduce `revalidateTag` + short `s-maxage` at the CDN edge for the storefront page; keep RLS/schema unchanged. Add pagination cursor (not offset) once product counts and viewer counts both grow. Consider Supabase compute add-on if row counts grow into the millions. |
-| 100k+ views/day | Not a realistic near-term concern (product's own success metric is "first WhatsApp order," not scale) — defer. If it happens, look at edge caching per-store (each store's storefront is independently cacheable) before considering read replicas. |
+| 0-1 mil visualizações de vitrine/dia (alvo real de curto prazo deste projeto: dezenas de revendedores) | SSR sem cache em `/loja/[slug]` (Padrão 3, opção 1). Tier gratuito do Supabase. Schema único compartilhado. Sem fila, sem jobs em segundo plano. |
+| 1 mil-100 mil visualizações/dia | Introduzir `revalidateTag` + `s-maxage` curto na edge do CDN para a página da vitrine; manter RLS/schema inalterados. Adicionar cursor de paginação (não offset) uma vez que contagens de produtos e visualizadores cresçam. Considerar o add-on de compute do Supabase se as contagens de linhas crescerem para milhões. |
+| 100 mil+ visualizações/dia | Não é uma preocupação realista de curto prazo (a própria métrica de sucesso do produto é "primeiro pedido WhatsApp", não escala) — adiar. Se acontecer, olhar para cache edge por loja (a vitrine de cada loja é independentemente cacheável) antes de considerar réplicas de leitura. |
 
-### Scaling Priorities
+### Prioridades de Escalonamento
 
-1. **First bottleneck (realistic for this product):** Supabase Storage egress/image transformation costs if photo-heavy stores get popular — mitigated by client-side compression at upload time (already required by PROJECT.md) rather than relying on Supabase's server-side Image Transformations, which are gated to the **Pro plan and above**, not available on the free tier this project is targeting for $0/month at launch.
-2. **Second bottleneck:** Product catalog pagination — PROJECT.md already flags "vitrine renderizando todos os produtos de uma vez" as a known bug to avoid; ~20 products per load via cursor-based pagination or infinite scroll from day one, not retrofitted later.
+1. **Primeiro gargalo (realista para este produto):** custos de egress de imagem/transformação de imagem do Supabase Storage se lojas ricas em fotos ficarem populares — mitigado por compressão no lado do cliente no momento do upload (já exigida pelo PROJECT.md) em vez de depender das Transformações de Imagem server-side do Supabase, que são restritas ao **plano Pro ou superior**, não disponível no tier gratuito que este projeto mira para $0/mês no lançamento.
+2. **Segundo gargalo:** paginação do catálogo de produtos — o PROJECT.md já sinaliza "vitrine renderizando todos os produtos de uma vez" como um bug conhecido a evitar; ~20 produtos por carregamento via paginação baseada em cursor ou scroll infinito desde o primeiro dia, não retrofitado depois.
 
-## Anti-Patterns
+## Antipadrões
 
-### Anti-Pattern 1: Auth middleware with a matcher broad enough to catch the public route
+### Antipadrão 1: Middleware de auth com um matcher amplo o suficiente para capturar a rota pública
 
-**What people do:** Write `middleware.ts` with `matcher: ['/((?!_next|static).*)']` (catch-all) and add an allowlist check inside for public paths.
-**Why it's wrong:** This is exactly the failure mode PROJECT.md calls out as critical (alert #5) — one missed condition in the allowlist and the public storefront 404s or redirects to login for every customer clicking a shared link. An allowlist is a runtime check that can regress silently on any future middleware edit.
-**Do this instead:** Scope the middleware `matcher` itself to `/admin/:path*` only. The public route is then unreachable by the middleware by construction — there is no condition to forget.
+**O que as pessoas fazem:** Escrever `middleware.ts` com `matcher: ['/((?!_next|static).*)']` (catch-all) e adicionar uma checagem de allowlist dentro para caminhos públicos.
+**Por que está errado:** Este é exatamente o modo de falha que o PROJECT.md cita como crítico (alerta #5) — uma condição esquecida na allowlist e a vitrine pública dá 404 ou redireciona para o login para todo cliente clicando em um link compartilhado. Uma allowlist é uma checagem em tempo de execução que pode regredir silenciosamente em qualquer edição futura de middleware.
+**Faça isto em vez:** Escope o próprio `matcher` do middleware apenas para `/admin/:path*`. A rota pública então se torna inalcançável pelo middleware por construção — não há condição a esquecer.
 
-### Anti-Pattern 2: Reaching for Supabase Realtime / websockets to hit the "seconds not minutes" requirement
+### Antipadrão 2: Recorrer ao Supabase Realtime/websockets para atender o requisito "segundos, não minutos"
 
-**What people do:** See "near-real-time" and jump straight to Postgres Changes subscriptions pushed over websockets to the storefront.
-**Why it's wrong:** Adds connection lifecycle management (reconnect on network drop — relevant given the project's own mobile-network-flakiness concerns), a new dependency surface, and doesn't actually improve the experience: a customer loading a fresh page already gets current data. Realtime only matters if the *same open tab* needs to update without a reload, which isn't a stated requirement.
-**Do this instead:** No-cache SSR fetch per page load (Pattern 3). It is simpler, has fewer failure modes, and meets the actual requirement (delay measured in seconds between an admin edit and the *next* page load, not live-updating an already-open tab).
+**O que as pessoas fazem:** Ver "quase em tempo real" e pular direto para subscrições Postgres Changes empurradas via websockets para a vitrine.
+**Por que está errado:** Adiciona gerenciamento de ciclo de vida de conexão (reconectar após queda de rede — relevante dado as próprias preocupações do projeto com instabilidade de rede móvel), uma nova superfície de dependência, e não melhora de fato a experiência: um cliente carregando uma página nova já recebe dados atuais. O Realtime só importa se a *mesma aba aberta* precisar atualizar sem um reload, o que não é um requisito declarado.
+**Faça isto em vez:** Fetch SSR sem cache a cada carregamento de página (Padrão 3). É mais simples, tem menos modos de falha, e atende o requisito real (atraso medido em segundos entre uma edição do admin e o *próximo* carregamento de página, não atualizar ao vivo uma aba já aberta).
 
-### Anti-Pattern 3: Building the WhatsApp link server-side
+### Antipadrão 3: Construir o link do WhatsApp no lado do servidor
 
-**What people do:** Add an API route that takes product/size/store IDs and returns the constructed `wa.me` URL, calling it on button click.
-**Why it's wrong:** Introduces a network round-trip and a failure mode (API down, slow, or the customer's connection drops) directly in the one flow the product cannot fail on (PROJECT.md's Core Value statement is explicit about this). It also adds latency to what should feel instantaneous.
-**Do this instead:** Fetch the store's settings (WhatsApp number + template) once when the storefront page renders (already needed for display), and do the link construction (including `encodeURIComponent`) entirely client-side on click.
+**O que as pessoas fazem:** Adicionar uma rota de API que recebe IDs de produto/tamanho/loja e retorna a URL `wa.me` construída, chamando-a no clique do botão.
+**Por que está errado:** Introduz um round-trip de rede e um modo de falha (API fora do ar, lenta, ou a conexão do cliente cai) diretamente no único fluxo que o produto não pode falhar (a declaração de Core Value do PROJECT.md é explícita sobre isso). Também adiciona latência ao que deveria parecer instantâneo.
+**Faça isto em vez:** Buscar as configurações da loja (número de WhatsApp + template) uma vez quando a página da vitrine renderiza (já necessário para exibição), e fazer a construção do link (incluindo `encodeURIComponent`) inteiramente no lado do cliente no clique.
 
-### Anti-Pattern 4: Schema-per-tenant or database-per-tenant
+### Antipadrão 4: Schema-por-tenant ou banco-por-tenant
 
-**What people do:** For "true" multi-tenant isolation, provision a separate schema or Supabase project per reseller.
-**Why it's wrong:** Massive operational overhead (migrations run N times, connection pooling complexity) for a product explicitly targeting "dezenas" of resellers pre-monetization. Solves an isolation problem RLS already solves at the row level.
-**Do this instead:** Shared schema, `store_id` FK everywhere, RLS policies as the isolation boundary (Pattern 1).
+**O que as pessoas fazem:** Para isolamento multi-tenant "de verdade", provisionar um schema separado ou projeto Supabase separado por revendedor.
+**Por que está errado:** Overhead operacional massivo (migrations rodam N vezes, complexidade de pool de conexão) para um produto explicitamente visando "dezenas" de revendedores pré-monetização. Resolve um problema de isolamento que o RLS já resolve no nível de linha.
+**Faça isto em vez:** Schema compartilhado, FK `store_id` em toda parte, políticas RLS como a fronteira de isolamento (Padrão 1).
 
-## Integration Points
+## Pontos de Integração
 
-### External Services
+### Serviços Externos
 
-| Service | Integration Pattern | Notes |
+| Serviço | Padrão de Integração | Notas |
 |---------|---------------------|-------|
-| Supabase Auth | Email/password only, session via cookies (Next.js server client helpers) | No OAuth per PROJECT.md scope decision — reduces surface area, one less integration to get wrong |
-| Supabase Postgres | RLS-enforced shared schema, accessed via `@supabase/ssr` server client (admin) and anon client (public) | Never use the `service_role` key from any code path reachable by the browser |
-| Supabase Storage | `product-images` bucket, public read, owner-scoped write policy, bucket-level max file size set to match the 5MB upload limit | Server-side Image Transformations require Pro plan — do client-side compression instead for MVP |
-| WhatsApp (`wa.me`) | Pure client-side deep link, no WhatsApp Business API integration needed | Test across Android/iOS × Chrome/Safari/Samsung Internet per PROJECT.md alert #1; verify both with-DDI and without-DDI number formats |
-| Vercel | Hosting for Next.js, edge middleware for the `/admin` matcher | Free tier sufficient at target scale; revisit only if function execution or bandwidth limits are approached |
+| Supabase Auth | Apenas email/senha, sessão via cookies (helpers de cliente servidor do Next.js) | Sem OAuth conforme decisão de escopo do PROJECT.md — reduz área de superfície, uma integração a menos para errar |
+| Supabase Postgres | Schema compartilhado aplicado por RLS, acessado via cliente servidor `@supabase/ssr` (admin) e cliente anon (público) | Nunca use a chave `service_role` em nenhum caminho de código alcançável pelo navegador |
+| Supabase Storage | Bucket `product-images`, leitura pública, política de escrita escopada ao owner, tamanho máximo de arquivo no nível do bucket ajustado para corresponder ao limite de upload de 5MB | Transformações de Imagem server-side requerem plano Pro — fazer compressão no lado do cliente em vez disso para o MVP |
+| WhatsApp (`wa.me`) | Link profundo puramente client-side, sem necessidade de integração com a API WhatsApp Business | Testar em Android/iOS × Chrome/Safari/Samsung Internet conforme alerta #1 do PROJECT.md; verificar formatos de número tanto com quanto sem DDI |
+| Vercel | Hospedagem para Next.js, middleware de edge para o matcher `/admin` | Tier gratuito suficiente na escala-alvo; revisitar apenas se limites de execução de função ou bandwidth forem aproximados |
 
-### Internal Boundaries
+### Fronteiras Internas
 
-| Boundary | Communication | Notes |
+| Fronteira | Comunicação | Notas |
 |----------|---------------|-------|
-| Admin panel ↔ Postgres | Server Actions using the authenticated (cookie-based) Supabase client | RLS is the actual enforcement; Server Actions are the interface, not the security boundary |
-| Public storefront ↔ Postgres | Server Component fetch using the **anon key** client, no cookies | Must never import or share the authenticated admin client module |
-| Storefront ↔ WhatsApp | Client-side function call only, no network hop to your own backend | See Anti-Pattern 3 |
-| Storefront/Admin ↔ Metrics | Fire-and-forget insert, does not block or gate any user-facing action | A failed metrics insert must never break the WhatsApp flow or the product view |
+| Painel admin ↔ Postgres | Server Actions usando o cliente Supabase autenticado (baseado em cookies) | RLS é a aplicação real; Server Actions são a interface, não a fronteira de segurança |
+| Vitrine pública ↔ Postgres | Fetch de Server Component usando o cliente com **chave anon**, sem cookies | Nunca deve importar ou compartilhar o módulo de cliente admin autenticado |
+| Vitrine ↔ WhatsApp | Apenas chamada de função client-side, sem hop de rede para seu próprio backend | Ver Antipadrão 3 |
+| Vitrine/Admin ↔ Métricas | Inserção fire-and-forget, não bloqueia nem restringe nenhuma ação voltada ao usuário | Uma inserção de métricas falha nunca deve quebrar o fluxo do WhatsApp ou a visualização do produto |
 
-## Sources
+## Fontes
 
-- [Next.js — Guides: Multi-tenant](https://nextjs.org/docs/app/guides/multi-tenant) — HIGH (official docs)
-- [Next.js — revalidateTag reference](https://nextjs.org/docs/app/api-reference/functions/revalidateTag) — HIGH (official docs)
-- [Next.js — Getting Started: Revalidating](https://nextjs.org/docs/app/getting-started/revalidating) — HIGH (official docs)
-- [Supabase — Row Level Security](https://supabase.com/docs/guides/database/postgres/row-level-security) — HIGH (official docs)
-- [Supabase — Using Realtime with Next.js](https://supabase.com/docs/guides/realtime/realtime-with-nextjs) — HIGH (official docs)
-- [Supabase — Storage Image Transformations](https://supabase.com/docs/guides/storage/serving/image-transformations) — HIGH (official docs; confirms Pro-plan gating)
-- [Supabase — Storage v2: Image resizing and Smart CDN (blog)](https://supabase.com/blog/storage-image-resizing-smart-cdn) — MEDIUM (official blog)
-- [Supabase — Storage Optimizations](https://supabase.com/docs/guides/storage/production/scaling) — HIGH (official docs)
-- [MakerKit — Supabase RLS Best Practices: Production Patterns for Multi-Tenant Apps](https://makerkit.dev/blog/tutorials/supabase-rls-best-practices) — MEDIUM (community, cross-checked against official docs)
-- [peal.dev — Multi-Tenant Subdomain Routing in Next.js: The Complete Pattern](https://www.peal.dev/blog/multi-tenant-subdomain-routing-nextjs-patterns) — MEDIUM (community, cross-checked against official multi-tenant guide)
-- Project-specific constraints and known-bug catalog: `.planning/PROJECT.md` (this repo)
+- [Next.js — Guides: Multi-tenant](https://nextjs.org/docs/app/guides/multi-tenant) — ALTA (documentação oficial)
+- [Next.js — revalidateTag reference](https://nextjs.org/docs/app/api-reference/functions/revalidateTag) — ALTA (documentação oficial)
+- [Next.js — Getting Started: Revalidating](https://nextjs.org/docs/app/getting-started/revalidating) — ALTA (documentação oficial)
+- [Supabase — Row Level Security](https://supabase.com/docs/guides/database/postgres/row-level-security) — ALTA (documentação oficial)
+- [Supabase — Using Realtime with Next.js](https://supabase.com/docs/guides/realtime/realtime-with-nextjs) — ALTA (documentação oficial)
+- [Supabase — Storage Image Transformations](https://supabase.com/docs/guides/storage/serving/image-transformations) — ALTA (documentação oficial; confirma restrição ao plano Pro)
+- [Supabase — Storage v2: Image resizing and Smart CDN (blog)](https://supabase.com/blog/storage-image-resizing-smart-cdn) — MÉDIA (blog oficial)
+- [Supabase — Storage Optimizations](https://supabase.com/docs/guides/storage/production/scaling) — ALTA (documentação oficial)
+- [MakerKit — Supabase RLS Best Practices: Production Patterns for Multi-Tenant Apps](https://makerkit.dev/blog/tutorials/supabase-rls-best-practices) — MÉDIA (comunidade, cruzada com documentação oficial)
+- [peal.dev — Multi-Tenant Subdomain Routing in Next.js: The Complete Pattern](https://www.peal.dev/blog/multi-tenant-subdomain-routing-nextjs-patterns) — MÉDIA (comunidade, cruzada com o guia oficial de multi-tenant)
+- Restrições específicas do projeto e catálogo de bugs conhecidos: `.planning/PROJECT.md` (este repositório)
 
 ---
-*Architecture research for: Multi-tenant reseller catalog/storefront (Vitrino)*
-*Researched: 2026-07-10*
+*Pesquisa de arquitetura para: catálogo/vitrine de revendedor multi-tenant (Vitrino)*
+*Pesquisado em: 2026-07-10*

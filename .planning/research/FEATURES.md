@@ -1,69 +1,69 @@
-# Feature Research
+# Pesquisa de Funcionalidades
 
-**Domain:** Catalog/storefront + "click-to-order via WhatsApp" tools (Brazilian micro-SaaS, imported soccer cleats/sneaker resale niche)
-**Researched:** 2026-07-10
-**Confidence:** MEDIUM-HIGH (BR competitor feature sets confirmed from multiple public sources; niche-specific reseller behavior corroborated but not from primary user interviews)
+**Domínio:** Ferramentas de catálogo/vitrine + "peça pelo WhatsApp com um clique" (micro-SaaS brasileiro, nicho de revenda de chuteiras/tênis importados)
+**Pesquisado em:** 2026-07-10
+**Confiança:** MÉDIA-ALTA (conjuntos de funcionalidades de concorrentes BR confirmados a partir de múltiplas fontes públicas; comportamento de revendedor específico do nicho corroborado, mas não a partir de entrevistas primárias com usuários)
 
-## Feature Landscape
+## Panorama de Funcionalidades
 
-This niche has three overlapping reference categories, all converging on the same core loop (browse → pick variant → tap → WhatsApp message pre-filled → seller closes deal in chat):
+Este nicho tem três categorias de referência que se sobrepõem, todas convergindo para o mesmo loop central (navegar → escolher variante → tocar → mensagem do WhatsApp pré-preenchida → vendedor fecha o negócio no chat):
 
-1. **BR "catálogo digital para WhatsApp" tools** — Gopage, Vendizap, Vou Pedir, Linqui. Direct competitors, same customer profile (non-technical BR reseller), same "sem carrinho, sem gateway" mental model at the entry tier.
-2. **Global "social commerce via chat" tools** — Catlog (Nigeria/Africa), WhatsApp's own native Business Catalog. Same core mechanic, more mature monetization/payment layers once they scale past MVP.
-3. **Link-in-bio tools** — Linktree, Beacons, Stan Store. Not catalog-first, but they are the reference for slug/QR/analytics table stakes since Vitrino's public storefront link behaves like a bio link for Instagram-first sellers.
+1. **Ferramentas BR de "catálogo digital para WhatsApp"** — Gopage, Vendizap, Vou Pedir, Linqui. Concorrentes diretos, mesmo perfil de cliente (revendedor BR não-técnico), mesmo modelo mental de "sem carrinho, sem gateway" no tier de entrada.
+2. **Ferramentas globais de "comércio social via chat"** — Catlog (Nigéria/África), o próprio Catálogo Business nativo do WhatsApp. Mesmo mecanismo central, camadas de monetização/pagamento mais maduras uma vez que escalam além do MVP.
+3. **Ferramentas de link-in-bio** — Linktree, Beacons, Stan Store. Não são catálogo-first, mas são a referência para tabela de requisitos básicos de slug/QR/analytics, já que o link da vitrine pública do Vitrino se comporta como um link de bio para vendedores Instagram-first.
 
-Nearly every competitor above started exactly where Vitrino's MVP spec is aimed: catalog + WhatsApp button, no payment, no cart. Payment, stock automation, multi-seller, and AI descriptions were all added later, after traction — which validates the project's own MVP/nice-to-have split rather than contradicting it.
+Quase todos os concorrentes acima começaram exatamente onde o MVP do Vitrino mira: catálogo + botão do WhatsApp, sem pagamento, sem carrinho. Pagamento, automação de estoque, multi-vendedor e descrições por IA foram todos adicionados depois, após tração — o que valida a própria divisão de MVP/nice-to-have do projeto em vez de contradizê-la.
 
-### Table Stakes (Users Expect These)
+### Requisitos Básicos (Usuários Esperam Isso)
 
-Features users assume exist. Missing these = product feels incomplete or reseller churns back to raw WhatsApp/Instagram photos.
+Funcionalidades que os usuários assumem que existem. Sem elas, o produto parece incompleto ou o revendedor volta para fotos cruas no WhatsApp/Instagram.
 
-| Feature | Why Expected | Complexity | Notes |
+| Funcionalidade | Por Que É Esperada | Complexidade | Notas |
 |---------|--------------|------------|-------|
-| Product CRUD with photos, price, variant (size) | Every competitor (Gopage, Vendizap, Catlog, native WA Catalog) leads with this; it's the reason the product exists | MEDIUM | Already in spec. Photos are the #1 driver of perceived professionalism vs raw WhatsApp photo dumps |
-| Size/variant selection before contact action | Confirmed across Vendizap ("variações disponíveis") and general shoe-resale UX; sizes drive availability, not just SKU | MEDIUM | Spec already treats this as the core conversion — correctly prioritized as P0 |
-| One-tap "order now" that opens WhatsApp pre-filled | This is the entire category's value prop across every BR competitor found (Gopage, Vou Pedir, Vendizap all lead with "pedido chega no WhatsApp") | MEDIUM | encodeURIComponent + wa.me deep link correctness is the single highest-risk technical detail across the whole category — every competitor's marketing copy centers on this working flawlessly |
-| Out-of-stock indication per variant | Vendizap explicitly calls out stock control ("evita vender algo que não está mais disponível") as core, not optional | LOW-MEDIUM | Confirms spec's "bulk mark sold-out" instinct is right-shaped, just should exist per-variant not only per-product |
-| Shareable link + basic branding (logo, name, accent color) | Every competitor customizes store name/logo; this is the "professional storefront" promise vs raw social media | LOW | Spec covers this (loja config) |
-| Mobile-first responsive storefront | All BR competitors' target customer discovers the link via Instagram bio / WhatsApp status on phone; desktop is secondary | MEDIUM | Already flagged in PROJECT.md as non-negotiable |
-| Filters (brand, category, or equivalent) once catalog >20-30 items | Confirmed indirectly: competitors emphasize "catálogo organizado" and search/highlight features (Catlog's "Best Sellers" tags) once catalogs grow past a screen or two | LOW-MEDIUM | Spec's brand/sole/modalidade filters map directly to this |
-| Custom slug / shareable short link | Direct parallel to link-in-bio category (Linktree/Beacons) — a memorable, brandable link is what gets pasted into an Instagram bio | LOW | Spec covers this |
-| QR code for the storefront link | Confirmed as standard even in the cheaper/adjacent link-in-bio tier (Beacons offers this free); resellers use QR in physical contexts (feiras, embalagens) even though this is a digital-first niche — low cost to include, expected once present | LOW | Spec covers this — correctly scoped as MVP not nice-to-have, since it's near-zero cost to generate from an existing slug |
-| Basic visit/click metrics | Confirmed as baseline in link-in-bio and catalog tools alike (Beacons "basic analytics", Vendizap-adjacent tools) — sellers want to know "is anyone looking at this" | LOW | Spec's "basic metrics" (accesses, most-viewed, WA clicks) matches category norm precisely — do not go deeper than this for MVP |
-| Simple signup/login (no OAuth needed) | Confirmed via Gopage/Vendizap onboarding flows — no evidence any BR competitor gates entry behind OAuth; email/password or magic link is the norm for this non-technical audience | LOW | Spec's choice validated |
+| CRUD de produtos com fotos, preço, variante (tamanho) | Todo concorrente (Gopage, Vendizap, Catlog, Catálogo nativo do WA) lidera com isso; é a razão de o produto existir | MÉDIA | Já no escopo. Fotos são o principal fator de profissionalismo percebido vs. despejo de fotos cruas no WhatsApp |
+| Seleção de tamanho/variante antes da ação de contato | Confirmado no Vendizap ("variações disponíveis") e na UX geral de revenda de calçados; tamanhos direcionam disponibilidade, não apenas SKU | MÉDIA | O escopo já trata isso como a conversão central — corretamente priorizado como P0 |
+| "Pedir agora" com um toque que abre o WhatsApp pré-preenchido | Esta é a proposta de valor inteira da categoria em todo concorrente BR encontrado (Gopage, Vou Pedir, Vendizap todos lideram com "pedido chega no WhatsApp") | MÉDIA | A correção do encodeURIComponent + link profundo wa.me é o detalhe técnico de maior risco em toda a categoria — o copy de marketing de todo concorrente centra-se em isso funcionar impecavelmente |
+| Indicação de esgotado por variante | O Vendizap chama explicitamente o controle de estoque ("evita vender algo que não está mais disponível") de central, não opcional | BAIXA-MÉDIA | Confirma que o instinto de "marcar esgotado em massa" do escopo está certo, apenas deveria existir por variante e não só por produto |
+| Link compartilhável + branding básico (logo, nome, cor de destaque) | Todo concorrente personaliza nome/logo da loja; essa é a promessa de "vitrine profissional" vs. redes sociais cruas | BAIXA | O escopo cobre isso (config da loja) |
+| Vitrine mobile-first responsiva | Todos os concorrentes BR têm o cliente-alvo descobrindo o link via bio do Instagram/status do WhatsApp no celular; desktop é secundário | MÉDIA | Já sinalizado no PROJECT.md como inegociável |
+| Filtros (marca, categoria, ou equivalente) uma vez que o catálogo passe de 20-30 itens | Confirmado indiretamente: concorrentes enfatizam "catálogo organizado" e recursos de busca/destaque (tags "Mais Vendidos" do Catlog) uma vez que os catálogos crescem além de uma ou duas telas | BAIXA-MÉDIA | Os filtros de marca/solado/modalidade do escopo mapeiam diretamente para isso |
+| Slug personalizado / link curto compartilhável | Paralelo direto à categoria link-in-bio (Linktree/Beacons) — um link memorável e personalizável é o que se cola em uma bio do Instagram | BAIXA | O escopo cobre isso |
+| QR code para o link da vitrine | Confirmado como padrão mesmo no tier mais barato/adjacente de link-in-bio (Beacons oferece isso grátis); revendedores usam QR em contextos físicos (feiras, embalagens) mesmo sendo esse um nicho digital-first — baixo custo para incluir, esperado uma vez presente | BAIXA | O escopo cobre isso — corretamente escopado como MVP, não nice-to-have, já que é quase sem custo gerar a partir de um slug existente |
+| Métricas básicas de visita/clique | Confirmado como linha de base em ferramentas de link-in-bio e catálogo igualmente (Beacons "analytics básico", ferramentas adjacentes ao Vendizap) — vendedores querem saber "alguém está olhando isso" | BAIXA | As "métricas básicas" do escopo (acessos, mais vistos, cliques WA) combinam precisamente com a norma da categoria — não vá além disso no MVP |
+| Cadastro/login simples (sem necessidade de OAuth) | Confirmado via fluxos de onboarding do Gopage/Vendizap — nenhuma evidência de que algum concorrente BR restrinja a entrada atrás de OAuth; email/senha ou magic link é a norma para esse público não-técnico | BAIXA | Escolha do escopo validada |
 
-### Differentiators (Competitive Advantage)
+### Diferenciais (Vantagem Competitiva)
 
-Features that set the product apart within *this specific niche* (imported cleats resale) rather than the generic catalog-tool category. Not required for MVP viability, but where Vitrino can win once validated.
+Funcionalidades que diferenciam o produto dentro *deste nicho específico* (revenda de chuteiras importadas) em vez da categoria genérica de ferramentas de catálogo. Não obrigatórias para a viabilidade do MVP, mas onde o Vitrino pode vencer uma vez validado.
 
-| Feature | Value Proposition | Complexity | Notes |
+| Funcionalidade | Proposta de Valor | Complexidade | Notas |
 |---------|-------------------|------------|-------|
-| Niche-specific taxonomy (sole type / modalidade / brand as first-class fields, not generic "category") | Generic catalog tools (Gopage, Vendizap) use freeform categories; a sneaker/cleat-specific schema (solado society/campo/futsal, marca, modalidade) is a real wedge for this exact buyer, who currently improvises this info in photo captions | LOW (already schema decision, not new build) | Spec already bakes this into the CRUD — this *is* the differentiator, just not labeled as one. Worth stating explicitly in requirements so it isn't genericized away later |
-| Portuguese-first, BRL-native, WhatsApp-BR-number-format UX | Generic international WhatsApp-commerce tools (Catlog, native WA Catalog) are not BR-localized in currency/number formatting/copy tone; existing BR players (Gopage/Vendizap) are the real comparison set, and they're generalist (any product category), not cleats-specific | LOW | This is a positioning differentiator more than a feature; still worth listing since it drives UI/copy decisions (already reflected in PROJECT.md copy) |
-| Yupoo/source-photo import assist | Confirmed real pain: Yupoo is literally a Chinese photo-gallery site suppliers use as their wholesale catalog (not a sales channel) — BR resellers today manually screenshot/download photos from Yupoo galleries in Mandarin UI and re-upload to Instagram/WhatsApp one by one. A "paste Yupoo album link → pull photos" import would directly remove the single most repetitive task in this specific workflow | MEDIUM-HIGH | Correctly deferred (spec lists as nice-to-have) — no evidence any competitor does this; it's genuinely bespoke to this niche and worth prioritizing right after MVP validation, since it addresses the literal painpoint named in "What This Is" |
-| Duplicate product (create variant/colorway fast) | Not seen as an explicit named feature in competitor marketing, but implied by how sneaker/cleat catalogs work — same model in multiple colorways/soles is the norm, and re-entering all fields per colorway is friction unique to catalogs with many near-identical SKUs (more true here than in generic-goods catalogs) | LOW | Spec correctly places this as should-have; unlike generic catalog tools, this niche has unusually high SKU-variant density (same shoe, N soles x N colors), so it pays off sooner than a generic reseller would need it |
-| Multiple catalogs (pronta entrega vs sob encomenda) | Confirmed as a paid-tier differentiator elsewhere (Gopage's Premium/Profissional tiers sell exactly this — multiple independent catalogs) — validates it as real, monetizable value, not a made-up idea | MEDIUM | Correctly deferred to post-MVP; this is literally how an established competitor (Gopage) tiers its paid plans, which validates it as a legitimate Pro-tier candidate later |
-| CSV bulk import | Real competitor precedent (bulk/atacado catalog tools target distributors who already have spreadsheets) but Vitrino's target user is an individual reseller managing dozens of SKUs by hand, not hundreds via ERP export — value is real but arrives later, once sellers have enough SKU volume to feel CRUD pain | MEDIUM | Correctly deferred; not table stakes for this specific (individually-run, phone-first) customer segment even though it is table stakes for the wholesale/atacado segment of adjacent tools |
+| Taxonomia específica do nicho (tipo de solado / modalidade / marca como campos de primeira classe, não "categoria" genérica) | Ferramentas de catálogo genéricas (Gopage, Vendizap) usam categorias livres; um schema específico de tênis/chuteira (solado society/campo/futsal, marca, modalidade) é uma cunha real para esse comprador exato, que hoje improvisa essa informação em legendas de fotos | BAIXA (já é decisão de schema, não novo desenvolvimento) | O escopo já embute isso no CRUD — este *é* o diferencial, apenas não rotulado como tal. Vale declarar isso explicitamente nos requisitos para que não seja genericizado mais tarde |
+| UX português-first, nativa em BRL, formato de número do WhatsApp BR | Ferramentas genéricas internacionais de comércio via WhatsApp (Catlog, Catálogo nativo do WA) não são localizadas BR em moeda/formatação de número/tom de copy; os players BR existentes (Gopage/Vendizap) são o conjunto de comparação real, e são generalistas (qualquer categoria de produto), não específicos de chuteiras | BAIXA | Este é um diferencial de posicionamento mais do que uma funcionalidade; ainda assim vale listar já que direciona decisões de UI/copy (já refletido no copy do PROJECT.md) |
+| Assistente de importação de foto-fonte do Yupoo | Dor real confirmada: Yupoo é literalmente um site chinês de galeria de fotos que fornecedores usam como seu catálogo atacadista (não um canal de venda) — revendedores BR hoje tiram print/baixam fotos manualmente de galerias do Yupoo em interface mandarim e re-fazem upload no Instagram/WhatsApp uma por uma. Uma importação "cole o link do álbum Yupoo → puxe as fotos" removeria diretamente a tarefa mais repetitiva desse fluxo de trabalho específico | MÉDIA-ALTA | Corretamente adiado (o escopo lista como nice-to-have) — nenhuma evidência de que algum concorrente faz isso; é genuinamente sob medida para esse nicho e vale priorizar logo após a validação do MVP, já que endereça a dor literal citada em "O Que É Isto" |
+| Duplicar produto (criar variante/colorway rápido) | Não visto como funcionalidade explicitamente nomeada no marketing dos concorrentes, mas implícito em como catálogos de tênis/chuteiras funcionam — o mesmo modelo em múltiplas colorways/solados é a norma, e reinserir todos os campos por colorway é atrito único de catálogos com muitos SKUs quase idênticos (mais verdadeiro aqui do que em catálogos de produtos genéricos) | BAIXA | O escopo corretamente posiciona isso como should-have; diferente de ferramentas de catálogo genéricas, este nicho tem densidade de variantes de SKU incomumente alta (mesmo tênis, N solados x N cores), então compensa mais cedo do que um revendedor genérico precisaria |
+| Múltiplos catálogos (pronta entrega vs sob encomenda) | Confirmado como diferencial de tier pago em outro lugar (os tiers Premium/Profissional do Gopage vendem exatamente isso — múltiplos catálogos independentes) — valida isso como valor real e monetizável, não uma ideia inventada | MÉDIA | Corretamente adiado para pós-MVP; isso é literalmente como um concorrente estabelecido (Gopage) monetiza seus planos pagos, o que valida isso como candidato legítimo a tier Pro mais tarde |
+| Importação em massa via CSV | Precedente real de concorrente (ferramentas de catálogo em massa/atacado miram distribuidores que já têm planilhas), mas o usuário-alvo do Vitrino é um revendedor individual gerenciando dezenas de SKUs manualmente, não centenas via exportação de ERP — o valor é real mas chega depois, uma vez que os vendedores tenham volume suficiente de SKU para sentir a dor do CRUD | MÉDIA | Corretamente adiado; não é requisito básico para este segmento de cliente específico (gerido individualmente, mobile-first) mesmo sendo requisito básico para o segmento atacado de ferramentas adjacentes |
 
-### Anti-Features (Commonly Requested, Often Problematic)
+### Antifuncionalidades (Comumente Solicitadas, Frequentemente Problemáticas)
 
-Features that competitors eventually add (once scaled) or that non-technical sellers may ask for, but that would be actively harmful to build during MVP validation for this specific product.
+Funcionalidades que os concorrentes eventualmente adicionam (uma vez escalados) ou que vendedores não-técnicos podem pedir, mas que seriam ativamente prejudiciais construir durante a validação do MVP para este produto específico.
 
-| Feature | Why Requested | Why Problematic | Alternative |
+| Funcionalidade | Por Que É Solicitada | Por Que É Problemática | Alternativa |
 |---------|---------------|-----------------|-------------|
-| Payment gateway / checkout / cart | Every "grown-up" competitor (Catlog, Vendizap higher tiers, native WA "Cart" for larger businesses) eventually adds this, so sellers may ask "where's the pay button" | For this MVP, the entire value prop is *closing the deal on WhatsApp exactly like the seller already does* — adding checkout before validating demand adds massive scope (PCI-adjacent concerns, refunds, reconciliation) for a segment (imported/possibly gray-market goods, cash/pix-in-chat culture) that overwhelmingly prefers negotiating price/shipping in chat anyway | Keep WhatsApp as 100% of checkout; revisit payments only after "N resellers get ≥1 order" is proven — exactly as PROJECT.md already states |
-| Full order/CRM pipeline (order status, history, customer database) | Vendizap/Catlog both build toward this as they mature ("gestão de pedidos"); resellers juggling many chats might genuinely want it | This turns Vitrino into a mini-ERP; the actual order lifecycle happens inside WhatsApp itself (a system Vitrino doesn't own and shouldn't try to shadow) — building an order tracker that isn't the real source of truth (the WhatsApp thread) creates a second, always-stale ledger | Metrics stay at pageview/click level (as scoped); if order tracking becomes a real need later, it should hook into "click sent" events, not attempt to model order state Vitrino can't observe |
-| Real-time inventory sync with supplier (Yupoo/1688 stock levels) | Tempting once Yupoo import exists — "why not also sync stock automatically" | Yupoo galleries are photo albums with no stock API; suppliers change stock via WeChat negotiation, not structured data. Attempting "sync" invites silently-wrong availability, which directly violates the project's own critical alert #4 (stock must reflect within seconds, never be stale) | Manual mark-sold-out/available, fast and obvious in the seller dashboard, stays authoritative — never auto-infer from a scraped source |
-| Multi-vendor/team accounts, sub-seller logins | Gopage's higher tiers explicitly sell this ("Cadastro de Vendedores", each with own catálogo/WhatsApp) — a plausible upsell ask | Vitrino's target customer today is a solo/small reseller, not an atacado distributor with a sales team; building multi-seller auth/permissions now is solving a problem this segment doesn't have yet, at real complexity cost (roles, per-seller storefront routing) | Defer until/unless customer research post-MVP shows resellers operate distribution teams, not solo shops |
-| AI-generated product descriptions | Gopage already markets this ("IA para criar descrições") — an easy "why don't we have that" ask once seen in a competitor | Pure scope inflation for MVP; product descriptions in this niche are short and formulaic (modelo/solado/tamanho/preço) — the differentiator is data completeness and photos, not prose | Provide a simple template/defaults per category instead of generative AI; revisit only if user feedback specifically flags copywriting as a blocker |
-| WhatsApp Business API / official Cloud API integration (automated bot replies, chatbot) | The "grown-up" version of this category (aisensy, wati, sleekflow tooling found in research) is built entirely around the paid WhatsApp Business Platform API | Requires Meta Business verification, message-template approval, and per-conversation costs — completely disproportionate for a Free-tier, non-technical solo reseller MVP whose entire ask is "open a wa.me link with prefilled text" | Stick to `wa.me`/`api.whatsapp.com` deep links (zero API, zero approval, zero cost) — this is what every direct BR competitor (Gopage, Vendizap, Vou Pedir) also does at this tier |
-| Native WhatsApp catalog (Meta's own product catalog feature) as a replacement for Vitrino's storefront | It's free and built into WhatsApp Business already — "why build a whole product for this" | Native WA Catalog has no BR-specific taxonomy, no custom branding/slug/QR, poor multi-photo browsing UX for variant-heavy goods (up to 500 flat items, no size-filtering, no analytics), and is generally acknowledged (in the research sources) as "no cart, just chat" with limited discovery — this is exactly the gap Vitrino fills, not a reason to abandon the idea | Position Vitrino as the browsing/filtering/branding layer *in front of* the WhatsApp conversation, not a competitor to WhatsApp itself |
+| Gateway de pagamento / checkout / carrinho | Todo concorrente "adulto" (Catlog, tiers mais altos do Vendizap, "Carrinho" nativo do WA para negócios maiores) eventualmente adiciona isso, então vendedores podem perguntar "cadê o botão de pagar" | Para este MVP, a proposta de valor inteira é *fechar o negócio no WhatsApp exatamente como o vendedor já faz* — adicionar checkout antes de validar a demanda adiciona escopo massivo (preocupações PCI-adjacentes, reembolsos, reconciliação) para um segmento (produtos importados/possivelmente de mercado paralelo, cultura de dinheiro/pix-no-chat) que prefere amplamente negociar preço/frete no chat | Manter o WhatsApp como 100% do checkout; revisitar pagamentos apenas depois que "N revendedores conseguem ≥1 pedido" seja comprovado — exatamente como o PROJECT.md já declara |
+| Pipeline completo de pedidos/CRM (status de pedido, histórico, base de clientes) | Vendizap/Catlog ambos constroem em direção a isso conforme amadurecem ("gestão de pedidos"); revendedores lidando com muitos chats podem genuinamente querer isso | Isso transforma o Vitrino em um mini-ERP; o ciclo de vida real do pedido acontece dentro do próprio WhatsApp (um sistema que o Vitrino não possui e não deveria tentar espelhar) — construir um rastreador de pedidos que não é a fonte real da verdade (a conversa do WhatsApp) cria um segundo ledger sempre desatualizado | Métricas permanecem no nível de pageview/clique (conforme escopo); se o rastreamento de pedidos se tornar uma necessidade real mais tarde, deve se conectar a eventos de "clique enviado", não tentar modelar o estado de pedido que o Vitrino não pode observar |
+| Sincronização de estoque em tempo real com fornecedor (níveis de estoque Yupoo/1688) | Tentador uma vez que a importação do Yupoo existe — "por que não sincronizar o estoque automaticamente também" | Galerias do Yupoo são álbuns de fotos sem API de estoque; fornecedores mudam estoque via negociação no WeChat, não dados estruturados. Tentar "sincronizar" convida disponibilidade silenciosamente errada, o que viola diretamente o alerta crítico #4 do próprio projeto (estoque deve refletir em segundos, nunca ficar obsoleto) | Marcação manual de esgotado/disponível, rápida e óbvia no painel do vendedor, permanece autoritativa — nunca auto-inferir de uma fonte raspada |
+| Contas multi-vendedor/equipe, logins de sub-vendedor | Os tiers mais altos do Gopage vendem explicitamente isso ("Cadastro de Vendedores", cada um com seu próprio catálogo/WhatsApp) — um upsell plausível | O cliente-alvo do Vitrino hoje é um revendedor solo/pequeno, não um distribuidor atacadista com equipe de vendas; construir auth/permissões multi-vendedor agora resolve um problema que este segmento ainda não tem, a custo real de complexidade (papéis, roteamento de vitrine por vendedor) | Adiar até/a menos que pesquisa de cliente pós-MVP mostre que revendedores operam equipes de distribuição, não lojas solo |
+| Descrições de produto geradas por IA | O Gopage já comercializa isso ("IA para criar descrições") — um pedido fácil de "por que não temos isso" uma vez visto em um concorrente | Inflação de escopo pura para o MVP; descrições de produto neste nicho são curtas e formulaicas (modelo/solado/tamanho/preço) — o diferencial é completude de dados e fotos, não prosa | Fornecer um template/padrões simples por categoria em vez de IA generativa; revisitar apenas se o feedback do usuário especificamente sinalizar copywriting como um bloqueador |
+| Integração com a API oficial WhatsApp Business/Cloud API (respostas automáticas por bot, chatbot) | A versão "adulta" desta categoria (ferramentas aisensy, wati, sleekflow encontradas na pesquisa) é construída inteiramente em torno da Plataforma WhatsApp Business paga | Requer verificação Meta Business, aprovação de template de mensagem, e custos por conversa — completamente desproporcional para um MVP de tier gratuito, revendedor solo não-técnico cujo pedido inteiro é "abrir um link wa.me com texto pré-preenchido" | Manter os links profundos `wa.me`/`api.whatsapp.com` (zero API, zero aprovação, zero custo) — é isso que todo concorrente BR direto (Gopage, Vendizap, Vou Pedir) também faz neste tier |
+| Catálogo nativo do WhatsApp (recurso próprio de catálogo de produto da Meta) como substituto da vitrine do Vitrino | É gratuito e embutido no WhatsApp Business já — "por que construir um produto inteiro para isso" | O Catálogo WA nativo não tem taxonomia BR-específica, sem branding/slug/QR personalizado, UX ruim de navegação multi-foto para itens ricos em variantes (até 500 itens planos, sem filtragem por tamanho, sem analytics), e é geralmente reconhecido (nas fontes de pesquisa) como "sem carrinho, só chat" com descoberta limitada — essa é exatamente a lacuna que o Vitrino preenche, não uma razão para abandonar a ideia | Posicionar o Vitrino como a camada de navegação/filtragem/branding *na frente da* conversa do WhatsApp, não um concorrente do próprio WhatsApp |
 
-## Feature Dependencies
+## Dependências de Funcionalidades
 
 ```
 Cadastro/login do revendedor
-    └──requires──> nothing (foundation)
+    └──requires──> nada (fundação)
 
 Configuração de WhatsApp (número + template)
     └──requires──> Cadastro/login
@@ -72,134 +72,134 @@ CRUD de produtos (fotos, tamanhos, preço, marca, solado, categoria)
     └──requires──> Cadastro/login
 
 Vitrine pública com filtros
-    └──requires──> CRUD de produtos (need products to filter)
-    └──requires──> Configuração da loja (nome, logo, cor — for branding)
+    └──requires──> CRUD de produtos (precisa de produtos para filtrar)
+    └──requires──> Configuração da loja (nome, logo, cor — para branding)
 
 Seleção de tamanho + botão "Pedir agora"
     └──requires──> CRUD de produtos (tamanhos como dado estruturado)
     └──requires──> Configuração de WhatsApp (número + template)
-    └──requires──> Vitrine pública (needs a place to render)
+    └──requires──> Vitrine pública (precisa de um lugar para renderizar)
 
 Link personalizável (slug) + QR Code
-    └──requires──> Vitrine pública (slug routes to it)
+    └──requires──> Vitrine pública (slug roteia até ela)
 
 Métricas básicas (acessos, produtos vistos, cliques WA)
-    └──requires──> Vitrine pública (nothing to measure without it)
-    └──requires──> Botão "Pedir agora" (click event source)
+    └──requires──> Vitrine pública (nada a medir sem ela)
+    └──requires──> Botão "Pedir agora" (fonte do evento de clique)
 
 Dashboard com métricas + produtos recentes
     └──requires──> Métricas básicas
     └──requires──> CRUD de produtos
 
---- Post-MVP layer ---
+--- Camada pós-MVP ---
 
-Duplicate product ──enhances──> CRUD de produtos
-Bulk mark-sold-out ──enhances──> CRUD de produtos (per-variant stock)
-CSV import ──enhances──> CRUD de produtos (bulk creation path)
-Yupoo import ──enhances──> CRUD de produtos (bulk creation path, photo-first)
-Multiple catalogs ──requires──> CRUD de produtos + Vitrine pública (needs to be multiplied, non-trivial routing/slug implications)
-Pro plan / paid tier ──requires──> stable Free-tier usage data to price against (conflicts with "no billing in MVP" if built prematurely)
+Duplicar produto ──enhances──> CRUD de produtos
+Marcar esgotado em massa ──enhances──> CRUD de produtos (estoque por variante)
+Importação CSV ──enhances──> CRUD de produtos (caminho de criação em massa)
+Importação Yupoo ──enhances──> CRUD de produtos (caminho de criação em massa, foto-first)
+Múltiplos catálogos ──requires──> CRUD de produtos + Vitrine pública (precisa ser multiplicado, implicações de roteamento/slug não triviais)
+Plano Pro / tier pago ──requires──> dados estáveis de uso do tier Free para precificar contra (conflita com "sem billing no MVP" se construído prematuramente)
 ```
 
-### Dependency Notes
+### Notas de Dependência
 
-- **Seleção de tamanho + botão "Pedir agora" requires CRUD de produtos, Configuração de WhatsApp, and Vitrine pública:** this is the single conversion moment the whole product exists for — it cannot be built or tested in isolation; all three prerequisites must land first, and this should be the last MVP piece assembled, tested exhaustively (per PROJECT.md's own alert #1) before anything else ships.
-- **Métricas básicas requires the "Pedir agora" click as an event source:** click tracking is not a separate feature to sequence in parallel — it's an instrumentation layer that must be wired into the order button itself, so plan it in the same phase as the order flow, not as an afterthought bolt-on.
-- **Multiple catalogs conflicts with a simple slug-per-seller model:** if this is added later (as Gopage's tiering suggests it should be, eventually), the URL/routing design in the MVP phase should leave room for `slug` to map to one-of-N catalogs rather than assuming seller == storefront 1:1. Worth a lightweight future-proofing note in architecture even though the feature itself is deferred.
-- **Pro plan / paid tier conflicts with "no billing in MVP":** don't let differentiator features (multiple catalogs, CSV import, advanced analytics) get built as gated-by-plan from day one — that reintroduces billing complexity through the back door. Build them as plain features first; gate behind a plan only after PROJECT.md's monetization decision is actually made.
+- **Seleção de tamanho + botão "Pedir agora" requer CRUD de produtos, Configuração de WhatsApp e Vitrine pública:** este é o único momento de conversão pelo qual o produto inteiro existe — não pode ser construído ou testado isoladamente; todos os três pré-requisitos precisam estar prontos primeiro, e este deveria ser o último pedaço do MVP montado, testado exaustivamente (conforme o próprio alerta #1 do PROJECT.md) antes de qualquer outra coisa ser lançada.
+- **Métricas básicas requerem o clique de "Pedir agora" como fonte de evento:** o rastreamento de clique não é uma funcionalidade separada para sequenciar em paralelo — é uma camada de instrumentação que precisa ser conectada ao próprio botão de pedido, então planeje-a na mesma fase que o fluxo de pedido, não como um complemento tardio.
+- **Múltiplos catálogos conflita com um modelo simples de slug-por-vendedor:** se isso for adicionado depois (como o modelo de tiering do Gopage sugere que deveria ser, eventualmente), o design de URL/roteamento na fase de MVP deveria deixar espaço para o `slug` mapear para um-de-N catálogos em vez de assumir vendedor == vitrine 1:1. Vale uma nota leve de future-proofing na arquitetura mesmo que a funcionalidade em si seja adiada.
+- **Plano Pro / tier pago conflita com "sem billing no MVP":** não deixe que funcionalidades diferenciais (múltiplos catálogos, importação CSV, analytics avançado) sejam construídas como gated-por-plano desde o primeiro dia — isso reintroduz a complexidade de billing pela porta dos fundos. Construa-as primeiro como funcionalidades simples; gate atrás de um plano apenas depois que a decisão de monetização do PROJECT.md for de fato tomada.
 
-## MVP Definition
+## Definição de MVP
 
-### Launch With (v1)
+### Lançar Com (v1)
 
-Minimum viable product — matches the project's own "Active" requirements list, validated against category norms above. No additions needed; category research confirms this list is neither over- nor under-scoped.
+Produto minimamente viável — corresponde à própria lista de requisitos "Ativos" do projeto, validada contra as normas de categoria acima. Nenhuma adição necessária; a pesquisa de categoria confirma que essa lista não está nem super nem sub-escopada.
 
-- [ ] Cadastro/login do revendedor (email/senha) — foundation, no competitor gates this behind more
-- [ ] CRUD completo de produtos (fotos, tamanhos, preço, marca, solado, categoria, modalidade) — the category's non-negotiable core
-- [ ] Configuração da loja (nome, logo, cor, frase) — matches "professional storefront" promise every competitor leads with
-- [ ] Configuração de WhatsApp (número validado + template com variáveis) — the entire conversion mechanism
-- [ ] Vitrine pública com filtros (marca, solado, modalidade) — table stakes once catalog exceeds a handful of items
-- [ ] Seleção de tamanho + botão "Pedir agora" (wa.me + encodeURIComponent) — the one flow that must never break
-- [ ] Slug personalizável + QR Code — near-zero marginal cost once slug exists, expected by category
-- [ ] Métricas básicas (acessos, produtos mais vistos, cliques WA) — baseline in every adjacent category (link-in-bio and catalog tools alike)
-- [ ] Dashboard com métricas + produtos recentes — ties it together for the seller's daily check-in habit
+- [ ] Cadastro/login do revendedor (email/senha) — fundação, nenhum concorrente restringe isso além do necessário
+- [ ] CRUD completo de produtos (fotos, tamanhos, preço, marca, solado, categoria, modalidade) — o núcleo inegociável da categoria
+- [ ] Configuração da loja (nome, logo, cor, frase) — combina com a promessa de "vitrine profissional" que todo concorrente lidera
+- [ ] Configuração de WhatsApp (número validado + template com variáveis) — o mecanismo de conversão inteiro
+- [ ] Vitrine pública com filtros (marca, solado, modalidade) — requisito básico uma vez que o catálogo exceda um punhado de itens
+- [ ] Seleção de tamanho + botão "Pedir agora" (wa.me + encodeURIComponent) — o único fluxo que nunca pode quebrar
+- [ ] Slug personalizável + QR Code — custo marginal quase zero uma vez que o slug exista, esperado pela categoria
+- [ ] Métricas básicas (acessos, produtos mais vistos, cliques WA) — linha de base em toda categoria adjacente (link-in-bio e ferramentas de catálogo igualmente)
+- [ ] Dashboard com métricas + produtos recentes — junta tudo para o hábito de checagem diária do vendedor
 
-### Add After Validation (v1.x)
+### Adicionar Após Validação (v1.x)
 
-Features to add once "resellers create a storefront and receive ≥1 WhatsApp order" is proven — matches the project's own SHOULD/NICE list, sequenced by how directly each removes friction discovered in the niche.
+Funcionalidades para adicionar uma vez que "revendedores criam uma vitrine e recebem ≥1 pedido pelo WhatsApp" seja comprovado — corresponde à própria lista SHOULD/NICE do projeto, sequenciada por quanto cada uma remove diretamente o atrito descoberto no nicho.
 
-- [ ] Click tracking granularity beyond MVP baseline (per-product click funnels) — add once dashboard usage shows sellers actually check metrics regularly
-- [ ] Duplicate product — add once sellers report re-entering near-identical colorway/sole variants is tedious (very likely given this niche's SKU density)
-- [ ] Bulk mark-sold-out (per-variant, not just per-product) — add as soon as any seller reports stock going stale across many sizes at once
-- [ ] Yupoo import assist — add early in this tier; it directly targets the exact pain named in PROJECT.md's "What This Is" (Yupoo galleries in Mandarin) and is the strongest niche-specific differentiator found in this research
-- [ ] CSV import — add once a seller's catalog size or migration need (e.g., coming from a spreadsheet) makes manual entry the visible bottleneck
+- [ ] Granularidade de rastreamento de clique além da linha de base do MVP (funis de clique por produto) — adicionar uma vez que o uso do dashboard mostre que os vendedores realmente checam métricas regularmente
+- [ ] Duplicar produto — adicionar uma vez que vendedores relatem que reinserir variantes quase idênticas de colorway/solado é tedioso (muito provável dada a densidade de SKU deste nicho)
+- [ ] Marcar esgotado em massa (por variante, não só por produto) — adicionar assim que qualquer vendedor relatar estoque ficando obsoleto em muitos tamanhos de uma vez
+- [ ] Assistente de importação Yupoo — adicionar cedo neste tier; endereça diretamente a dor exata citada em "O Que É Isto" do PROJECT.md (galerias Yupoo em mandarim) e é o diferencial mais forte específico do nicho encontrado nesta pesquisa
+- [ ] Importação CSV — adicionar uma vez que o tamanho do catálogo de um vendedor ou necessidade de migração (ex.: vindo de uma planilha) torne a entrada manual o gargalo visível
 
-### Future Consideration (v2+)
+### Consideração Futura (v2+)
 
-Features to defer until product-market fit and monetization decisions are made — confirmed by competitor precedent that these arrive only after a tool has scaled past the "just launched" stage.
+Funcionalidades para adiar até que product-market fit e decisões de monetização sejam tomadas — confirmado pelo precedente de concorrentes de que elas chegam apenas depois que uma ferramenta escalou além do estágio "acabou de lançar".
 
-- [ ] Multiple catálogos por revendedor — defer until routing/slug model can be redesigned deliberately (see dependency note above); Gopage precedent shows this is real Pro-tier value, not wasted effort, just sequenced wrong if built early
-- [ ] Analytics avançado (funnels, retention, cohort) — defer; even mature competitors (Beacons "advanced analytics") gate this behind paid tiers, and MVP's basic counters are sufficient to prove the core hypothesis
-- [ ] Pro plan / paid tier + billing — explicitly deferred by PROJECT.md itself; category precedent (Gopage ~R$40-240/yr, Vendizap ~R$80/mo) gives useful future pricing anchors once this is revisited
-- [ ] Notificação por e-mail de produto esgotado — low value relative to cost; sellers already live in WhatsApp, not email, for this workflow
+- [ ] Múltiplos catálogos por revendedor — adiar até que o modelo de roteamento/slug possa ser redesenhado deliberadamente (ver nota de dependência acima); o precedente do Gopage mostra que isso é valor real de tier Pro, não esforço desperdiçado, apenas sequenciado errado se construído cedo
+- [ ] Analytics avançado (funis, retenção, cohort) — adiar; mesmo concorrentes maduros (Beacons "analytics avançado") restringem isso atrás de tiers pagos, e os contadores básicos do MVP são suficientes para provar a hipótese central
+- [ ] Plano Pro / tier pago + billing — explicitamente adiado pelo próprio PROJECT.md; o precedente de categoria (Gopage ~R$40-240/ano, Vendizap ~R$80/mês) dá âncoras de precificação futura úteis uma vez que isso seja revisitado
+- [ ] Notificação por e-mail de produto esgotado — baixo valor relativo ao custo; vendedores já vivem no WhatsApp, não no e-mail, para esse fluxo de trabalho
 
-## Feature Prioritization Matrix
+## Matriz de Priorização de Funcionalidades
 
-| Feature | User Value | Implementation Cost | Priority |
+| Funcionalidade | Valor para o Usuário | Custo de Implementação | Prioridade |
 |---------|------------|---------------------|----------|
-| Seleção de tamanho + botão "Pedir agora" | HIGH | MEDIUM | P1 |
-| CRUD de produtos (fotos, tamanhos, preço, marca, solado) | HIGH | MEDIUM | P1 |
-| Configuração de WhatsApp (número + template) | HIGH | LOW | P1 |
-| Vitrine pública com filtros | HIGH | MEDIUM | P1 |
-| Slug + QR Code | MEDIUM | LOW | P1 |
-| Métricas básicas | MEDIUM | LOW | P1 |
-| Dashboard resumo | MEDIUM | LOW | P1 |
-| Yupoo import assist | HIGH (niche-specific) | HIGH | P2 |
-| Duplicate product | MEDIUM | LOW | P2 |
-| Bulk mark-sold-out (per variant) | MEDIUM | LOW-MEDIUM | P2 |
-| CSV import | MEDIUM | MEDIUM | P2 |
-| Multiple catálogos | MEDIUM | MEDIUM-HIGH | P3 |
-| Analytics avançado | LOW (for this stage) | MEDIUM-HIGH | P3 |
-| Pro plan / billing | LOW (pre-validation) | HIGH | P3 |
-| Payment gateway / checkout | LOW (actively counter to positioning) | HIGH | Anti-feature |
-| Full CRM/order pipeline | LOW (duplicates WhatsApp itself) | HIGH | Anti-feature |
+| Seleção de tamanho + botão "Pedir agora" | ALTO | MÉDIA | P1 |
+| CRUD de produtos (fotos, tamanhos, preço, marca, solado) | ALTO | MÉDIA | P1 |
+| Configuração de WhatsApp (número + template) | ALTO | BAIXA | P1 |
+| Vitrine pública com filtros | ALTO | MÉDIA | P1 |
+| Slug + QR Code | MÉDIO | BAIXA | P1 |
+| Métricas básicas | MÉDIO | BAIXA | P1 |
+| Dashboard resumo | MÉDIO | BAIXA | P1 |
+| Assistente de importação Yupoo | ALTO (específico do nicho) | ALTA | P2 |
+| Duplicar produto | MÉDIO | BAIXA | P2 |
+| Marcar esgotado em massa (por variante) | MÉDIO | BAIXA-MÉDIA | P2 |
+| Importação CSV | MÉDIO | MÉDIA | P2 |
+| Múltiplos catálogos | MÉDIO | MÉDIA-ALTA | P3 |
+| Analytics avançado | BAIXO (para este estágio) | MÉDIA-ALTA | P3 |
+| Plano Pro / billing | BAIXO (pré-validação) | ALTA | P3 |
+| Gateway de pagamento / checkout | BAIXO (ativamente contra o posicionamento) | ALTA | Antifuncionalidade |
+| Pipeline completo de CRM/pedidos | BAIXO (duplica o próprio WhatsApp) | ALTA | Antifuncionalidade |
 
-**Priority key:**
-- P1: Must have for launch
-- P2: Should have, add when possible
-- P3: Nice to have, future consideration
+**Legenda de prioridade:**
+- P1: Obrigatório para o lançamento
+- P2: Desejável, adicionar quando possível
+- P3: Bom ter, consideração futura
 
-## Competitor Feature Analysis
+## Análise de Funcionalidades de Concorrentes
 
-| Feature | Gopage (BR, catálogo digital) | Vendizap (BR, catálogo + WhatsApp) | Catlog (Nigeria, WhatsApp commerce) | Native WhatsApp Business Catalog | Our Approach |
+| Funcionalidade | Gopage (BR, catálogo digital) | Vendizap (BR, catálogo + WhatsApp) | Catlog (Nigéria, comércio via WhatsApp) | Catálogo Business nativo do WhatsApp | Nossa Abordagem |
 |---------|-------------------------------|--------------------------------------|--------------------------------------|-----------------------------------|--------------|
-| Product catalog w/ photos | Yes, unlimited products + AI description helper | Yes, with "variações" | Yes, with videos + "Best Sellers" tags | Yes, up to 500 items, no variant filtering | Match core, add niche-specific taxonomy (solado/modalidade) as structured fields, not freeform tags |
-| Order via WhatsApp | Yes, core mechanic | Yes, core mechanic ("pedido chega no WhatsApp") | Yes, plus optional in-app payment | Yes (chat-only, no structured pre-fill from a browsing UI) | Match, with pre-filled template + strict encodeURIComponent testing (higher bar than most, per PROJECT.md alerts) |
-| Stock/variant control | Not emphasized in marketing | Yes, explicit "controle de estoque" | Yes, "abandoned cart" and inventory tracking | No stock concept beyond manual removal | Match Vendizap's approach: per-variant availability, mark sold-out fast |
-| Custom slug/link | Yes (own domain: gopage.bio or catalogo.com.br) | Yes | Yes ("share your store link everywhere") | Fixed wa.me/catalog link, not brandable | Match — slug is table stakes |
-| QR Code | Not confirmed in marketing copy | Not confirmed in marketing copy | Not confirmed | No | Include anyway (spec already does) — near-zero cost, matches adjacent link-in-bio category norm even if direct competitors underserve it; potential minor differentiator |
-| Analytics | Not emphasized (SEO/keyword feature mentioned instead) | Not emphasized | Yes, detailed sales/customer analytics | No | Match spec's basic-metrics scope; do not over-invest, since even funded competitors keep this shallow at this tier |
-| Multiple catalogs | Yes, tiered (1 / 3 / 10 catálogos by plan) | Not confirmed | Not directly, but multi-channel | No | Defer to post-MVP tier exactly as Gopage does — validates it as a legitimate future paid-tier lever |
-| Payments | No (pure catalog + WhatsApp tier) | Mentions "opções de pagamento" at higher tier | Yes, core differentiator (local + international currencies) | Limited (some regions) | Explicitly out of scope for MVP, matches Gopage/Vendizap's own entry tier, not an outlier decision |
-| Pricing anchor | R$19.90-39.90/mo | R$79.80/mo | ₦6,500-12,500/mo (~R$40-75) | Free (native WhatsApp feature) | Useful anchor for eventual Pro tier: BR market clears at roughly R$20-80/mo for this category |
+| Catálogo de produtos c/ fotos | Sim, produtos ilimitados + assistente de descrição por IA | Sim, com "variações" | Sim, com vídeos + tags "Mais Vendidos" | Sim, até 500 itens, sem filtragem por variante | Igualar o núcleo, adicionar taxonomia específica do nicho (solado/modalidade) como campos estruturados, não tags livres |
+| Pedido via WhatsApp | Sim, mecanismo central | Sim, mecanismo central ("pedido chega no WhatsApp") | Sim, mais pagamento in-app opcional | Sim (apenas chat, sem pré-preenchimento estruturado de uma UI de navegação) | Igualar, com template pré-preenchido + teste rigoroso de encodeURIComponent (barra mais alta que a maioria, conforme alertas do PROJECT.md) |
+| Controle de estoque/variante | Não enfatizado no marketing | Sim, "controle de estoque" explícito | Sim, "carrinho abandonado" e rastreamento de estoque | Sem conceito de estoque além de remoção manual | Igualar a abordagem do Vendizap: disponibilidade por variante, marcar esgotado rápido |
+| Slug/link personalizado | Sim (domínio próprio: gopage.bio ou catalogo.com.br) | Sim | Sim ("compartilhe o link da sua loja em qualquer lugar") | Link fixo wa.me/catalog, não personalizável | Igualar — slug é requisito básico |
+| QR Code | Não confirmado no material de marketing | Não confirmado no material de marketing | Não confirmado | Não | Incluir mesmo assim (o escopo já faz) — custo quase zero, combina com a norma da categoria adjacente de link-in-bio mesmo que concorrentes diretos negligenciem isso; potencial diferencial menor |
+| Analytics | Não enfatizado (recurso de SEO/palavra-chave mencionado em vez disso) | Não enfatizado | Sim, analytics detalhado de vendas/clientes | Não | Igualar o escopo de métricas básicas; não sobre-investir, já que mesmo concorrentes financiados mantêm isso raso neste tier |
+| Múltiplos catálogos | Sim, escalonado (1 / 3 / 10 catálogos por plano) | Não confirmado | Não diretamente, mas multicanal | Não | Adiar para tier pós-MVP exatamente como o Gopage faz — valida isso como uma alavanca legítima de tier pago futuro |
+| Pagamentos | Não (tier puro de catálogo + WhatsApp) | Menciona "opções de pagamento" em tier mais alto | Sim, diferencial central (moedas locais + internacionais) | Limitado (algumas regiões) | Explicitamente fora de escopo para o MVP, combina com o próprio tier de entrada do Gopage/Vendizap, não é uma decisão fora da curva |
+| Âncora de preço | R$19,90-39,90/mês | R$79,80/mês | ₦6.500-12.500/mês (~R$40-75) | Grátis (recurso nativo do WhatsApp) | Âncora útil para um eventual tier Pro: o mercado BR se estabiliza em torno de R$20-80/mês para esta categoria |
 
-## Sources
+## Fontes
 
-- [Gopage — Catálogo Digital e planos](https://gopage.bio/) — BR direct competitor, pricing/tiering confirmed (R$19.90-39.90/mo tiers, 1/3/10 catálogos by plan)
+- [Gopage — Catálogo Digital e planos](https://gopage.bio/) — concorrente direto BR, precificação/tiering confirmados (tiers R$19,90-39,90/mês, 1/3/10 catálogos por plano)
 - [Gopage — Planos](https://gopage.bio/planos/)
-- [Vendizap — Plataforma para Vender pelo WhatsApp](https://www.vendizap.com/) — BR direct competitor, stock control and pricing (R$79.80/mo) confirmed
+- [Vendizap — Plataforma para Vender pelo WhatsApp](https://www.vendizap.com/) — concorrente direto BR, controle de estoque e preço (R$79,80/mês) confirmados
 - [Vendizap — Catálogo Online](https://www.vendizap.com/catalogo-online)
-- [Vou Pedir — Catálogos interativos para Venda por WhatsApp](https://www.voupedir.net/) — BR direct competitor, "pedir agora" mechanic confirmed
-- [Catlog — Manage your business without the chaos](https://www.catlog.shop/) — international analog (Nigeria/Africa), shows post-MVP evolution path (payments, analytics, campaigns)
+- [Vou Pedir — Catálogos interativos para Venda por WhatsApp](https://www.voupedir.net/) — concorrente direto BR, mecânica "pedir agora" confirmada
+- [Catlog — Manage your business without the chaos](https://www.catlog.shop/) — análogo internacional (Nigéria/África), mostra o caminho de evolução pós-MVP (pagamentos, analytics, campanhas)
 - [TechCabal — Built around WhatsApp, Catlog wants to improve social commerce in Nigeria](https://techcabal.com/2022/04/07/catlog-wants-to-improve-social-commerce-in-nigeria/)
-- [WhatsApp Business Catalog official help](https://faq.whatsapp.com/405903568419894/) — native feature baseline, confirms 500-item cap and no-cart/chat-only model
+- [Ajuda oficial do Catálogo Business do WhatsApp](https://faq.whatsapp.com/405903568419894/) — linha de base do recurso nativo, confirma o limite de 500 itens e o modelo apenas-chat sem carrinho
 - [whatsform.com — How to use WhatsApp catalog for your products](https://whatsform.com/blog/whatsapp-catalog-products/)
-- [Beacons vs Linktree comparison (Jotform Blog)](https://www.jotform.com/blog/beacons-vs-linktree/) — link-in-bio category norms for slug/QR/analytics
+- [Comparação Beacons vs Linktree (Jotform Blog)](https://www.jotform.com/blog/beacons-vs-linktree/) — normas de categoria link-in-bio para slug/QR/analytics
 - [QRLynx — Link-in-Bio QR Code + Built-in Analytics Guide](https://qrlynx.com/blog/link-in-bio-qr-code-guide)
-- [Yupoo Explained — How China's Photo-Album Trading Sites Work](https://www.replica-jerseys.com/blog/yupoo-explained) — confirms Yupoo is a photo-gallery/catalog tool, not a transactional platform, validating the "Yupoo import" niche pain point
+- [Yupoo Explained — How China's Photo-Album Trading Sites Work](https://www.replica-jerseys.com/blog/yupoo-explained) — confirma que o Yupoo é uma ferramenta de galeria de fotos/catálogo, não uma plataforma transacional, validando o ponto de dor da "importação Yupoo" no nicho
 - [repfindsarchive.com — Yupoo Sellers Guide 2026](https://repfindsarchive.com/blog/yupoo-sellers-guide)
-- General BR footwear-resale sourcing/margin context: [Avacy — Onde Comprar Tênis para Revender](https://www.avacy.com.br/blog/post/onde-comprar-tenis-para-revender.html), [Nuvemshop — Como escolher o melhor fornecedor de tênis](https://www.nuvemshop.com.br/blog/fornecedor-de-tenis/)
+- Contexto geral de sourcing/margem de revenda de calçados BR: [Avacy — Onde Comprar Tênis para Revender](https://www.avacy.com.br/blog/post/onde-comprar-tenis-para-revender.html), [Nuvemshop — Como escolher o melhor fornecedor de tênis](https://www.nuvemshop.com.br/blog/fornecedor-de-tenis/)
 
 ---
-*Feature research for: Brazilian micro-SaaS catalog/storefront for imported soccer cleat resellers (WhatsApp-only checkout)*
-*Researched: 2026-07-10*
+*Pesquisa de funcionalidades para: micro-SaaS brasileiro de catálogo/vitrine para revendedores de chuteiras de futebol importadas (checkout apenas via WhatsApp)*
+*Pesquisado em: 2026-07-10*

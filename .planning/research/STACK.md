@@ -1,161 +1,161 @@
-# Stack Research
+# Pesquisa de Stack
 
-**Domain:** Two-sided micro-SaaS — admin catalog panel + public no-login mobile storefront with WhatsApp checkout handoff (Brazil, imported soccer cleats resale)
-**Researched:** 2026-07-10
-**Confidence:** MEDIUM overall (HIGH on library/version facts pulled directly from npm/official docs; MEDIUM on ecosystem opinions from web search, cross-checked across multiple independent sources)
+**Domínio:** Micro-SaaS de dois lados — painel admin de catálogo + vitrine pública mobile sem login com repasse de checkout via WhatsApp (Brasil, revenda de chuteiras de futebol importadas)
+**Pesquisado em:** 2026-07-10
+**Confiança:** MÉDIA geral (ALTA em fatos de biblioteca/versão obtidos diretamente do npm/documentação oficial; MÉDIA em opiniões de ecossistema obtidas via busca na web, cruzadas entre múltiplas fontes independentes)
 
-## Verdict on the Suggested Stack
+## Veredito sobre a Stack Sugerida
 
-The author's suggestion — **Next.js 14 + Tailwind CSS + Supabase (auth/Postgres/storage) + Vercel** — is directionally correct and should be kept as the architecture shape (one framework, one BaaS, one host). Two things need updating before you start:
+A sugestão do autor — **Next.js 14 + Tailwind CSS + Supabase (auth/Postgres/storage) + Vercel** — está correta na direção e deve ser mantida como o formato da arquitetura (um framework, um BaaS, um host). Duas coisas precisam ser atualizadas antes de começar:
 
-1. **Next.js 14 is two majors behind.** Current stable is **Next.js 16.2.x** (16 shipped Oct 2025; 16.2.10 is latest on npm as of this research). Starting a greenfield project on 14 in mid-2026 means immediately inheriting deprecated APIs (`middleware.ts`, sync `params`/`cookies()`) that you'd have to migrate within months. Start on 16.
-2. **Vercel Hobby (the free tier) is contractually non-commercial.** Vitrino is a revenue-oriented SaaS (freemium, monetization deferred but the product itself is commercial) — this technically requires Vercel **Pro ($20/mo)** for the production deployment per Vercel's own fair-use terms, even with $0 in actual billing today. This changes the "runs at $0/month" assumption in PROJECT.md's Key Decisions and should be flagged to the user explicitly (see What NOT to Use / Confidence Assessment below).
+1. **Next.js 14 está duas majors atrás.** A versão estável atual é **Next.js 16.2.x** (a 16 foi lançada em out/2025; 16.2.10 é a mais recente no npm na data desta pesquisa). Começar um projeto greenfield na 14 em meados de 2026 significa herdar imediatamente APIs depreciadas (`middleware.ts`, `params`/`cookies()` síncronos) que precisariam ser migradas em poucos meses. Comece na 16.
+2. **O Vercel Hobby (o plano gratuito) é contratualmente não-comercial.** Vitrino é um SaaS orientado a receita (freemium, monetização adiada mas o produto em si é comercial) — isso tecnicamente exige o **Vercel Pro ($20/mês)** para o deploy de produção, conforme os próprios termos de uso justo da Vercel, mesmo com $0 em cobrança real hoje. Isso muda a suposição de "roda a $0/mês" nas Key Decisions do PROJECT.md e deve ser sinalizado explicitamente ao usuário (ver O Que NÃO Usar / Avaliação de Confiança abaixo).
 
-Everything else in the suggestion (Tailwind, Supabase for auth+DB+storage, single hosting provider) holds up well against 2026 alternatives and is confirmed below.
+Todo o restante da sugestão (Tailwind, Supabase para auth+DB+storage, provedor único de hospedagem) se sustenta bem contra as alternativas de 2026 e está confirmado abaixo.
 
-## Recommended Stack
+## Stack Recomendada
 
-### Core Technologies
+### Tecnologias Core
 
-| Technology | Version | Purpose | Why Recommended |
+| Tecnologia | Versão | Propósito | Por Que Recomendada |
 |------------|---------|---------|-----------------|
-| Next.js | **16.2.x** (App Router) | Full-stack React framework — admin panel + public storefront in one codebase | Current stable major (superseded 14 in Oct 2025). Turbopack is now the default bundler (2-5x faster builds, up to 10x faster refresh — matters for a solo/small team iterating fast). Most importantly: Next 16's **Cache Components** model flips caching from opt-out to **opt-in** (`"use cache"` directive) — every route is dynamic by default unless you explicitly cache it. This is a direct win for this project: the public storefront's stock state (`critical alert #4` in PROJECT.md — delay must be seconds, never minutes) is correct by default with zero extra sync plumbing, because you simply never add `"use cache"` to that route. |
-| React | **19.2.x** | UI library (bundled dependency of Next 16) | Required by Next 16 (uses React Canary/19.2 features — View Transitions, `useEffectEvent`, `Activity`). Not a separate decision — comes with the Next.js choice. |
-| Tailwind CSS | **4.x** (currently 4.3.x) | Styling, mobile-first responsive design | Tailwind v4 is a rewrite (Oxide engine, CSS-first config via `@theme` in `globals.css`, no `tailwind.config.js` needed by default). `create-next-app@latest` now scaffolds Tailwind v4 out of the box — treat v3 as legacy for a greenfield project. The utility-first, mobile-first breakpoint model (`sm:`/`md:`/`lg:` prefixes = min-width) maps directly onto the "mobile-first, not secondary" mandate for the public storefront. |
-| Supabase (`@supabase/supabase-js` 2.110.x + `@supabase/ssr` 0.12.x) | Postgres + Auth (GoTrue) + Storage, bundled | Backend-as-a-service: database, reseller login, and product photo storage in one project | Confirmed still the strongest 2026 default for a small full-stack SaaS that needs auth+relational-DB+file-storage together without stitching multiple vendors. Row-Level-Security maps cleanly onto the multi-tenant model (each reseller only sees/edits their own products) and, critically, lets the public storefront route read data **without any auth middleware** (PROJECT.md's hard requirement) via a public/anon RLS policy scoped to published products only. `@supabase/ssr` (not the deprecated `auth-helpers-nextjs`) is the current correct package for Next.js App Router cookie-based session handling. |
-| Vercel | Hobby for dev/preview, **Pro ($20/mo) for production** | Hosting, deploy pipeline, image CDN | Still the reference host for Next.js (built by the same team; zero-config; preview URLs per PR are useful for a non-technical stakeholder to review UI). See verdict above on Hobby's non-commercial restriction — budget Pro from day one of production traffic, not as a "scale later" cost. |
+| Next.js | **16.2.x** (App Router) | Framework React full-stack — painel admin + vitrine pública em um único codebase | Major estável atual (sucedeu a 14 em out/2025). O Turbopack agora é o bundler padrão (builds 2-5x mais rápidos, refresh até 10x mais rápido — importante para um solo/pequeno time iterando rápido). Mais importante: o modelo **Cache Components** do Next 16 inverte o cache de opt-out para **opt-in** (diretiva `"use cache"`) — toda rota é dinâmica por padrão, a menos que você explicitamente a cacheie. Isso é uma vantagem direta para este projeto: o estado de estoque da vitrine pública (`alerta crítico #4` no PROJECT.md — o atraso deve ser de segundos, nunca minutos) é correto por padrão sem nenhuma sincronização extra, porque você simplesmente nunca adiciona `"use cache"` nessa rota. |
+| React | **19.2.x** | Biblioteca de UI (dependência empacotada do Next 16) | Exigido pelo Next 16 (usa recursos do React Canary/19.2 — View Transitions, `useEffectEvent`, `Activity`). Não é uma decisão separada — vem junto com a escolha do Next.js. |
+| Tailwind CSS | **4.x** (atualmente 4.3.x) | Estilização, design responsivo mobile-first | O Tailwind v4 é uma reescrita (engine Oxide, config CSS-first via `@theme` no `globals.css`, sem necessidade de `tailwind.config.js` por padrão). O `create-next-app@latest` agora já vem com Tailwind v4 por padrão — trate a v3 como legado para um projeto greenfield. O modelo utility-first e mobile-first de breakpoints (prefixos `sm:`/`md:`/`lg:` = min-width) mapeia diretamente no mandato "mobile-first, não secundário" para a vitrine pública. |
+| Supabase (`@supabase/supabase-js` 2.110.x + `@supabase/ssr` 0.12.x) | Postgres + Auth (GoTrue) + Storage, empacotados | Backend-as-a-service: banco de dados, login do revendedor e armazenamento de fotos de produtos em um único projeto | Confirmado ainda como o padrão mais forte de 2026 para um pequeno SaaS full-stack que precisa de auth+DB-relacional+file-storage juntos, sem costurar múltiplos fornecedores. Row-Level-Security mapeia de forma limpa no modelo multi-tenant (cada revendedor só vê/edita seus próprios produtos) e, criticamente, permite que a rota da vitrine pública leia dados **sem nenhum middleware de autenticação** (requisito rígido do PROJECT.md) via uma política RLS pública/anônima restrita apenas a produtos publicados. `@supabase/ssr` (não o depreciado `auth-helpers-nextjs`) é o pacote correto atual para gerenciamento de sessão baseado em cookies no App Router do Next.js. |
+| Vercel | Hobby para dev/preview, **Pro ($20/mês) para produção** | Hospedagem, pipeline de deploy, CDN de imagens | Ainda é o host de referência para Next.js (construído pelo mesmo time; zero-config; URLs de preview por PR são úteis para um stakeholder não-técnico revisar a UI). Veja o veredito acima sobre a restrição não-comercial do Hobby — orce o Pro desde o primeiro dia de tráfego em produção, não como um custo de "escalar depois". |
 
-### Supporting Libraries
+### Bibliotecas de Suporte
 
-| Library | Version | Purpose | When to Use |
+| Biblioteca | Versão | Propósito | Quando Usar |
 |---------|---------|---------|-------------|
-| `browser-image-compression` | 2.0.2 | Client-side image compression/resize in a Web Worker before upload | Always, on every product photo upload in the admin panel. This is the mechanism that satisfies PROJECT.md's "upload rápido e confiável" + "5MB limit with warning before hard error" requirements — compress to target (e.g. `maxSizeMB: 1`, `maxWidthOrHeight: 1600-1920`) client-side before the file ever leaves the reseller's phone. See dedicated section below. |
-| `sharp` | 0.35.x | Optional server-side re-encode/thumbnailing | Only if you want a defense-in-depth second pass (e.g. a Vercel Route Handler that re-compresses on upload as a safety net for resellers who bypass client compression, or generates a fixed-size thumbnail for the catalog grid). Not required for MVP if client-side compression is enforced — adding it is a deliberate scope decision, not a default. Already a transitive dependency of `next/image`'s built-in optimizer, so no extra infra needed to add it as a Route Handler dependency. |
-| `zod` | 4.4.x | Runtime validation — product form, WhatsApp number format, slug format | Validate reseller-entered data (price as BRL, WhatsApp number in `55DDXXXXXXXXX` format, unique slug pattern) on both client (admin form) and server (Server Action) boundary. |
-| `react-hook-form` + `@hookform/resolvers` | 7.81.x / 5.4.x | Admin form state (product CRUD, store config, WhatsApp config) | Standard pairing with Zod for a non-technical user's forms — gives inline validation feedback (a PROJECT.md requirement: "ações do painel sem feedback visual imediato" is a listed bug to avoid). |
-| `sonner` | 2.0.x | Toast notifications | Directly addresses the "salvar/excluir/marcar esgotado sem feedback visual" bug called out in PROJECT.md. Lightweight, Tailwind-friendly, works well with Server Actions' `useTransition` pending states. |
-| `qrcode` | 1.5.4 | Generate downloadable QR code for the storefront link | Satisfies the "Link personalizável + QR Code para download" requirement — generate client-side or in a tiny Route Handler, no external API/service needed. |
-| `clsx` + `tailwind-merge` | 2.1.x / 3.6.x | Conditional className composition | Needed once you have conditional states (sold-out pill styling, active filter chips, button disabled states) — avoids className string concatenation bugs. |
-| `lucide-react` | latest (1.24.x) | Icon set | Common pairing with Tailwind/shadcn-style UI; consistent stroke-based icons fit the clean admin-panel aesthetic described in PROJECT.md's visual identity section. |
-| `next-themes` | 0.4.x | Only if dark mode is ever needed | Not required by current PROJECT.md scope (fixed brand palette) — list only as a known-good option if a future milestone asks for it. |
+| `browser-image-compression` | 2.0.2 | Compressão/redimensionamento de imagem no lado do cliente em um Web Worker antes do upload | Sempre, em todo upload de foto de produto no painel admin. Este é o mecanismo que satisfaz os requisitos de "upload rápido e confiável" + "limite de 5MB com aviso antes do erro rígido" do PROJECT.md — comprimir para um alvo (ex.: `maxSizeMB: 1`, `maxWidthOrHeight: 1600-1920`) no lado do cliente antes que o arquivo saia do celular do revendedor. Ver seção dedicada abaixo. |
+| `sharp` | 0.35.x | Recodificação/geração de thumbnails opcional no lado do servidor | Apenas se você quiser uma segunda camada de defesa em profundidade (ex.: um Route Handler da Vercel que recomprime no upload como uma rede de segurança para revendedores que contornam a compressão do cliente, ou gera um thumbnail de tamanho fixo para o grid do catálogo). Não é necessário para o MVP se a compressão no cliente for aplicada — adicioná-lo é uma decisão deliberada de escopo, não um padrão. Já é uma dependência transitiva do otimizador embutido do `next/image`, então nenhuma infraestrutura extra é necessária para adicioná-lo como dependência de um Route Handler. |
+| `zod` | 4.4.x | Validação em tempo de execução — formulário de produto, formato de número do WhatsApp, formato de slug | Validar dados inseridos pelo revendedor (preço em BRL, número do WhatsApp no formato `55DDXXXXXXXXX`, padrão de slug único) tanto no cliente (formulário admin) quanto na fronteira do servidor (Server Action). |
+| `react-hook-form` + `@hookform/resolvers` | 7.81.x / 5.4.x | Estado de formulário admin (CRUD de produto, config da loja, config do WhatsApp) | Combinação padrão com Zod para formulários de um usuário não-técnico — dá feedback de validação inline (um requisito do PROJECT.md: "ações do painel sem feedback visual imediato" é um bug listado a ser evitado). |
+| `sonner` | 2.0.x | Notificações toast | Endereça diretamente o bug "salvar/excluir/marcar esgotado sem feedback visual" citado no PROJECT.md. Leve, amigável ao Tailwind, funciona bem com os estados pendentes do `useTransition` das Server Actions. |
+| `qrcode` | 1.5.4 | Gerar QR code para download do link da vitrine | Satisfaz o requisito "Link personalizável + QR Code para download" — gerar no lado do cliente ou em um pequeno Route Handler, sem necessidade de API/serviço externo. |
+| `clsx` + `tailwind-merge` | 2.1.x / 3.6.x | Composição condicional de className | Necessário assim que você tiver estados condicionais (estilo de pílula esgotada, chips de filtro ativos, estados de botão desabilitado) — evita bugs de concatenação de strings de className. |
+| `lucide-react` | mais recente (1.24.x) | Conjunto de ícones | Combinação comum com UI estilo Tailwind/shadcn; ícones consistentes baseados em traço combinam com a estética limpa de painel admin descrita na seção de identidade visual do PROJECT.md. |
+| `next-themes` | 0.4.x | Apenas se o modo escuro for necessário algum dia | Não exigido pelo escopo atual do PROJECT.md (paleta de marca fixa) — listado apenas como uma opção conhecida caso um marco futuro peça isso. |
 
-### Development Tools
+### Ferramentas de Desenvolvimento
 
-| Tool | Purpose | Notes |
+| Ferramenta | Propósito | Notas |
 |------|---------|-------|
-| TypeScript | Type safety across admin/storefront/Server Actions | `create-next-app@latest` defaults to TypeScript-first config in Next 16's simplified scaffold — accept the default. |
-| ESLint (flat config) | Linting | Next 16 removed `next lint`; use ESLint directly (or Biome). `@next/eslint-plugin-next` now defaults to flat config, matching upcoming ESLint v10. Run `npx @next/codemod@canary next-lint-to-eslint-cli .` if you ever migrate an existing 14/15 project. |
-| Supabase CLI | Local dev, migrations, type generation (`supabase gen types typescript`) | Generates typed DB schema for use with `@supabase/supabase-js` — removes a whole class of "field renamed, forgot to update the client" bugs given the non-technical target user has zero tolerance for broken flows. |
-| Vercel CLI / GitHub integration | Preview deployments per PR/branch | Use preview URLs to get non-technical stakeholder sign-off on UI before merging to production. |
+| TypeScript | Segurança de tipos em admin/vitrine/Server Actions | `create-next-app@latest` usa por padrão config TypeScript-first no scaffold simplificado do Next 16 — aceite o padrão. |
+| ESLint (config flat) | Linting | O Next 16 removeu o `next lint`; use o ESLint diretamente (ou Biome). `@next/eslint-plugin-next` agora usa config flat por padrão, alinhando com o próximo ESLint v10. Rode `npx @next/codemod@canary next-lint-to-eslint-cli .` se algum dia migrar um projeto existente de 14/15. |
+| Supabase CLI | Dev local, migrations, geração de tipos (`supabase gen types typescript`) | Gera schema de banco tipado para uso com `@supabase/supabase-js` — remove uma classe inteira de bugs do tipo "campo renomeado, esqueci de atualizar o cliente" dado que o usuário-alvo não-técnico tem zero tolerância a fluxos quebrados. |
+| Vercel CLI / integração GitHub | Deploys de preview por PR/branch | Use URLs de preview para obter aprovação de stakeholder não-técnico sobre a UI antes de mergear para produção. |
 
-## Installation
+## Instalação
 
 ```bash
-# Scaffold (Next 16 default: App Router, TS, Tailwind v4, ESLint flat config)
+# Scaffold (padrão Next 16: App Router, TS, Tailwind v4, ESLint config flat)
 npx create-next-app@latest vitrino --typescript --tailwind --eslint --app
 
 # Supabase
 npm install @supabase/supabase-js @supabase/ssr
 
-# Forms & validation
+# Formulários & validação
 npm install react-hook-form @hookform/resolvers zod
 
-# UI/UX polish
+# Polimento de UI/UX
 npm install sonner clsx tailwind-merge lucide-react qrcode
 
-# Image compression (client-side, primary compression strategy)
+# Compressão de imagem (lado do cliente, estratégia primária de compressão)
 npm install browser-image-compression
 
-# Dev dependencies
-npm install -D sharp   # only if adding server-side re-encode as a second pass
+# Dependências de dev
+npm install -D sharp   # apenas se adicionar recodificação server-side como segunda camada
 ```
 
-## Alternatives Considered
+## Alternativas Consideradas
 
-| Recommended | Alternative | When to Use Alternative |
+| Recomendado | Alternativa | Quando Usar a Alternativa |
 |-------------|-------------|--------------------------|
-| Supabase (bundled auth+DB+storage) | Neon (pure Postgres) + Clerk (auth) + Vercel Blob (storage) | If you specifically want best-in-class serverless Postgres branching (scale-to-zero, instant DB branches per PR) and are willing to integrate 2-3 vendors instead of one. Adds integration surface area with no MVP benefit here — reject for this project. |
-| Supabase | Firebase | Only if this were a NoSQL-friendly, mobile-native app. Vitrino's data (products, sizes, prices, slugs, RLS-scoped multi-tenant catalogs) is inherently relational — Firestore's document model is a worse fit and would fight you on filtering/joins for the storefront's brand/sole/modality filters. |
-| Vercel | Netlify / Cloudflare Pages | Only if the Hobby-tier commercial-use restriction is a hard blocker and the user wants to stay at literal $0 for longer — Cloudflare Pages' free tier has a more permissive commercial-use policy, at the cost of losing Vercel's zero-config Next.js integration (ISR, ISR ergonomics need extra adapter work outside Vercel). Not recommended as default; only revisit if budget is truly $0 non-negotiable. |
-| `browser-image-compression` client-side compression | Supabase Storage image transformations (server-side) | Only once on Supabase Pro ($25/mo) — the transform/Smart CDN feature is **not included in Supabase's free tier** (100 free origin images, then metered). Don't design the MVP assuming this is available. |
-| Dynamic (uncached) storefront rendering for stock freshness | Supabase Realtime (Postgres Changes websockets) | Add later as a progressive enhancement if you want stock pills to update live on a tab a customer already has open for minutes. Not needed to satisfy the "seconds, never minutes" requirement, which a plain dynamic render on each page load/navigation already satisfies with far less code. |
+| Supabase (auth+DB+storage empacotados) | Neon (Postgres puro) + Clerk (auth) + Vercel Blob (storage) | Se você especificamente quer o melhor branching de Postgres serverless da categoria (scale-to-zero, branches de DB instantâneos por PR) e está disposto a integrar 2-3 fornecedores em vez de um. Adiciona área de integração sem benefício para o MVP aqui — rejeitar para este projeto. |
+| Supabase | Firebase | Apenas se este fosse um app NoSQL-friendly, mobile-nativo. Os dados do Vitrino (produtos, tamanhos, preços, slugs, catálogos multi-tenant escopados por RLS) são inerentemente relacionais — o modelo de documentos do Firestore seria um encaixe pior e brigaria com você nos filtros/joins de marca/solado/modalidade da vitrine. |
+| Vercel | Netlify / Cloudflare Pages | Apenas se a restrição de uso comercial do tier Hobby for um bloqueador rígido e o usuário quiser ficar em $0 literal por mais tempo — o tier gratuito do Cloudflare Pages tem uma política de uso comercial mais permissiva, ao custo de perder a integração zero-config da Vercel com Next.js (ISR, ergonomia de ISR exigem trabalho extra de adaptador fora da Vercel). Não recomendado como padrão; revisitar apenas se o orçamento for realmente $0 inegociável. |
+| Compressão de imagem no lado do cliente com `browser-image-compression` | Transformações de imagem do Supabase Storage (lado do servidor) | Apenas no Supabase Pro ($25/mês) — o recurso de transform/Smart CDN **não está incluído no tier gratuito** do Supabase (100 imagens de origem grátis, depois medido). Não desenhe o MVP assumindo que isso está disponível. |
+| Renderização dinâmica (sem cache) da vitrine para frescor de estoque | Supabase Realtime (websockets do Postgres Changes) | Adicionar depois como um aprimoramento progressivo se você quiser que as pílulas de estoque atualizem ao vivo em uma aba que um cliente já tem aberta por minutos. Não é necessário para satisfazer o requisito "segundos, nunca minutos", que uma renderização dinâmica simples a cada carregamento/navegação de página já satisfaz com muito menos código. |
 
-## What NOT to Use
+## O Que NÃO Usar
 
-| Avoid | Why | Use Instead |
+| Evitar | Por Quê | Usar Em Vez |
 |-------|-----|--------------|
-| Next.js 14 as the starting version | Two majors behind; you'd inherit `middleware.ts` (deprecated), sync `params`/`cookies()` (removed in 16), and the old implicit-caching model that actively works against the "stock must be fresh" requirement. Migrating mid-build costs more than starting current. | Next.js 16.2.x |
-| Vercel Hobby for the **production** deployment | Per Vercel's own fair-use guidelines, Hobby is restricted to non-commercial personal use; a freemium SaaS with paying resellers (even if $0 is charged in MVP) falls outside those terms. | Vercel Pro ($20/mo) for production; Hobby is fine for personal dev/preview projects only |
-| `next/legacy/image` or `images.domains` config | Deprecated in Next 16 in favor of `next/image` + `images.remotePatterns` (needed anyway to whitelist your Supabase Storage public URL host) | `next/image` with `images.remotePatterns` |
-| Relying on Supabase's paid image transform API for MVP compression | Not part of the free tier; designing the upload flow around a feature you haven't budgeted for will silently break once traffic/usage triggers metering | `browser-image-compression` client-side (free, works today) |
-| Programmatic `window.open()` for the WhatsApp CTA | In-app browsers (Instagram/Facebook webviews — the exact channels PROJECT.md names as primary traffic sources) can block or mishandle JS-triggered popups; Instagram's in-app browser had a specific bug failing to hand off `wa.me` links to the native app (fixed as of Instagram v354, Oct 2024, but older client versions remain in the wild in Brazil) | A real `<a href="https://wa.me/...">` anchor tag — always test explicitly from inside Instagram Stories/bio-link webviews before shipping, not just in a regular mobile browser |
-| `whatsapp://send` or `intent://` URL schemes for the primary CTA | Reserved for in-app deep-linking scenarios (native app calling another native app); unreliable when the click originates from a web page opened inside another app's webview | `https://wa.me/<digits>?text=<encodeURIComponent(message)>` — works uniformly across iOS, Android, desktop, and WhatsApp Web |
-| Building the freemium billing/gateway integration now | Explicitly out of scope for this milestone per PROJECT.md | Nothing — defer entirely, don't pre-build a Stripe/gateway abstraction "just in case" |
+| Next.js 14 como versão inicial | Duas majors atrás; você herdaria `middleware.ts` (depreciado), `params`/`cookies()` síncronos (removidos na 16), e o antigo modelo de cache implícito que trabalha ativamente contra o requisito "estoque deve estar fresco". Migrar no meio do build custa mais do que começar atualizado. | Next.js 16.2.x |
+| Vercel Hobby para o deploy de **produção** | Segundo as próprias diretrizes de uso justo da Vercel, o Hobby é restrito a uso pessoal não-comercial; um SaaS freemium com revendedores pagantes (mesmo que $0 seja cobrado no MVP) cai fora desses termos. | Vercel Pro ($20/mês) para produção; Hobby serve apenas para projetos pessoais de dev/preview |
+| `next/legacy/image` ou config `images.domains` | Depreciado no Next 16 em favor de `next/image` + `images.remotePatterns` (necessário de qualquer forma para permitir o host de URL pública do seu Supabase Storage) | `next/image` com `images.remotePatterns` |
+| Depender da API paga de transformação de imagem do Supabase para compressão no MVP | Não faz parte do tier gratuito; desenhar o fluxo de upload em torno de um recurso que você não orçou vai quebrar silenciosamente assim que o tráfego/uso disparar a medição | `browser-image-compression` no lado do cliente (grátis, funciona hoje) |
+| `window.open()` programático para o CTA do WhatsApp | Navegadores in-app (webviews do Instagram/Facebook — exatamente os canais que o PROJECT.md nomeia como fontes primárias de tráfego) podem bloquear ou lidar mal com popups disparados via JS; o navegador in-app do Instagram teve um bug específico falhando ao repassar links `wa.me` para o app nativo (corrigido a partir do Instagram v354, out/2024, mas versões mais antigas do cliente ainda circulam no Brasil) | Uma tag `<a href="https://wa.me/...">` real — sempre teste explicitamente de dentro de webviews de Stories/link-na-bio do Instagram antes de lançar, não apenas em um navegador mobile comum |
+| Esquemas de URL `whatsapp://send` ou `intent://` para o CTA primário | Reservados para cenários de deep-linking in-app (um app nativo chamando outro app nativo); pouco confiáveis quando o clique se origina de uma página web aberta dentro do webview de outro app | `https://wa.me/<digitos>?text=<encodeURIComponent(mensagem)>` — funciona uniformemente em iOS, Android, desktop e WhatsApp Web |
+| Construir a integração de billing/gateway freemium agora | Explicitamente fora de escopo para este marco conforme o PROJECT.md | Nada — adiar completamente, não pré-construir uma abstração Stripe/gateway "só por precaução" |
 
-## Stack Patterns by Variant
+## Padrões de Stack por Variante
 
-**If the public storefront route (`/loja/[slug]`) needs to survive a traffic spike (e.g. a reseller goes viral on a story):**
-- Keep it fully dynamic per this doc's default recommendation (no `"use cache"`), but add Vercel's Data Cache / CDN caching selectively only for the truly static parts (store logo, brand colors) via a short, explicit `cacheLife` profile — never cache the stock-bearing product list.
-- Because caching in Next 16 is opt-in per Cache Components, this is a targeted addition later, not a rearchitecture.
+**Se a rota da vitrine pública (`/loja/[slug]`) precisar sobreviver a um pico de tráfego (ex.: um revendedor viraliza em uma story):**
+- Mantenha totalmente dinâmica seguindo a recomendação padrão deste documento (sem `"use cache"`), mas adicione o Data Cache/CDN caching da Vercel seletivamente apenas para as partes verdadeiramente estáticas (logo da loja, cores da marca) via um perfil `cacheLife` curto e explícito — nunca cacheie a lista de produtos que carrega estoque.
+- Como o cache no Next 16 é opt-in por Cache Components, essa é uma adição pontual mais tarde, não uma rearquitetura.
 
-**If you later add the "sold-out live update on an open tab" nice-to-have:**
-- Layer in Supabase Realtime Postgres Changes scoped with `select` column filtering (only `status`/`quantity` columns, not full rows) to keep payload/connection overhead low — this is additive, not a replacement for the default dynamic-render approach.
+**Se você adicionar depois o "nice-to-have" de atualização ao vivo de esgotado em uma aba aberta:**
+- Adicione o Supabase Realtime Postgres Changes com filtragem de colunas via `select` (apenas colunas `status`/`quantity`, não linhas completas) para manter baixo o overhead de payload/conexão — isso é aditivo, não um substituto para a abordagem padrão de renderização dinâmica.
 
-**If budget must be literal $0 (no Vercel Pro) for the initial validation phase:**
-- Explicitly surface this tradeoff to the user rather than silently defaulting to Hobby — either accept the ToS risk short-term with "dezenas" of users (low visibility, arguably tolerable for a soft launch) and plan to upgrade before any real marketing push, or move hosting to Cloudflare Pages and accept extra Next.js adapter friction. Do not silently plan around Hobby without the user acknowledging the tradeoff.
+**Se o orçamento precisar ser $0 literal (sem Vercel Pro) para a fase de validação inicial:**
+- Surface explicitamente esse trade-off ao usuário em vez de silenciosamente usar o Hobby por padrão — ou aceite o risco de ToS a curto prazo com "dezenas" de usuários (baixa visibilidade, arguivelmente tolerável para um soft launch) e planeje fazer upgrade antes de qualquer empurrão de marketing real, ou mude a hospedagem para o Cloudflare Pages e aceite o atrito extra de adaptador do Next.js. Não planeje silenciosamente em torno do Hobby sem o usuário reconhecer o trade-off.
 
-## Version Compatibility
+## Compatibilidade de Versões
 
-| Package A | Compatible With | Notes |
+| Pacote A | Compatível Com | Notas |
 |-----------|------------------|-------|
-| next@16.2.x | react@19.2.x, react-dom@19.2.x | Next 16 requires these; `create-next-app@latest` pins them automatically. |
-| next@16.2.x | Node.js 20.9+ | Node 18 is no longer supported by Next 16 — check Vercel project settings / local `.nvmrc` before scaffolding. |
-| tailwindcss@4.x | next@16.2.x (via `create-next-app --tailwind`) | v4's CSS-first config (`@theme` in `globals.css`) is what `create-next-app` wires up by default now — don't manually add a `tailwind.config.js` expecting v3 semantics. |
-| @supabase/ssr@0.12.x | next@16.2.x (App Router, Server Actions/Route Handlers) | This is the current, non-deprecated package for cookie-based session handling in the App Router; do not use the old `@supabase/auth-helpers-nextjs` (deprecated). |
-| browser-image-compression@2.0.2 | Any bundler (webpack or Turbopack) | Runs in a Web Worker by default (`useWebWorker: true`); no Turbopack-specific issues found. |
+| next@16.2.x | react@19.2.x, react-dom@19.2.x | O Next 16 exige essas versões; `create-next-app@latest` as fixa automaticamente. |
+| next@16.2.x | Node.js 20.9+ | O Node 18 não é mais suportado pelo Next 16 — verifique as configurações do projeto na Vercel/`.nvmrc` local antes de fazer o scaffold. |
+| tailwindcss@4.x | next@16.2.x (via `create-next-app --tailwind`) | A config CSS-first da v4 (`@theme` no `globals.css`) é o que o `create-next-app` conecta por padrão agora — não adicione manualmente um `tailwind.config.js` esperando a semântica da v3. |
+| @supabase/ssr@0.12.x | next@16.2.x (App Router, Server Actions/Route Handlers) | Este é o pacote atual e não depreciado para gerenciamento de sessão baseado em cookies no App Router; não use o antigo `@supabase/auth-helpers-nextjs` (depreciado). |
+| browser-image-compression@2.0.2 | Qualquer bundler (webpack ou Turbopack) | Roda em um Web Worker por padrão (`useWebWorker: true`); nenhum problema específico do Turbopack encontrado. |
 
-## Image Upload / Compression Strategy (detailed, per downstream consumer request)
+## Estratégia de Upload/Compressão de Imagem (detalhada, a pedido do consumidor downstream)
 
-1. **Client-side compression is the primary and mandatory step**, not an optimization nice-to-have — it directly implements PROJECT.md's "upload rápido e confiável" and 5MB-with-early-warning requirements, and it's the only free option since Supabase's server-side image transform is a paid feature.
-   - Library: `browser-image-compression` (Web Worker-based, doesn't block the UI thread on a mid-range Android phone).
-   - Target: `maxSizeMB: 1`, `maxWidthOrHeight: 1600`–`1920`, keep aspect ratio, output JPEG/WebP.
-   - Show compression progress + resulting file size in the UI (toast/inline) before the actual network upload starts, so the reseller isn't staring at a frozen "Salvar" button.
-   - Enforce the 5MB **original file** limit before even attempting compression (reject with a clear message, per the "bug catalog" item #6 in PROJECT.md), so a 40MB raw phone photo doesn't hang the Web Worker.
-2. **Upload target:** Supabase Storage bucket, RLS-scoped so a reseller can only write into their own folder path (`{reseller_id}/{product_id}/...`), served via Supabase's public bucket URL.
-3. **Display-side optimization:** `next/image` with `images.remotePatterns` pointed at the Supabase Storage public host — this gives responsive `srcset`, AVIF/WebP negotiation, and lazy loading on the storefront grid for free, independent of whether Supabase's paid transform API is enabled.
-4. **Optional second pass (not MVP-required):** a Vercel Route Handler using `sharp` to re-encode/normalize on the server as a safety net against resellers who somehow bypass client compression (e.g. API misuse) — treat as a stretch goal, not a blocker.
-5. **Fallback image requirement:** PROJECT.md explicitly calls out "imagem sem fallback visual quando a URL quebra" as a known bug to avoid — use `next/image`'s `onError` (client component wrapper) to swap in a placeholder, since a broken photo on a catalog card kills trust in a purchase-intent moment.
+1. **A compressão no lado do cliente é a etapa primária e obrigatória**, não uma otimização opcional — ela implementa diretamente os requisitos de "upload rápido e confiável" e o limite de 5MB com aviso antecipado do PROJECT.md, e é a única opção gratuita já que a transformação de imagem server-side do Supabase é um recurso pago.
+   - Biblioteca: `browser-image-compression` (baseada em Web Worker, não bloqueia a thread de UI em um celular Android intermediário).
+   - Alvo: `maxSizeMB: 1`, `maxWidthOrHeight: 1600`–`1920`, mantendo a proporção, saída JPEG/WebP.
+   - Mostrar progresso de compressão + tamanho de arquivo resultante na UI (toast/inline) antes que o upload de rede de fato comece, para que o revendedor não fique olhando para um botão "Salvar" congelado.
+   - Aplicar o limite de 5MB do arquivo **original** antes mesmo de tentar comprimir (rejeitar com mensagem clara, conforme o item #6 do "catálogo de bugs" do PROJECT.md), para que uma foto crua de 40MB do celular não trave o Web Worker.
+2. **Alvo do upload:** bucket do Supabase Storage, escopado por RLS de forma que um revendedor só possa escrever no seu próprio caminho de pasta (`{reseller_id}/{product_id}/...`), servido via URL pública de bucket do Supabase.
+3. **Otimização no lado da exibição:** `next/image` com `images.remotePatterns` apontando para o host público do Supabase Storage — isso dá `srcset` responsivo, negociação AVIF/WebP e lazy loading no grid da vitrine de graça, independente de a API paga de transformação do Supabase estar habilitada ou não.
+4. **Segunda camada opcional (não exigida no MVP):** um Route Handler da Vercel usando `sharp` para recodificar/normalizar no servidor como uma rede de segurança contra revendedores que de alguma forma contornam a compressão do cliente (ex.: uso indevido de API) — tratar como meta esticada, não um bloqueador.
+5. **Requisito de imagem de fallback:** o PROJECT.md cita explicitamente "imagem sem fallback visual quando a URL quebra" como um bug conhecido a evitar — use o `onError` do `next/image` (componente cliente wrapper) para trocar por um placeholder, já que uma foto quebrada em um card de catálogo mata a confiança em um momento de intenção de compra.
 
-## WhatsApp Link Construction (detailed, per downstream consumer request)
+## Construção do Link do WhatsApp (detalhada, a pedido do consumidor downstream)
 
 ```ts
-// Server-side or client-side helper — pure function, easy to unit test
+// Helper server-side ou client-side — função pura, fácil de testar unitariamente
 function buildWhatsAppLink(phoneE164Digits: string, message: string): string {
-  // phoneE164Digits: digits only, country code included, no "+", no spaces — e.g. "5511999999999"
-  const encodedMessage = encodeURIComponent(message); // NOT encodeURI — must escape reserved chars too
+  // phoneE164Digits: apenas dígitos, código do país incluído, sem "+", sem espaços — ex.: "5511999999999"
+  const encodedMessage = encodeURIComponent(message); // NÃO encodeURI — precisa escapar caracteres reservados também
   return `https://wa.me/${phoneE164Digits}?text=${encodedMessage}`;
 }
 ```
 
-- **Format:** `https://wa.me/<digits>?text=<encoded>` is the canonical, cross-platform format (iOS, Android, desktop, WhatsApp Web) — this is what PROJECT.md's constraint "toda mensagem do WhatsApp precisa passar por `encodeURIComponent`" already anticipates; keep that as a hard rule, not a suggestion.
-- **Phone normalization:** validate/normalize the reseller's stored WhatsApp number to strict `55DDXXXXXXXXX` digits-only E.164-style format *once*, at save-time in the store-config form (this is PROJECT.md bug-catalog item #7) — don't re-derive/strip formatting at click-time in the storefront, since that's the last place you want a silent bug.
-- **Rendering:** always a real `<a href={waLink}>` element, not a JS `onClick` handler calling `window.open` or `router.push` — this is the single highest-leverage reliability fix for the in-app-browser cases PROJECT.md flags as the traffic source (Instagram Stories/bio links, WhatsApp-shared links).
-- **Testing matrix:** Android Chrome, Android Samsung Internet, iOS Safari, iOS Instagram in-app browser, iOS WhatsApp in-app browser (when the storefront link itself was shared inside WhatsApp) — with and without the country code / with accented product names (ã, ç, é) in the message — this matches PROJECT.md's own "testar exaustivamente" alert almost verbatim.
-- **Never build the message string with the size/price interpolated *before* encoding one field but not another** — construct the full template string first, then run `encodeURIComponent` once over the whole message, to avoid double-encoding or partially-encoded output.
+- **Formato:** `https://wa.me/<digitos>?text=<encoded>` é o formato canônico e multiplataforma (iOS, Android, desktop, WhatsApp Web) — é isso que a restrição "toda mensagem do WhatsApp precisa passar por `encodeURIComponent`" do PROJECT.md já antecipa; mantenha isso como regra rígida, não sugestão.
+- **Normalização de telefone:** validar/normalizar o número de WhatsApp armazenado do revendedor para o formato rígido `55DDXXXXXXXXX` apenas-dígitos estilo E.164 *uma vez*, no momento de salvar no formulário de config da loja (este é o item #7 do catálogo de bugs do PROJECT.md) — não re-derive/remova formatação no momento do clique na vitrine, já que esse é o último lugar onde você quer um bug silencioso.
+- **Renderização:** sempre um elemento `<a href={waLink}>` real, não um handler `onClick` de JS chamando `window.open` ou `router.push` — este é o ajuste de confiabilidade de maior alavancagem para os casos de navegador in-app que o PROJECT.md sinaliza como fonte de tráfego (Stories/links na bio do Instagram, links compartilhados via WhatsApp).
+- **Matriz de teste:** Android Chrome, Android Samsung Internet, iOS Safari, iOS Instagram in-app browser, iOS WhatsApp in-app browser (quando o próprio link da vitrine foi compartilhado dentro do WhatsApp) — com e sem o código do país / com nomes de produto acentuados (ã, ç, é) na mensagem — isso combina quase literalmente com o próprio alerta de "testar exaustivamente" do PROJECT.md.
+- **Nunca construa a string da mensagem interpolando o tamanho/preço *antes* de codificar um campo mas não outro** — construa a string completa do template primeiro, depois rode `encodeURIComponent` uma única vez sobre a mensagem inteira, para evitar codificação dupla ou saída parcialmente codificada.
 
-## Stock Sync Strategy (detailed, per downstream consumer request)
+## Estratégia de Sincronização de Estoque (detalhada, a pedido do consumidor downstream)
 
-- **Default/MVP approach:** render the public storefront as a fully dynamic (uncached) Server Component reading straight from Supabase on every request/navigation. Next.js 16's Cache Components make this the *default* behavior (you'd have to opt in to caching with `"use cache"` to break it) — so this requires no special sync mechanism, just discipline not to cache that route. This satisfies "delay máximo de segundos, nunca minutos" trivially, since there's no cache to go stale in the first place.
-- **Do not reach for Supabase Realtime/websockets by default** — it solves a problem this MVP doesn't have yet (live-updating a tab a customer already has open) at the cost of publication config, subscription lifecycle management, and reconnection handling that a non-technical solo builder doesn't need to carry for a "dezenas de revendedores" launch.
-- **Add Realtime later, scoped narrowly** (subscribe only to `status`/`quantity` columns via `select` filtering) if user feedback shows customers leaving a storefront tab open and hitting stale "available" pills.
+- **Abordagem padrão/MVP:** renderizar a vitrine pública como um Server Component totalmente dinâmico (sem cache) lendo diretamente do Supabase a cada requisição/navegação. Os Cache Components do Next.js 16 tornam esse o comportamento *padrão* (você teria que optar por cache com `"use cache"` para quebrar isso) — então isso não requer nenhum mecanismo especial de sincronização, apenas disciplina para não cachear essa rota. Isso satisfaz "delay máximo de segundos, nunca minutos" trivialmente, já que não há cache algum para ficar obsoleto em primeiro lugar.
+- **Não recorra ao Supabase Realtime/websockets por padrão** — isso resolve um problema que este MVP ainda não tem (atualizar ao vivo uma aba que um cliente já tem aberta) ao custo de configuração de publicação, gerenciamento de ciclo de vida de subscrição e tratamento de reconexão que um construtor solo não-técnico não precisa carregar para um lançamento de "dezenas de revendedores".
+- **Adicione o Realtime depois, escopado de forma restrita** (subscrever apenas às colunas `status`/`quantity` via filtragem `select`) se o feedback do usuário mostrar clientes deixando uma aba de vitrine aberta e vendo pílulas de "disponível" obsoletas.
 
-## Sources
+## Fontes
 
-- npm registry (direct `npm view`, HIGH confidence — live package metadata): `next@16.2.10`, `react@19.2.7`, `tailwindcss@4.3.2`, `@supabase/supabase-js@2.110.2`, `@supabase/ssr@0.12.0`, `browser-image-compression@2.0.2`, `sharp@0.35.3`, `qrcode@1.5.4`, `zod@4.4.3`, `react-hook-form@7.81.0`, `@hookform/resolvers@5.4.0`, `lucide-react@1.24.0`, `clsx@2.1.1`, `tailwind-merge@3.6.0`, `next-themes@0.4.6`, `sonner@2.0.7`, `zustand@5.0.14`
-- [Next.js 16 blog announcement](https://nextjs.org/blog/next-16) — official, fetched directly; caching model, Turbopack default, breaking changes, version requirements (MEDIUM confidence per source-hierarchy rules, cross-checked against npm registry version)
-- [Vercel Hobby Plan docs](https://vercel.com/docs/plans/hobby) — official, fetched directly; confirms Hobby's non-commercial restriction and free-tier limits (MEDIUM confidence, cross-checked against web search results)
-- Web search (multiple independent results cross-checked, MEDIUM confidence): Supabase vs Neon vs Firebase 2026 comparisons; Supabase free-tier storage/image-transformation pricing; client-side image compression best practices; wa.me link construction and encoding guidance; Supabase Realtime Postgres Changes docs; Instagram in-app-browser wa.me handoff bug and fix date
+- Registro npm (`npm view` direto, confiança ALTA — metadados de pacote ao vivo): `next@16.2.10`, `react@19.2.7`, `tailwindcss@4.3.2`, `@supabase/supabase-js@2.110.2`, `@supabase/ssr@0.12.0`, `browser-image-compression@2.0.2`, `sharp@0.35.3`, `qrcode@1.5.4`, `zod@4.4.3`, `react-hook-form@7.81.0`, `@hookform/resolvers@5.4.0`, `lucide-react@1.24.0`, `clsx@2.1.1`, `tailwind-merge@3.6.0`, `next-themes@0.4.6`, `sonner@2.0.7`, `zustand@5.0.14`
+- [Anúncio oficial do blog do Next.js 16](https://nextjs.org/blog/next-16) — oficial, obtido diretamente; modelo de cache, Turbopack padrão, mudanças que quebram compatibilidade, requisitos de versão (confiança MÉDIA conforme regras de hierarquia de fontes, cruzada com a versão do registro npm)
+- [Documentação do Plano Hobby da Vercel](https://vercel.com/docs/plans/hobby) — oficial, obtida diretamente; confirma a restrição não-comercial do Hobby e os limites do tier gratuito (confiança MÉDIA, cruzada com resultados de busca na web)
+- Busca na web (múltiplos resultados independentes cruzados, confiança MÉDIA): comparações Supabase vs Neon vs Firebase em 2026; preços de storage/transformação de imagem no tier gratuito do Supabase; melhores práticas de compressão de imagem no lado do cliente; orientação de construção e codificação de links wa.me; documentação do Supabase Realtime Postgres Changes; bug e data de correção do repasse wa.me no navegador in-app do Instagram
 
 ---
-*Stack research for: Vitrino — Brazilian reseller catalog/storefront micro-SaaS*
-*Researched: 2026-07-10*
+*Pesquisa de stack para: Vitrino — micro-SaaS brasileiro de catálogo/vitrine para revendedores*
+*Pesquisado em: 2026-07-10*

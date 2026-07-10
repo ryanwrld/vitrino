@@ -1,315 +1,315 @@
-# Project Research Summary
+# Resumo da Pesquisa do Projeto
 
-**Project:** Vitrino — Brazilian micro-SaaS catalog/storefront for imported soccer cleat resellers  
-**Domain:** Two-sided mobile-first SaaS (admin panel + public no-login storefront) with WhatsApp order handoff  
-**Researched:** 2026-07-10  
-**Confidence:** MEDIUM (HIGH on technology facts, MEDIUM on features/architecture patterns, MEDIUM-HIGH on pitfalls based on competitive research + UX best practices)
-
----
-
-## Executive Summary
-
-Vitrino is a marketplace coordination tool for non-technical resellers in Brazil's competitive soccer-cleat resale niche. Success depends entirely on one conversion moment: a customer landing on a storefront link (shared via Instagram/WhatsApp), selecting a size, and tapping "order now" to open WhatsApp with a pre-filled message. Any friction in that flow kills the product — and research confirms three overlapping risks that must drive early phase sequencing: (1) the WhatsApp deep link is surprisingly brittle (phone formatting, encoding, in-app-browser compatibility), (2) multi-tenant isolation via RLS is powerful but silent-when-broken, and (3) the public storefront must never be gated by auth middleware, which is a structural guarantee in Next.js only if enforced at the routing level, not in code.
-
-The recommended stack (Next.js 16 + Supabase + Vercel Pro, **not** the originally suggested v14 + Hobby) is modern, cost-appropriate for the "dezenas" launch scale, and aligns with how mature competitors in this category (Gopage, Vendizap) bootstrap. The feature scope is well-validated against competitors and neither over- nor under-scoped for MVP. The architecture follows proven multi-tenant patterns but imposes strict structural constraints (route isolation, RLS-first data model, client-side link construction) that must be embedded during foundation phases, not retrofitted.
-
-**Bottom line for roadmap:** The dependency chain is deep (auth → RLS data layer → admin CRUD → storefront → WhatsApp link generation → metrics). Each phase must verify specific pitfalls before the next phase begins. Defer nothing about the WhatsApp link flow to "refinement later" — it's the non-negotiable core, and testing it exhaustively (Brazil-specific phone formats, accented product names, Android/iOS/in-app browsers) is a blocker for launch readiness.
+**Projeto:** Vitrino — micro-SaaS brasileiro de catálogo/vitrine para revendedores de chuteiras de futebol importadas
+**Domínio:** SaaS mobile-first de dois lados (painel admin + vitrine pública sem login) com repasse de pedido via WhatsApp
+**Pesquisado em:** 2026-07-10
+**Confiança:** MÉDIA (ALTA em fatos de tecnologia, MÉDIA em padrões de funcionalidades/arquitetura, MÉDIA-ALTA em armadilhas baseado em pesquisa competitiva + melhores práticas de UX)
 
 ---
 
-## Key Findings
+## Resumo Executivo
 
-### Recommended Stack
+Vitrino é uma ferramenta de coordenação de mercado para revendedores não-técnicos no nicho competitivo de revenda de chuteiras de futebol no Brasil. O sucesso depende inteiramente de um momento de conversão: um cliente chegando em um link de vitrine (compartilhado via Instagram/WhatsApp), selecionando um tamanho, e tocando em "pedir agora" para abrir o WhatsApp com uma mensagem pré-preenchida. Qualquer atrito nesse fluxo mata o produto — e a pesquisa confirma três riscos sobrepostos que devem guiar o sequenciamento inicial das fases: (1) o link profundo do WhatsApp é surpreendentemente frágil (formatação de telefone, codificação, compatibilidade com navegador in-app), (2) o isolamento multi-tenant via RLS é poderoso mas silencioso quando quebrado, e (3) a vitrine pública nunca deve ser bloqueada por middleware de auth, o que é uma garantia estrutural no Next.js apenas se aplicado no nível de roteamento, não no código.
 
-Start with **Next.js 16.2.x + React 19.2.x + Tailwind CSS 4.x + Supabase + Vercel Pro ($20/mo)**.
+A stack recomendada (Next.js 16 + Supabase + Vercel Pro, **não** a v14 + Hobby originalmente sugerida) é moderna, apropriada em custo para a escala de lançamento de "dezenas", e alinha-se com como concorrentes maduros nesta categoria (Gopage, Vendizap) fizeram bootstrap. O escopo de funcionalidades está bem validado contra concorrentes e não está nem super nem sub-escopado para o MVP. A arquitetura segue padrões multi-tenant comprovados mas impõe restrições estruturais rígidas (isolamento de rotas, modelo de dados RLS-first, construção de link no lado do cliente) que devem ser embutidas durante as fases de fundação, não retrofitadas.
 
-The original spec recommended Next.js 14, which is two majors behind (current stable: 16.2.10 as of this research). Starting on 14 means immediately inheriting deprecated APIs and migrating them within months. More critically: Next 16's **Cache Components** model (opt-in caching via `"use cache"` directive) makes the public storefront dynamic-by-default, which is perfect for the project's critical requirement (stock freshness within seconds, never minutes). With 14, the implicit caching model works against this requirement.
-
-The original spec used Vercel Hobby (free), which violates Vercel's own fair-use terms for commercial products (Vitrino is revenue-oriented even if pre-monetization). This must be flagged: Vercel Pro ($20/mo) is the correct production tier from day one.
-
-**Core technologies with rationale:**
-
-- **Next.js 16.2.x** (App Router) — Full-stack React. Turbopack default (2-5× faster builds). Cache Components model gives stock freshness by default.
-- **React 19.2.x** — Required by Next 16; bundled dependency, not a separate decision.
-- **Tailwind CSS 4.x** — CSS-first config, mobile-first breakpoints (matches "mobile-first storefront" mandate). Default scaffold from `create-next-app@latest`.
-- **Supabase** (@supabase/supabase-js 2.110.x + @supabase/ssr 0.12.x) — Postgres + Auth (email/password) + Storage in one project. Row-Level-Security (RLS) maps cleanly to multi-tenant isolation. Anon-key for public storefront reads avoids auth middleware on that route.
-- **Vercel (Pro tier)** — Zero-config Next.js hosting, edge middleware for `/admin` auth checking, image CDN.
-- **browser-image-compression (2.0.2)** — Mandatory, not optional. Compress client-side before upload to meet "upload rápido" + 5MB limit requirements. Supabase's server-side Image Transformations are Pro-plan only (not free tier), so client-side is the only MVP-viable approach.
-- **Supporting:** zod (validation), react-hook-form (forms), sonner (toast feedback), qrcode (QR generation), clsx/tailwind-merge (conditional styling), lucide-react (icons)
-
-See STACK.md for detailed library versions, installation instructions, and integration patterns.
-
-### Expected Features
-
-Features are well-scoped and validated against three overlapping reference categories: BR catalog-tools (Gopage, Vendizap, Vou Pedir), global social-commerce tools (Catlog, WhatsApp Business Catalog), and link-in-bio tools (Linktree, Beacons). Competitor analysis confirms the niche has converged on "catalog + WhatsApp button, no payment, no cart" at the entry tier — exactly where Vitrino's MVP sits.
-
-**Table stakes (users expect these — missing any kills product viability):**
-
-- Product CRUD with photos, price, sizes/variants
-- Size selection before order action
-- One-tap "order now" opening WhatsApp pre-filled
-- Out-of-stock indication per variant
-- Shareable link + basic branding
-- Mobile-first responsive storefront
-- Filters (brand, sole type, modality)
-- Custom slug for sharing
-- QR code for link
-- Basic visit/click metrics
-- Simple email/password signup (no OAuth)
-
-**Should have (differentiators — competitive advantage once MVP validates):**
-
-- Niche-specific taxonomy (sole type, modality, brand as first-class fields)
-- Portuguese-first, BRL-native UX
-- Yupoo import assist (highest-leverage niche-specific feature)
-- Duplicate product for variant creation
-- Multiple catalogs (pronta entrega vs sob encomenda)
-
-**Defer entirely (v2+ or never):**
-
-- Payment gateway/checkout — actively counter to value prop
-- Full order CRM — duplicates WhatsApp itself
-- Real-time inventory sync — Yupoo has no API
-- Multi-vendor/team accounts — target is solo reseller
-- AI product descriptions — short, formulaic here
-- WhatsApp Business API integration — disproportionate for MVP
-
-See FEATURES.md for detailed dependency chain and competitor analysis.
-
-### Architecture Approach
-
-Use shared-schema multi-tenancy with RLS-enforced isolation (one Postgres schema, multiple resellers, row-level policies prevent cross-tenant reads/writes). This is simpler than schema-per-tenant at "dezenas" scale and cheaper on Supabase free tier.
-
-Two authentication domains run in the same codebase but are strictly separated: (1) `/admin/**` routes are authenticated (reseller login) and protected by Next.js middleware, (2) `/loja/[slug]` is public (no auth check ever) and served via Supabase anon key. The middleware matcher must be scoped to `/admin/:path*` only — a broad matcher with an allowlist of public exceptions is a footgun that regresses silently.
-
-Three architectural patterns matter: (1) Shared-schema RLS with owner isolation, (2) Slug-resolved public rendering using anon-key client, (3) Mutation-triggered freshness (no cache on storefront).
-
-**Major components:**
-
-1. Admin auth — Supabase email/password + Next.js middleware scoped to `/admin`
-2. Data model — Supabase Postgres + RLS enforcing multi-tenant boundaries
-3. Product CRUD — Server Actions, authenticated client
-4. Media pipeline — Client-side compression → Supabase Storage → next/image
-5. Store config — WhatsApp number + template, branding
-6. Public storefront — Server Component, anon-key client, no-cache fetch
-7. WhatsApp link generator — Pure client-side function, no server round-trip
-8. Metrics/events — Lightweight fire-and-forget insert
-
-See ARCHITECTURE.md for detailed patterns and anti-patterns.
-
-### Critical Pitfalls
-
-Research validated all 10 original pitfalls and identified 9 additional critical ones. Top priorities:
-
-1. **`wa.me` phone number formatting is stricter than "validate it"** — Raw input produces broken links. Normalize to E.164 format (digits-only, country code, no spaces) at save-time. Show confirmation to user. Unit-test against all malformed cases.
-
-2. **`encodeURIComponent` alone doesn't guarantee working message** — Double-encoding produces garbled output. Build full plain-text string once, then encode exactly once. Test with Portuguese accents + real line breaks on device.
-
-3. **Public storefront route accidentally gated by auth middleware** — Broad middleware matcher silently starts requiring auth. Fix: middleware matcher is `/admin/:path*` only (whitelist protected routes). Add automated smoke test on every deploy.
-
-4. **Supabase RLS misconfiguration is silent, not loud** — Missing RLS enables full data leak. Forgetting policies returns empty results (looks like frontend bug). Enable RLS on every table at creation. Test isolation with two seeded accounts.
-
-5. **Sold-out size pills need more than CSS `pointer-events: none`** — Stale state leaves pill appearing available. Disable at data layer, re-validate at click-time. Combine multiple CSS properties (belt and suspenders).
-
-Additional critical pitfalls: slug uniqueness race (DB constraint required), image upload size/EXIF (client + server normalization), in-app-browser compatibility, silent auth token expiry (draft persistence).
-
-See PITFALLS.md for detailed prevention strategies.
+**Conclusão para o roadmap:** A cadeia de dependências é profunda (auth → camada de dados RLS → CRUD admin → vitrine → geração de link WhatsApp → métricas). Cada fase deve verificar armadilhas específicas antes que a próxima fase comece. Não adie nada sobre o fluxo do link do WhatsApp para "refinamento depois" — é o núcleo inegociável, e testá-lo exaustivamente (formatos de telefone específicos do Brasil, nomes de produto acentuados, navegadores Android/iOS/in-app) é um bloqueador para a prontidão de lançamento.
 
 ---
 
-## Implications for Roadmap
+## Principais Descobertas
 
-Phase ordering is driven by: (1) dependency chain from FEATURES.md, (2) pitfall prevention (each phase must ship with specific validations). Critical path: foundation → admin CRUD → storefront rendering → WhatsApp link generation. Exhaustive WhatsApp testing is a blocker for MVP launch.
+### Stack Recomendada
 
-### Phase 1: Foundation & Multi-Tenant Data Layer
+Comece com **Next.js 16.2.x + React 19.2.x + Tailwind CSS 4.x + Supabase + Vercel Pro ($20/mês)**.
 
-**Rationale:** Auth and RLS isolation are foundational. RLS misconfiguration is silent, so early validation is critical.
+O escopo original recomendava Next.js 14, que está duas majors atrás (versão estável atual: 16.2.10 na data desta pesquisa). Começar na 14 significa herdar imediatamente APIs depreciadas e migrá-las dentro de poucos meses. Mais criticamente: o modelo **Cache Components** do Next 16 (cache opt-in via diretiva `"use cache"`) torna a vitrine pública dinâmica por padrão, o que é perfeito para o requisito crítico do projeto (frescor de estoque em segundos, nunca minutos). Com a 14, o modelo de cache implícito trabalha contra esse requisito.
 
-**Delivers:**
-- Supabase project setup (schema, Auth, Storage)
-- RLS policies for all tables
-- Middleware scoped to `/admin/:path*` only (structural guarantee for public route)
-- Slug uniqueness DB constraint
+O escopo original usava o Vercel Hobby (gratuito), que viola os próprios termos de uso justo da Vercel para produtos comerciais (Vitrino é orientado a receita mesmo pré-monetização). Isso deve ser sinalizado: o Vercel Pro ($20/mês) é o tier de produção correto desde o primeiro dia.
 
-**Avoids:** RLS misconfiguration, public route gating, slug race conditions
+**Tecnologias core com justificativa:**
 
-**Acceptance criteria:**
-- [ ] RLS enabled on every table; two-tenant isolation test passes
-- [ ] Middleware matcher is `/admin/:path*` only; smoke test (curl `/loja/test-slug` without auth) passes
-- [ ] Slug has UNIQUE constraint
-- [ ] Local Supabase CLI environment working
+- **Next.js 16.2.x** (App Router) — React full-stack. Turbopack padrão (builds 2-5× mais rápidos). O modelo Cache Components dá frescor de estoque por padrão.
+- **React 19.2.x** — Exigido pelo Next 16; dependência empacotada, não uma decisão separada.
+- **Tailwind CSS 4.x** — Config CSS-first, breakpoints mobile-first (combina com o mandato "vitrine mobile-first"). Scaffold padrão do `create-next-app@latest`.
+- **Supabase** (@supabase/supabase-js 2.110.x + @supabase/ssr 0.12.x) — Postgres + Auth (email/senha) + Storage em um projeto. Row-Level-Security (RLS) mapeia de forma limpa para isolamento multi-tenant. Chave anon para leituras da vitrine pública evita middleware de auth nessa rota.
+- **Vercel (tier Pro)** — Hospedagem Next.js zero-config, middleware de edge para checagem de auth do `/admin`, CDN de imagens.
+- **browser-image-compression (2.0.2)** — Obrigatório, não opcional. Comprimir no lado do cliente antes do upload para atender os requisitos de "upload rápido" + limite de 5MB. As Transformações de Imagem server-side do Supabase são apenas do plano Pro (não no tier gratuito), então o lado do cliente é a única abordagem viável para o MVP.
+- **Suporte:** zod (validação), react-hook-form (formulários), sonner (feedback de toast), qrcode (geração de QR), clsx/tailwind-merge (estilização condicional), lucide-react (ícones)
+
+Ver STACK.md para versões detalhadas de bibliotecas, instruções de instalação e padrões de integração.
+
+### Funcionalidades Esperadas
+
+As funcionalidades estão bem escopadas e validadas contra três categorias de referência sobrepostas: ferramentas de catálogo BR (Gopage, Vendizap, Vou Pedir), ferramentas globais de comércio social (Catlog, Catálogo Business do WhatsApp), e ferramentas de link-in-bio (Linktree, Beacons). A análise de concorrentes confirma que o nicho convergiu para "catálogo + botão do WhatsApp, sem pagamento, sem carrinho" no tier de entrada — exatamente onde o MVP do Vitrino se posiciona.
+
+**Requisitos básicos (usuários esperam isso — a ausência de qualquer um mata a viabilidade do produto):**
+
+- CRUD de produtos com fotos, preço, tamanhos/variantes
+- Seleção de tamanho antes da ação de pedido
+- "Pedir agora" com um toque abrindo o WhatsApp pré-preenchido
+- Indicação de esgotado por variante
+- Link compartilhável + branding básico
+- Vitrine mobile-first responsiva
+- Filtros (marca, tipo de solado, modalidade)
+- Slug personalizado para compartilhamento
+- QR code para o link
+- Métricas básicas de visita/clique
+- Cadastro simples por email/senha (sem OAuth)
+
+**Deveria ter (diferenciais — vantagem competitiva uma vez que o MVP valide):**
+
+- Taxonomia específica do nicho (tipo de solado, modalidade, marca como campos de primeira classe)
+- UX português-first, nativa em BRL
+- Assistente de importação Yupoo (funcionalidade específica do nicho de maior alavancagem)
+- Duplicar produto para criação de variante
+- Múltiplos catálogos (pronta entrega vs sob encomenda)
+
+**Adiar completamente (v2+ ou nunca):**
+
+- Gateway de pagamento/checkout — ativamente contrário à proposta de valor
+- CRM completo de pedidos — duplica o próprio WhatsApp
+- Sincronização de estoque em tempo real — o Yupoo não tem API
+- Contas multi-vendedor/equipe — o alvo é o revendedor solo
+- Descrições de produto por IA — curtas e formulaicas aqui
+- Integração com a API WhatsApp Business — desproporcional para o MVP
+
+Ver FEATURES.md para a cadeia de dependência detalhada e análise de concorrentes.
+
+### Abordagem de Arquitetura
+
+Usar multi-tenancy de schema compartilhado com isolamento aplicado por RLS (um schema Postgres, múltiplos revendedores, políticas no nível de linha previnem leituras/escritas entre tenants). Isso é mais simples do que schema-por-tenant na escala de "dezenas" e mais barato no tier gratuito do Supabase.
+
+Dois domínios de autenticação rodam no mesmo codebase mas são estritamente separados: (1) rotas `/admin/**` são autenticadas (login do revendedor) e protegidas por middleware do Next.js, (2) `/loja/[slug]` é pública (sem checagem de auth jamais) e servida via chave anon do Supabase. O matcher do middleware deve ser escopado apenas para `/admin/:path*` — um matcher amplo com uma allowlist de exceções públicas é uma cilada que regride silenciosamente.
+
+Três padrões arquiteturais importam: (1) RLS de schema compartilhado com isolamento por owner, (2) renderização pública resolvida por slug usando cliente de chave anon, (3) frescor disparado por mutação (sem cache na vitrine).
+
+**Componentes principais:**
+
+1. Auth do admin — Supabase email/senha + middleware do Next.js escopado ao `/admin`
+2. Modelo de dados — Supabase Postgres + RLS aplicando fronteiras multi-tenant
+3. CRUD de produtos — Server Actions, cliente autenticado
+4. Pipeline de mídia — Compressão no lado do cliente → Supabase Storage → next/image
+5. Configuração da loja — Número de WhatsApp + template, branding
+6. Vitrine pública — Server Component, cliente de chave anon, fetch sem cache
+7. Gerador de link do WhatsApp — Função puramente client-side, sem round-trip de servidor
+8. Métricas/eventos — Inserção leve fire-and-forget
+
+Ver ARCHITECTURE.md para padrões e antipadrões detalhados.
+
+### Armadilhas Críticas
+
+A pesquisa validou todas as 10 armadilhas originais e identificou 9 adicionais críticas. Principais prioridades:
+
+1. **A formatação de número de telefone do `wa.me` é mais rígida do que "valide isso"** — Entrada crua produz links quebrados. Normalizar para formato E.164 (apenas dígitos, código do país, sem espaços) no momento de salvar. Mostrar confirmação ao usuário. Testar unitariamente contra todos os casos malformados.
+
+2. **`encodeURIComponent` sozinho não garante uma mensagem funcional** — Codificação dupla produz saída embaralhada. Construir a string completa em texto puro uma vez, depois codificar exatamente uma vez. Testar com acentos em português + quebras de linha reais em dispositivo.
+
+3. **Rota da vitrine pública acidentalmente bloqueada por middleware de auth** — Um matcher de middleware amplo começa silenciosamente a exigir auth. Correção: o matcher de middleware é apenas `/admin/:path*` (allowlist de rotas protegidas). Adicionar teste de fumaça automatizado em todo deploy.
+
+4. **Configuração incorreta do RLS do Supabase é silenciosa, não barulhenta** — RLS ausente habilita vazamento completo de dados. Esquecer políticas retorna resultados vazios (parece bug de frontend). Habilitar RLS em toda tabela na criação. Testar isolamento com duas contas semeadas.
+
+5. **Pílulas de tamanho esgotado precisam de mais do que CSS `pointer-events: none`** — Estado obsoleto deixa a pílula aparecendo disponível. Desabilitar na camada de dados, revalidar no momento do clique. Combinar múltiplas propriedades CSS (cinto e suspensórios).
+
+Armadilhas críticas adicionais: corrida de unicidade de slug (constraint de BD necessária), tamanho de upload de imagem/EXIF (normalização cliente + servidor), compatibilidade com navegador in-app, expiração silenciosa de token de auth (persistência de rascunho).
+
+Ver PITFALLS.md para estratégias de prevenção detalhadas.
 
 ---
 
-### Phase 2: Admin Panel & Store Configuration
+## Implicações para o Roadmap
 
-**Rationale:** Once auth/RLS work, establish store configuration surface. Surfaces the highest-risk input: WhatsApp phone number.
+O ordenamento de fases é guiado por: (1) cadeia de dependência do FEATURES.md, (2) prevenção de armadilhas (cada fase deve ser lançada com validações específicas). Caminho crítico: fundação → CRUD admin → renderização da vitrine → geração de link do WhatsApp. Teste exaustivo do WhatsApp é um bloqueador para o lançamento do MVP.
 
-**Delivers:**
-- Store settings (WhatsApp number, message template, branding)
-- Admin dashboard shell (authenticated, reseller-only)
-- Phone number normalization (Brazil-specific: E.164, digits-only, country code)
-- Store slug setup with validation
-- Toast notifications on save/delete
+### Fase 1: Fundação & Camada de Dados Multi-Tenant
 
-**Avoids:** Phone number formatting, missing feedback
+**Justificativa:** Auth e isolamento RLS são fundacionais. A configuração incorreta de RLS é silenciosa, então a validação precoce é crítica.
 
-**Acceptance criteria:**
-- [ ] Unit tests for phone normalization (all malformed cases)
-- [ ] Manual device test: real WhatsApp number, link preview, confirmed correct
-- [ ] Duplicate slug rejected with friendly message
-- [ ] Toast feedback on every admin action
+**Entrega:**
+- Configuração do projeto Supabase (schema, Auth, Storage)
+- Políticas RLS para todas as tabelas
+- Middleware escopado apenas para `/admin/:path*` (garantia estrutural para a rota pública)
+- Constraint de BD para unicidade de slug
 
----
+**Evita:** Configuração incorreta de RLS, bloqueio da rota pública, condições de corrida de slug
 
-### Phase 3: Product CRUD & Media Pipeline
-
-**Rationale:** With auth/config in place, build the primary admin tool. Establish image upload pattern (client-side compression mandatory, EXIF normalization).
-
-**Delivers:**
-- Product CRUD (create, edit, delete)
-- Size/variant management
-- Photo upload with client-side compression (browser-image-compression)
-- Server-side EXIF normalization
-- next/image integration with Supabase Storage
-- Product dashboard
-
-**Avoids:** Unrestricted upload size, EXIF rotation, broken images
-
-**Acceptance criteria:**
-- [ ] Upload real phone-camera photo; verify final stored size is compressed and displays upright
-- [ ] Compression progress shown before upload
-- [ ] 5MB hard limit enforced before compression
-- [ ] Broken image URL shows fallback placeholder
+**Critérios de aceitação:**
+- [ ] RLS habilitado em toda tabela; teste de isolamento entre dois tenants passa
+- [ ] Matcher do middleware é apenas `/admin/:path*`; teste de fumaça (curl `/loja/test-slug` sem auth) passa
+- [ ] Slug tem constraint UNIQUE
+- [ ] Ambiente local do Supabase CLI funcionando
 
 ---
 
-### Phase 4: Public Storefront & Filtering
+### Fase 2: Painel Admin & Configuração da Loja
 
-**Rationale:** With products in DB, render catalog. Establishes patterns for public-route data access and filtering (URL query params, shareable links).
+**Justificativa:** Uma vez que auth/RLS funcionem, estabelecer a superfície de configuração da loja. Expõe a entrada de maior risco: número de telefone do WhatsApp.
 
-**Delivers:**
-- Public storefront (`/loja/[slug]`)
-- Product grid with responsive images
-- Filters persisted in URL query params (shareable)
-- Pagination (~20 products per load)
-- Loading skeleton
+**Entrega:**
+- Configurações da loja (número de WhatsApp, template de mensagem, branding)
+- Shell do dashboard admin (autenticado, apenas revendedor)
+- Normalização de número de telefone (específico do Brasil: E.164, apenas dígitos, código do país)
+- Configuração de slug da loja com validação
+- Notificações toast ao salvar/excluir
 
-**Avoids:** Filters not in URL, unfiltered rendering, broken images
+**Evita:** Formatação de número de telefone, feedback ausente
 
-**Acceptance criteria:**
-- [ ] Filtered URL loaded fresh reproduces same view
-- [ ] Filters work across browsers/devices
-- [ ] Pagination loads next 20 without full reload
-- [ ] Images load progressively
+**Critérios de aceitação:**
+- [ ] Testes unitários para normalização de telefone (todos os casos malformados)
+- [ ] Teste manual em dispositivo: número real de WhatsApp, prévia do link, confirmado correto
+- [ ] Slug duplicado rejeitado com mensagem amigável
+- [ ] Feedback de toast em toda ação admin
 
 ---
 
-### Phase 5: Size Selection & WhatsApp Order Flow
+### Fase 3: CRUD de Produtos & Pipeline de Mídia
 
-**Rationale:** CRITICAL PHASE. Single most important moment. Everything converges here. Hard blocker for MVP launch.
+**Justificativa:** Com auth/config em vigor, construir a ferramenta admin primária. Estabelecer o padrão de upload de imagem (compressão no lado do cliente obrigatória, normalização EXIF).
 
-**Delivers:**
-- Size selection UI (pills for available sizes, sold-out distinct + unselectable)
-- Re-validation at click-time
-- WhatsApp link generation (normalize phone + encode message exactly once)
-- WhatsApp click tracking (fire-and-forget)
-- Fallback message/number copy
+**Entrega:**
+- CRUD de produtos (criar, editar, excluir)
+- Gerenciamento de tamanho/variante
+- Upload de foto com compressão no lado do cliente (browser-image-compression)
+- Normalização EXIF no lado do servidor
+- Integração do next/image com o Supabase Storage
+- Dashboard de produtos
 
-**Avoids:** All WhatsApp formatting pitfalls, sold-out selectability, in-app-browser failures
+**Evita:** Tamanho de upload irrestrito, rotação EXIF, imagens quebradas
 
-**Mandatory test matrix (before sign-off):**
+**Critérios de aceitação:**
+- [ ] Fazer upload de uma foto real de câmera de celular; verificar que o tamanho final armazenado está comprimido e exibe correta a orientação
+- [ ] Progresso de compressão mostrado antes do upload
+- [ ] Limite rígido de 5MB aplicado antes da compressão
+- [ ] URL de imagem quebrada mostra placeholder de fallback
+
+---
+
+### Fase 4: Vitrine Pública & Filtragem
+
+**Justificativa:** Com produtos no BD, renderizar o catálogo. Estabelece padrões para acesso a dados na rota pública e filtragem (parâmetros de query da URL, links compartilháveis).
+
+**Entrega:**
+- Vitrine pública (`/loja/[slug]`)
+- Grid de produtos com imagens responsivas
+- Filtros persistidos em parâmetros de query da URL (compartilháveis)
+- Paginação (~20 produtos por carregamento)
+- Skeleton de carregamento
+
+**Evita:** Filtros não na URL, renderização não filtrada, imagens quebradas
+
+**Critérios de aceitação:**
+- [ ] URL filtrada carregada nova reproduz a mesma visualização
+- [ ] Filtros funcionam entre navegadores/dispositivos
+- [ ] Paginação carrega os próximos 20 sem reload completo
+- [ ] Imagens carregam progressivamente
+
+---
+
+### Fase 5: Seleção de Tamanho & Fluxo de Pedido do WhatsApp
+
+**Justificativa:** FASE CRÍTICA. O momento mais importante único. Tudo converge aqui. Bloqueador rígido para o lançamento do MVP.
+
+**Entrega:**
+- UI de seleção de tamanho (pílulas para tamanhos disponíveis, esgotado distinto + inselecionável)
+- Revalidação no momento do clique
+- Geração de link do WhatsApp (normalizar telefone + codificar mensagem exatamente uma vez)
+- Rastreamento de clique no WhatsApp (fire-and-forget)
+- Cópia de mensagem/número de fallback
+
+**Evita:** Todas as armadilhas de formatação do WhatsApp, seletividade de esgotado, falhas de navegador in-app
+
+**Matriz de teste obrigatória (antes do encerramento):**
 - Android: Chrome, Samsung Internet, Firefox
 - iOS: Safari, Chrome
-- iOS/Android: Instagram in-app browser, WhatsApp in-app browser
-- Test with: real BR WhatsApp numbers, accented names, multi-line template
+- iOS/Android: navegador in-app do Instagram, navegador in-app do WhatsApp
+- Testar com: números reais de WhatsApp BR, nomes acentuados, template multi-linha
 
-**Acceptance criteria:**
-- [ ] WhatsApp opens with pre-filled message on every test combination
-- [ ] Accented characters display correctly (not garbled)
-- [ ] No double-encoding or percent artifacts
-- [ ] Sold-out cannot be selected (rapid click, keyboard Enter)
-- [ ] Click tracking logged (fire-and-forget)
-- [ ] Fallback copy-to-clipboard works if link fails
-- [ ] Dashboard shows WhatsApp click metrics correctly
-
----
-
-### Phase 6: Metrics Dashboard & Admin Analytics
-
-**Rationale:** Aggregate tracked events into simple dashboard for reseller. Keep minimal (basic counters, top products) — advanced analytics is v2+.
-
-**Delivers:**
-- Events dashboard (pageviews, top products, WhatsApp click count)
-- Most-viewed products list
-- Recent products summary
-- Simple time-series
+**Critérios de aceitação:**
+- [ ] WhatsApp abre com mensagem pré-preenchida em toda combinação de teste
+- [ ] Caracteres acentuados exibem corretamente (não embaralhados)
+- [ ] Nenhuma codificação dupla ou artefatos percentuais
+- [ ] Esgotado não pode ser selecionado (clique rápido, Enter no teclado)
+- [ ] Rastreamento de clique registrado (fire-and-forget)
+- [ ] Fallback de copiar-para-área-de-transferência funciona se o link falhar
+- [ ] Dashboard mostra métricas de clique no WhatsApp corretamente
 
 ---
 
-### Phase 7: QR Code & Shareable Link Features
+### Fase 6: Dashboard de Métricas & Analytics Admin
 
-**Rationale:** Low-cost QR generation. Resellers use QR in physical contexts (fairs, packaging).
+**Justificativa:** Agregar eventos rastreados em um dashboard simples para o revendedor. Manter mínimo (contadores básicos, produtos top) — analytics avançado é v2+.
 
-**Delivers:**
-- QR code generation from slug URL
-- Downloadable QR image
-- QR display in admin settings + storefront footer
+**Entrega:**
+- Dashboard de eventos (pageviews, produtos top, contagem de cliques no WhatsApp)
+- Lista de produtos mais vistos
+- Resumo de produtos recentes
+- Série temporal simples
 
 ---
 
-## Confidence Assessment
+### Fase 7: QR Code & Funcionalidades de Link Compartilhável
 
-| Area | Confidence | Notes |
+**Justificativa:** Geração de QR de baixo custo. Revendedores usam QR em contextos físicos (feiras, embalagens).
+
+**Entrega:**
+- Geração de QR code a partir da URL do slug
+- Imagem de QR para download
+- Exibição de QR nas configurações do admin + rodapé da vitrine
+
+---
+
+## Avaliação de Confiança
+
+| Área | Confiança | Notas |
 |------|------------|-------|
-| **Stack** | **HIGH** | Technology versions verified against npm registry, Next.js blog, official docs. Vercel Hobby/Pro distinction confirmed. One flag: Next 16's Cache Components are new (Oct 2025) — no real-world MVP experience yet. |
-| **Features** | **MEDIUM-HIGH** | Competitors analyzed publicly. Features cross-checked against category norms. No direct user interviews, so validated against competitors, not customers. Table stakes unlikely wrong; differentiators inferred from pain points. |
-| **Architecture** | **MEDIUM** | Patterns are standard/well-documented. Specific plan solid for "dezenas" scale. Uncertainty: how far to leverage Cache Components for performance. Scaling assumptions for "100k+ views/day" are speculative. |
-| **Pitfalls** | **MEDIUM** | All pitfalls validated against research sources. Technical mechanics (RLS, middleware) are HIGH-confidence. UX pitfalls are MEDIUM (best practices + observation, not user testing). LOWEST: in-app browser compatibility — must be validated by manual testing. |
-| **Overall** | **MEDIUM** | Stack is HIGH. Features well-researched. Patterns are standard but tight dependency chain focuses risk. Execution risk is in details (RLS correctness, WhatsApp testing, mobile compatibility). |
+| **Stack** | **ALTA** | Versões de tecnologia verificadas contra o registro npm, blog do Next.js, documentação oficial. Distinção Vercel Hobby/Pro confirmada. Uma ressalva: os Cache Components do Next 16 são novos (out/2025) — ainda sem experiência real de MVP. |
+| **Funcionalidades** | **MÉDIA-ALTA** | Concorrentes analisados publicamente. Funcionalidades cruzadas contra normas de categoria. Sem entrevistas diretas com usuários, então validado contra concorrentes, não clientes. Requisitos básicos dificilmente errados; diferenciais inferidos de pontos de dor. |
+| **Arquitetura** | **MÉDIA** | Padrões são padrão/bem documentados. Plano específico sólido para a escala de "dezenas". Incerteza: até que ponto alavancar os Cache Components para performance. Suposições de escalonamento para "100 mil+ visualizações/dia" são especulativas. |
+| **Armadilhas** | **MÉDIA** | Todas as armadilhas validadas contra fontes de pesquisa. Mecânicas técnicas (RLS, middleware) são de confiança ALTA. Armadilhas de UX são MÉDIA (melhores práticas + observação, não teste com usuários). MAIS BAIXA: compatibilidade com navegador in-app — deve ser validada por teste manual. |
+| **Geral** | **MÉDIA** | Stack é ALTA. Funcionalidades bem pesquisadas. Padrões são padrão mas a cadeia de dependência rígida concentra o risco. O risco de execução está nos detalhes (correção do RLS, teste do WhatsApp, compatibilidade mobile). |
 
-### Gaps to Address
+### Lacunas a Endereçar
 
-1. **WhatsApp in-app browser compatibility** — LOW-confidence (no official spec, behavior varies per app version). Must validate during Phase 5 via real devices or cloud device lab.
+1. **Compatibilidade com navegador in-app do WhatsApp** — Confiança BAIXA (nenhuma especificação oficial, comportamento varia por versão do app). Deve ser validada durante a Fase 5 via dispositivos reais ou um laboratório de dispositivos em nuvem.
 
-2. **Phone number edge cases beyond Brazil** — Normalization is BR-focused. Confirm it works for "55DDXXXXXXXXX" format only. Future: validate for other regions if product expands.
+2. **Casos extremos de número de telefone além do Brasil** — A normalização é focada no BR. Confirmar que funciona apenas para o formato "55DDXXXXXXXXX". Futuro: validar para outras regiões se o produto expandir.
 
-3. **Supabase free-tier scaling limits** — Assumes "dezenas" resellers. If adoption exceeds expectations, have Supabase Pro upgrade path ready (monitor Phase 6-7).
+3. **Limites de escalonamento do tier gratuito do Supabase** — Assume "dezenas" de revendedores. Se a adoção exceder as expectativas, ter o caminho de upgrade para o Supabase Pro pronto (monitorar Fase 6-7).
 
-4. **Image storage cost projections** — Client-side compression reduces risk, but validate cost during Phase 3 at realistic product counts.
+4. **Projeções de custo de armazenamento de imagem** — A compressão no lado do cliente reduz o risco, mas validar o custo durante a Fase 3 em contagens realistas de produtos.
 
-5. **Yupoo import differentiator** — Deferred to v1.x, identified as highest-leverage niche-specific. During v1.x planning: investigate Yupoo API availability, gallery selection UX, scraping ToS implications.
+5. **Diferencial de importação Yupoo** — Adiado para v1.x, identificado como o de maior alavancagem específico do nicho. Durante o planejamento de v1.x: investigar disponibilidade de API do Yupoo, UX de seleção de galeria, implicações de ToS de scraping.
 
-6. **Vercel Pro cost transparency** — STACK.md identifies Vercel Pro ($20/mo) as mandatory. Verify this cost assumption with user before shipping; if "$0" is hard constraint, Cloudflare Pages is alternative (at cost of losing zero-config integration).
-
----
-
-## Sources
-
-### Primary (HIGH confidence)
-
-- **npm registry** — Stack technologies verified: Next.js 16.2.10, React 19.2.7, Tailwind 4.3.2, Supabase packages, browser-image-compression, sharp
-- **Next.js 16 official blog** — Cache Components model, Turbopack, breaking changes, version requirements
-- **Vercel documentation** — Hobby Plan commercial restriction, Pro tier requirements
-- **Supabase official docs** — RLS, Auth (@supabase/ssr), Storage, Image Transformations pro-plan gating
-- **WhatsApp Help Center** — Business Catalog features, 500-item limit, chat-only model
-- **STACK.md, FEATURES.md, ARCHITECTURE.md, PITFALLS.md** — This project's research outputs
-
-### Secondary (MEDIUM confidence)
-
-- **Competitor analysis** — Gopage, Vendizap, Vou Pedir, Catlog public websites
-- **Web search (multiple sources)** — WhatsApp deep-links, phone normalization, RLS patterns, image compression, in-app browser compatibility
-- **Baymard Institute** — ecommerce UX best practices
-- **Next.js multi-tenant guide** — Architecture patterns
-- **Supabase RLS best practices** — Policy templates, common mistakes
-
-### Tertiary (LOW/ANECDOTAL confidence)
-
-- **In-app browser (Instagram WebView) wa.me compatibility** — No official spec; behavior reports vary. Needs validation during Phase 5.
-- **EXIF orientation handling** — Implementation varies across browsers; plan to normalize server-side.
+6. **Transparência de custo do Vercel Pro** — O STACK.md identifica o Vercel Pro ($20/mês) como obrigatório. Verificar essa suposição de custo com o usuário antes de lançar; se "$0" for uma restrição rígida, o Cloudflare Pages é uma alternativa (ao custo de perder a integração zero-config).
 
 ---
 
-*Research completed: 2026-07-10*  
-*Synthesized by: gsd-synthesizer agent*  
-*Ready for roadmap creation: YES*
+## Fontes
+
+### Primárias (confiança ALTA)
+
+- **Registro npm** — Tecnologias de stack verificadas: Next.js 16.2.10, React 19.2.7, Tailwind 4.3.2, pacotes Supabase, browser-image-compression, sharp
+- **Blog oficial do Next.js 16** — Modelo Cache Components, Turbopack, mudanças que quebram compatibilidade, requisitos de versão
+- **Documentação da Vercel** — Restrição comercial do Plano Hobby, requisitos do tier Pro
+- **Documentação oficial do Supabase** — RLS, Auth (@supabase/ssr), Storage, restrição de plano Pro nas Transformações de Imagem
+- **Central de Ajuda do WhatsApp** — Funcionalidades do Catálogo Business, limite de 500 itens, modelo apenas-chat
+- **STACK.md, FEATURES.md, ARCHITECTURE.md, PITFALLS.md** — Saídas de pesquisa deste projeto
+
+### Secundárias (confiança MÉDIA)
+
+- **Análise de concorrentes** — Sites públicos do Gopage, Vendizap, Vou Pedir, Catlog
+- **Busca na web (múltiplas fontes)** — Links profundos do WhatsApp, normalização de telefone, padrões de RLS, compressão de imagem, compatibilidade com navegador in-app
+- **Baymard Institute** — Melhores práticas de UX de e-commerce
+- **Guia de multi-tenant do Next.js** — Padrões de arquitetura
+- **Melhores práticas de RLS do Supabase** — Templates de política, erros comuns
+
+### Terciárias (confiança BAIXA/ANEDÓTICA)
+
+- **Compatibilidade do wa.me com navegador in-app (WebView do Instagram)** — Sem especificação oficial; relatos de comportamento variam. Precisa validação durante a Fase 5.
+- **Tratamento de orientação EXIF** — Implementação varia entre navegadores; planejar normalizar no lado do servidor.
+
+---
+
+*Pesquisa concluída em: 2026-07-10*
+*Sintetizado por: agente gsd-synthesizer*
+*Pronto para criação de roadmap: SIM*
