@@ -96,7 +96,8 @@ Poderia confirmar a disponibilidade?
 
 ## Constraints
 
-- **Tech stack (sugerido)**: Next.js 14 + Tailwind CSS (frontend), Supabase (auth + banco + storage), Vercel (hospedagem) — validar em research antes de travar
+- **Tech stack (validado pela pesquisa)**: Next.js 16 (não 14 — versão atual traz Cache Components, que resolve o requisito de estoque sempre atualizado sem esforço extra) + Tailwind CSS, Supabase (auth + banco + storage), Vercel (hospedagem). Ver `.planning/research/STACK.md` para detalhes e versões exatas
+- **Hospedagem MVP**: Vercel Hobby (grátis) no MVP, mesmo com a restrição de uso não-comercial do Vercel Hobby nos termos de serviço — risco aceito conscientemente pelo usuário para validação de baixa visibilidade. Migração planejada para Hostinger (pago) quando o produto precisar expandir
 - **Mobile-first**: Cliente final acessa quase sempre via link compartilhado no WhatsApp/Instagram — qualquer feature que quebre no mobile não vai para produção
 - **Rota pública sem auth**: A vitrine (`/loja/[slug]`) não pode ter nenhum middleware de autenticação
 - **Encoding de URL**: Toda mensagem do WhatsApp precisa passar por `encodeURIComponent`
@@ -112,6 +113,7 @@ Poderia confirmar a disponibilidade?
 | Mobile-first em toda a interface | Cliente final acessa majoritariamente via link no WhatsApp/Instagram, no celular | — Pending |
 | Sem OAuth no MVP, só email/senha | Simplicidade para revendedor não-técnico, reduz escopo de auth | — Pending |
 | Lançamento como validação, escala pequena inicial | Poucos revendedores (dezenas) nos primeiros meses, sem pressão de escala | — Pending |
+| Vercel Hobby (grátis) no MVP apesar da restrição de uso comercial nos ToS | Usuário optou por aceitar o risco em troca de custo zero na validação; migração para Hostinger (pago) planejada quando o produto expandir | ⚠️ Revisit |
 
 ## Evolution
 
