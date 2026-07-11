@@ -488,6 +488,7 @@ export function normalizeWhatsAppBR(input: string): { e164Digits: string } | { e
 **Dependências ausentes com fallback:**
 - Nenhuma identificada — esta fase é fundacional e a maioria das dependências não tem alternativa viável.
 
+<!-- ## Validation Architecture (marcador estrutural para detecção automática do pipeline — título visível traduzido abaixo) -->
 ## Arquitetura de Validação
 
 ### Framework de Teste
