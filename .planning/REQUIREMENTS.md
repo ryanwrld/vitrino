@@ -13,6 +13,7 @@ Requisitos para o lançamento inicial. Cada um mapeia para fases do roadmap.
 - [ ] **AUTH-02**: Revendedor pode fazer login e permanecer logado entre sessões (refresh do navegador)
 - [ ] **AUTH-03**: Revendedor pode fazer logout de qualquer página do painel
 - [ ] **AUTH-04**: Sessão do revendedor é renovada automaticamente durante atividade, com aviso claro antes de expirar (sem perder trabalho não salvo)
+- [ ] **AUTH-05**: Revendedor pode solicitar redefinição de senha via link enviado por email (adicionado na discussão da Fase 1, 2026-07-10)
 
 ### Loja
 
@@ -99,12 +100,13 @@ Quais fases cobrem quais requisitos. Atualizado durante a criação do roadmap.
 | AUTH-02 | Phase 1 | Pendente |
 | AUTH-03 | Phase 1 | Pendente |
 | AUTH-04 | Phase 1 | Pendente |
-| LOJA-01 | Phase 2 | Pendente |
+| AUTH-05 | Phase 1 | Pendente |
+| LOJA-01 | Phase 2 (UI antecipada para o onboarding da Fase 1 — ver 01-CONTEXT.md) | Pendente |
 | LOJA-02 | Phase 2 | Pendente |
 | LOJA-03 | Phase 2 | Pendente |
 | LOJA-04 | Phase 2 | Pendente |
-| WPP-01 | Phase 2 | Pendente |
-| WPP-02 | Phase 2 | Pendente |
+| WPP-01 | Phase 2 (UI antecipada para o onboarding da Fase 1 — ver 01-CONTEXT.md) | Pendente |
+| WPP-02 | Phase 2 (UI antecipada para o onboarding da Fase 1 — ver 01-CONTEXT.md) | Pendente |
 | PROD-01 | Phase 3 | Pendente |
 | PROD-02 | Phase 3 | Pendente |
 | PROD-03 | Phase 3 | Pendente |
@@ -125,10 +127,10 @@ Quais fases cobrem quais requisitos. Atualizado durante a criação do roadmap.
 | MTR-02 | Phase 6 | Pendente |
 
 **Cobertura:**
-- Requisitos v1: 28 total
-- Mapeados para fases: 28 ✓
+- Requisitos v1: 29 total (AUTH-05 adicionado na discussão da Fase 1)
+- Mapeados para fases: 29 ✓
 - Não mapeados: 0 ✓
 
 ---
 *Requisitos definidos: 2026-07-10*
-*Última atualização: 2026-07-10 após criação do roadmap*
+*Última atualização: 2026-07-10 após discussão da Fase 1 (AUTH-05 adicionado)*
