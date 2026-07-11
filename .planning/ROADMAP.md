@@ -34,7 +34,12 @@ Fases decimais aparecem entre suas fases inteiras vizinhas, em ordem numérica.
   5. Onboarding pós-cadastro coleta nome da loja, logo, cor de destaque, frase de apresentação e WhatsApp (número normalizado + template de mensagem) antes de liberar o Dashboard
   6. Teste de isolamento entre dois tenants passa: dados de um revendedor nunca aparecem para outro (RLS habilitado em toda tabela)
   7. Teste de fumaça confirma que `/loja/[slug]` responde sem auth (middleware escopado apenas a `/admin/:path*`) e o slug tem constraint UNIQUE no banco
-**Plans**: TBD
+**Plans**: 5 plans
+- [ ] 01-01-PLAN.md — Walking Skeleton: scaffold Next 16 + clientes Supabase + middleware `/admin` escopado + placeholder público
+- [ ] 01-02-PLAN.md — Schema multi-tenant (stores/store_settings) + RLS + [BLOCKING] push + teste de isolamento
+- [ ] 01-03-PLAN.md — Auth: cadastro (grava stores+settings), login, logout, SessionWatcher, guard de onboarding
+- [ ] 01-04-PLAN.md — Recuperação de senha (resetPasswordForEmail + verifyOtp + updateUser)
+- [ ] 01-05-PLAN.md — Onboarding: identidade da loja + WhatsApp normalizado + template (libphonenumber-js gate)
 **UI hint**: yes
 
 ### Phase 2: Link Compartilhável da Vitrine
@@ -117,7 +122,7 @@ As fases executam em ordem numérica: 1 → 2 → 3 → 4 → 5 → 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Fundação, Conta e Isolamento Multi-Tenant | 0/TBD | Not started | - |
+| 1. Fundação, Conta e Isolamento Multi-Tenant | 0/5 | Not started | - |
 | 2. Link Compartilhável da Vitrine | 0/TBD | Not started | - |
 | 3. CRUD de Produtos e Pipeline de Mídia | 0/TBD | Not started | - |
 | 4. Vitrine Pública e Filtragem | 0/TBD | Not started | - |
