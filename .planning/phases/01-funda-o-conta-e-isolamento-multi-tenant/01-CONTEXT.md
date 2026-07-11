@@ -38,7 +38,7 @@ O revendedor consegue criar conta, fazer login, permanecer autenticado, recupera
 ### Contexto do Projeto
 - `.planning/PROJECT.md` — Contexto geral, alertas críticos, identidade visual
 - `.planning/REQUIREMENTS.md` — Requisitos v1 (nota: AUTH-05 foi adicionado nesta discussão e ainda precisa ser propagado para este arquivo)
-- `.planning/ROADMAP.md` §Phase 1 e §Phase 2 — **atenção:** o roadmap atual mapeia LOJA-01..04 e WPP-01/02 para a Fase 2; esta discussão decidiu antecipar parcialmente esse escopo (identidade da loja + WhatsApp) para dentro do onboarding da Fase 1. Ver nota estrutural abaixo.
+- `.planning/ROADMAP.md` §Phase 1 e §Phase 2 — já atualizado para refletir esta discussão: LOJA-01, WPP-01 e WPP-02 mapeados para a Fase 1; Fase 2 ficou apenas com LOJA-02..04
 
 ### Pesquisa de Arquitetura e Multi-Tenancy
 - `.planning/research/ARCHITECTURE.md` — Padrão de multi-tenancy (schema compartilhado + RLS), separação de rotas `/admin/:path*` vs rota pública sem auth, recomendação de teste de isolamento com dois tenants reais antes de avançar
@@ -68,8 +68,8 @@ Projeto greenfield — nenhum código existe ainda. Nenhum mapa de codebase apli
 <deferred>
 ## Ideias Adiadas
 
-### Nota estrutural para o roadmap (ação sugerida, não executada aqui)
-A decisão D-04/D-05 expande o escopo real da Fase 1 além do que está formalmente mapeado em `.planning/ROADMAP.md` e na tabela de rastreabilidade de `.planning/REQUIREMENTS.md` (que ainda mapeiam LOJA-01..04 e WPP-01/02 inteiramente para a Fase 2). Este CONTEXT.md é a fonte de verdade para o planejamento da Fase 1 daqui em diante, mas o usuário pode querer rodar `/gsd:phase` para ajustar formalmente os limites/requisitos das Fases 1 e 2 no roadmap, evitando inconsistência para leitura futura.
+### Nota estrutural para o roadmap (RESOLVIDA)
+A decisão D-04/D-05 expandiu o escopo real da Fase 1. `/gsd:phase --edit` foi executado após esta discussão para propagar a mudança: ROADMAP.md e REQUIREMENTS.md agora mapeiam formalmente LOJA-01, WPP-01 e WPP-02 para a Fase 1 (junto com AUTH-01..05); Fase 2 ("Link Compartilhável da Vitrine") ficou só com LOJA-02, LOJA-03 e LOJA-04. Sem inconsistência pendente.
 
 ### Verificação de email obrigatória
 Considerada e descartada para o MVP — acesso imediato após cadastro é suficiente por ora. Pode voltar como ideia de v2 se abuso/spam de contas se tornar um problema real.

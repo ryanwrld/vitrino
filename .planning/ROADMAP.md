@@ -2,7 +2,7 @@
 
 ## Overview
 
-Vitrino nasce da base para o pico de conversão. Primeiro estabelecemos a fundação multi-tenant (conta do revendedor + isolamento por RLS + rota pública sem auth), depois a configuração da loja — onde travamos a normalização do número de WhatsApp que o fluxo de pedido vai consumir. Em seguida vem o CRUD de produtos com pipeline de mídia, a vitrine pública com filtros e paginação, e então a fase crítica e inegociável: o fluxo de pedido no WhatsApp, testado exaustivamente em uma matriz de dispositivos e navegadores. Por fim, agregamos os eventos coletados em um dashboard de métricas simples. Cada fase entrega uma fatia vertical utilizável e valida as armadilhas específicas identificadas na pesquisa antes da fase seguinte começar.
+Vitrino nasce da base para o pico de conversão. Primeiro estabelecemos a fundação multi-tenant (conta do revendedor, recuperação de senha, isolamento por RLS, rota pública sem auth) e já incluímos nela o onboarding que coleta identidade da loja e WhatsApp normalizado — travando cedo o que o fluxo de pedido vai consumir. Depois vem o link compartilhável da vitrine (slug/QR), o CRUD de produtos com pipeline de mídia, a vitrine pública com filtros e paginação, e então a fase crítica e inegociável: o fluxo de pedido no WhatsApp, testado exaustivamente em uma matriz de dispositivos e navegadores. Por fim, agregamos os eventos coletados em um dashboard de métricas simples. Cada fase entrega uma fatia vertical utilizável e valida as armadilhas específicas identificadas na pesquisa antes da fase seguinte começar.
 
 ## Phases
 
@@ -12,8 +12,8 @@ Vitrino nasce da base para o pico de conversão. Primeiro estabelecemos a funda�
 
 Fases decimais aparecem entre suas fases inteiras vizinhas, em ordem numérica.
 
-- [ ] **Phase 1: Fundação, Conta e Isolamento Multi-Tenant** - Revendedor cria conta e entra, sobre uma base de dados isolada por RLS com rota pública garantidamente sem auth
-- [ ] **Phase 2: Painel e Configuração da Loja** - Revendedor configura identidade da loja, link compartilhável (slug/QR) e WhatsApp com número normalizado
+- [ ] **Phase 1: Fundação, Conta e Isolamento Multi-Tenant** - Revendedor cria conta, entra, recupera senha e passa por onboarding (identidade da loja + WhatsApp), sobre uma base de dados isolada por RLS com rota pública garantidamente sem auth
+- [ ] **Phase 2: Link Compartilhável da Vitrine** - Revendedor define slug personalizado, gera QR Code e copia o link; pode revisitar/editar configurações do onboarding
 - [ ] **Phase 3: CRUD de Produtos e Pipeline de Mídia** - Revendedor cadastra, edita e gerencia produtos com fotos comprimidas e controle de estoque
 - [ ] **Phase 4: Vitrine Pública e Filtragem** - Cliente final acessa a vitrine sem login, filtra e navega produtos paginados com estoque atualizado
 - [ ] **Phase 5: Fluxo de Pedido no WhatsApp (CRÍTICO)** - Cliente seleciona tamanho e dispara mensagem de pedido pronta no WhatsApp, validada em matriz de dispositivos
@@ -22,30 +22,31 @@ Fases decimais aparecem entre suas fases inteiras vizinhas, em ordem numérica.
 ## Phase Details
 
 ### Phase 1: Fundação, Conta e Isolamento Multi-Tenant
-**Goal**: O revendedor consegue criar conta, entrar, permanecer autenticado e sair do painel, sobre uma base de dados multi-tenant onde cada revendedor só enxerga os próprios dados e a vitrine pública nunca é bloqueada por autenticação.
+**Goal**: O revendedor consegue criar conta, entrar, recuperar senha esquecida e sair do painel, sobre uma base de dados multi-tenant onde cada revendedor só enxerga os próprios dados e a vitrine pública nunca é bloqueada por autenticação. Logo após o cadastro, um onboarding coleta a identidade da loja (nome, logo, cor, frase) e o WhatsApp (número normalizado + template de mensagem) antes de liberar o Dashboard.
 **Mode:** mvp
 **Depends on**: Nada (primeira fase)
-**Requirements**: AUTH-01, AUTH-02, AUTH-03, AUTH-04
+**Requirements**: AUTH-01, AUTH-02, AUTH-03, AUTH-04, AUTH-05, LOJA-01, WPP-01, WPP-02
 **Success Criteria** (o que precisa ser VERDADE):
-  1. Revendedor cria conta com email e senha e é levado ao painel autenticado
+  1. Revendedor cria conta com email e senha e é levado ao onboarding inicial
   2. Revendedor faz login e continua logado após refresh do navegador; faz logout a partir de qualquer página do painel
-  3. Sessão é renovada automaticamente durante atividade e avisa claramente antes de expirar, sem perder trabalho não salvo
-  4. Teste de isolamento entre dois tenants passa: dados de um revendedor nunca aparecem para outro (RLS habilitado em toda tabela)
-  5. Teste de fumaça confirma que `/loja/[slug]` responde sem auth (middleware escopado apenas a `/admin/:path*`) e o slug tem constraint UNIQUE no banco
+  3. Revendedor pode solicitar redefinição de senha via link enviado por email
+  4. Sessão é renovada automaticamente em segundo plano durante atividade; um aviso visível só aparece se a renovação falhar de verdade
+  5. Onboarding pós-cadastro coleta nome da loja, logo, cor de destaque, frase de apresentação e WhatsApp (número normalizado + template de mensagem) antes de liberar o Dashboard
+  6. Teste de isolamento entre dois tenants passa: dados de um revendedor nunca aparecem para outro (RLS habilitado em toda tabela)
+  7. Teste de fumaça confirma que `/loja/[slug]` responde sem auth (middleware escopado apenas a `/admin/:path*`) e o slug tem constraint UNIQUE no banco
 **Plans**: TBD
 **UI hint**: yes
 
-### Phase 2: Painel e Configuração da Loja
-**Goal**: O revendedor consegue configurar a identidade da loja, gerar seu link compartilhável (slug único, QR Code, cópia com um clique) e cadastrar o número de WhatsApp normalizado e o template de mensagem — travando a normalização de telefone antes do fluxo de pedido depender dela.
+### Phase 2: Link Compartilhável da Vitrine
+**Goal**: O revendedor consegue definir um slug personalizado para a vitrine, gerar o QR Code e copiar o link com um clique — além de poder revisitar e editar as configurações de loja e WhatsApp definidas no onboarding da Fase 1.
 **Mode:** mvp
 **Depends on**: Phase 1
-**Requirements**: LOJA-01, LOJA-02, LOJA-03, LOJA-04, WPP-01, WPP-02
+**Requirements**: LOJA-02, LOJA-03, LOJA-04
 **Success Criteria** (o que precisa ser VERDADE):
-  1. Revendedor configura nome da loja, logo, cor de destaque e frase de apresentação (máx. 100 caracteres) e vê toast de sucesso ao salvar
-  2. Revendedor define um slug personalizado com validação de unicidade em tempo real; slug duplicado é rejeitado com mensagem amigável
-  3. Revendedor gera e baixa o QR Code do link e copia o link da vitrine com um clique
-  4. Revendedor cadastra o número de WhatsApp normalizado automaticamente para o padrão E.164 (55DDXXXXXXXXX), com confirmação visual do número final; testes unitários cobrem casos malformados
-  5. Revendedor edita o template de mensagem padrão com as variáveis {modelo}, {solado}, {tamanho} e {preço}
+  1. Revendedor define um slug personalizado com validação de unicidade em tempo real; slug duplicado é rejeitado com mensagem amigável
+  2. Revendedor gera e baixa o QR Code do link da vitrine
+  3. Revendedor copia o link da vitrine com um clique
+  4. Revendedor pode revisitar e editar nome da loja, logo, cor, frase de apresentação e configuração de WhatsApp definidos no onboarding da Fase 1
 **Plans**: TBD
 **UI hint**: yes
 
@@ -80,7 +81,7 @@ Fases decimais aparecem entre suas fases inteiras vizinhas, em ordem numérica.
 ### Phase 5: Fluxo de Pedido no WhatsApp (CRÍTICO)
 **Goal**: O cliente final consegue selecionar um tamanho disponível e disparar uma mensagem de pedido pronta e corretamente codificada no WhatsApp do revendedor — a única conversão que importa — funcionando de forma confiável em toda a matriz obrigatória de dispositivos e navegadores.
 **Mode:** mvp
-**Depends on**: Phase 2 (número de WhatsApp normalizado), Phase 4
+**Depends on**: Phase 1 (número de WhatsApp normalizado), Phase 4
 **Requirements**: PED-01, PED-02, PED-03, PED-04
 **Success Criteria** (o que precisa ser VERDADE):
   1. Botão "Pedir agora" só fica ativo/clicável depois que um tamanho disponível é selecionado
@@ -117,7 +118,7 @@ As fases executam em ordem numérica: 1 → 2 → 3 → 4 → 5 → 6
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Fundação, Conta e Isolamento Multi-Tenant | 0/TBD | Not started | - |
-| 2. Painel e Configuração da Loja | 0/TBD | Not started | - |
+| 2. Link Compartilhável da Vitrine | 0/TBD | Not started | - |
 | 3. CRUD de Produtos e Pipeline de Mídia | 0/TBD | Not started | - |
 | 4. Vitrine Pública e Filtragem | 0/TBD | Not started | - |
 | 5. Fluxo de Pedido no WhatsApp (CRÍTICO) | 0/TBD | Not started | - |

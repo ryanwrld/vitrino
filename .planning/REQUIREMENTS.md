@@ -101,12 +101,12 @@ Quais fases cobrem quais requisitos. Atualizado durante a criação do roadmap.
 | AUTH-03 | Phase 1 | Pendente |
 | AUTH-04 | Phase 1 | Pendente |
 | AUTH-05 | Phase 1 | Pendente |
-| LOJA-01 | Phase 2 (UI antecipada para o onboarding da Fase 1 — ver 01-CONTEXT.md) | Pendente |
+| LOJA-01 | Phase 1 | Pendente |
 | LOJA-02 | Phase 2 | Pendente |
 | LOJA-03 | Phase 2 | Pendente |
 | LOJA-04 | Phase 2 | Pendente |
-| WPP-01 | Phase 2 (UI antecipada para o onboarding da Fase 1 — ver 01-CONTEXT.md) | Pendente |
-| WPP-02 | Phase 2 (UI antecipada para o onboarding da Fase 1 — ver 01-CONTEXT.md) | Pendente |
+| WPP-01 | Phase 1 | Pendente |
+| WPP-02 | Phase 1 | Pendente |
 | PROD-01 | Phase 3 | Pendente |
 | PROD-02 | Phase 3 | Pendente |
 | PROD-03 | Phase 3 | Pendente |
@@ -133,4 +133,4 @@ Quais fases cobrem quais requisitos. Atualizado durante a criação do roadmap.
 
 ---
 *Requisitos definidos: 2026-07-10*
-*Última atualização: 2026-07-10 após discussão da Fase 1 (AUTH-05 adicionado)*
+*Última atualização: 2026-07-10 após ajuste do roadmap (LOJA-01/WPP-01/WPP-02 movidos formalmente para a Fase 1)*

@@ -6,7 +6,7 @@ current_phase: 1
 current_phase_name: Fundação, Conta e Isolamento Multi-Tenant
 status: planning
 stopped_at: Contexto da Fase 1 coletado
-last_updated: "2026-07-11T00:43:52.454Z"
+last_updated: "2026-07-11T00:47:58.592Z"
 progress:
   total_phases: 6
   completed_phases: 0
@@ -93,3 +93,10 @@ Arquivo de retomada: Nenhum
 **Last session:** 2026-07-11T00:43:52.441Z
 **Stopped at:** Contexto da Fase 1 coletado
 **Resume file:** .planning/phases/01-funda-o-conta-e-isolamento-multi-tenant/01-CONTEXT.md
+
+## Accumulated Context
+
+### Roadmap Evolution
+
+- Phase 1 edited: Escopo expandido: onboarding pós-cadastro absorve identidade da loja e WhatsApp (LOJA-01, WPP-01, WPP-02); novo requisito AUTH-05 (recuperação de senha)
+- Phase 2 edited: Escopo reduzido: agora só link compartilhável (LOJA-02, LOJA-03, LOJA-04); identidade da loja e WhatsApp migraram para a Fase 1
