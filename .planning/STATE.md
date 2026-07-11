@@ -1,6 +1,12 @@
 ---
-gsd_state_version: '1.0'  # placeholder; syncStateFrontmatter overwrites on first state.* call
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+current_phase: 1
+current_phase_name: Fundação, Conta e Isolamento Multi-Tenant
 status: planning
+stopped_at: Contexto da Fase 1 coletado
+last_updated: "2026-07-11T00:43:52.454Z"
 progress:
   total_phases: 6
   completed_phases: 0
@@ -30,6 +36,7 @@ Progresso: [░░░░░░░░░░] 0%
 ## Métricas de Desempenho
 
 **Velocidade:**
+
 - Total de planos concluídos: 0
 - Duração média: —
 - Tempo total de execução: —
@@ -41,6 +48,7 @@ Progresso: [░░░░░░░░░░] 0%
 | - | - | - | - |
 
 **Tendência recente:**
+
 - Últimos 5 planos: —
 - Tendência: —
 
@@ -79,3 +87,9 @@ Itens reconhecidos e carregados do fechamento do milestone anterior:
 Última sessão: 2026-07-10
 Parou em: Roadmap e STATE inicializados; rastreabilidade de requisitos atualizada
 Arquivo de retomada: Nenhum
+
+## Session
+
+**Last session:** 2026-07-11T00:43:52.441Z
+**Stopped at:** Contexto da Fase 1 coletado
+**Resume file:** .planning/phases/01-funda-o-conta-e-isolamento-multi-tenant/01-CONTEXT.md
