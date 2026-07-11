@@ -95,40 +95,40 @@ Quais fases cobrem quais requisitos. Atualizado durante a criação do roadmap.
 
 | Requisito | Fase | Status |
 |-----------|------|--------|
-| AUTH-01 | — | Pendente |
-| AUTH-02 | — | Pendente |
-| AUTH-03 | — | Pendente |
-| AUTH-04 | — | Pendente |
-| LOJA-01 | — | Pendente |
-| LOJA-02 | — | Pendente |
-| LOJA-03 | — | Pendente |
-| LOJA-04 | — | Pendente |
-| WPP-01 | — | Pendente |
-| WPP-02 | — | Pendente |
-| PROD-01 | — | Pendente |
-| PROD-02 | — | Pendente |
-| PROD-03 | — | Pendente |
-| PROD-04 | — | Pendente |
-| PROD-05 | — | Pendente |
-| PROD-06 | — | Pendente |
-| PROD-07 | — | Pendente |
-| VITR-01 | — | Pendente |
-| VITR-02 | — | Pendente |
-| VITR-03 | — | Pendente |
-| VITR-04 | — | Pendente |
-| VITR-05 | — | Pendente |
-| PED-01 | — | Pendente |
-| PED-02 | — | Pendente |
-| PED-03 | — | Pendente |
-| PED-04 | — | Pendente |
-| MTR-01 | — | Pendente |
-| MTR-02 | — | Pendente |
+| AUTH-01 | Phase 1 | Pendente |
+| AUTH-02 | Phase 1 | Pendente |
+| AUTH-03 | Phase 1 | Pendente |
+| AUTH-04 | Phase 1 | Pendente |
+| LOJA-01 | Phase 2 | Pendente |
+| LOJA-02 | Phase 2 | Pendente |
+| LOJA-03 | Phase 2 | Pendente |
+| LOJA-04 | Phase 2 | Pendente |
+| WPP-01 | Phase 2 | Pendente |
+| WPP-02 | Phase 2 | Pendente |
+| PROD-01 | Phase 3 | Pendente |
+| PROD-02 | Phase 3 | Pendente |
+| PROD-03 | Phase 3 | Pendente |
+| PROD-04 | Phase 3 | Pendente |
+| PROD-05 | Phase 3 | Pendente |
+| PROD-06 | Phase 3 | Pendente |
+| PROD-07 | Phase 3 | Pendente |
+| VITR-01 | Phase 4 | Pendente |
+| VITR-02 | Phase 4 | Pendente |
+| VITR-03 | Phase 4 | Pendente |
+| VITR-04 | Phase 4 | Pendente |
+| VITR-05 | Phase 4 | Pendente |
+| PED-01 | Phase 5 | Pendente |
+| PED-02 | Phase 5 | Pendente |
+| PED-03 | Phase 5 | Pendente |
+| PED-04 | Phase 5 | Pendente |
+| MTR-01 | Phase 6 | Pendente |
+| MTR-02 | Phase 6 | Pendente |
 
 **Cobertura:**
 - Requisitos v1: 28 total
-- Mapeados para fases: 0 (aguardando roadmap)
-- Não mapeados: 28 ⚠️
+- Mapeados para fases: 28 ✓
+- Não mapeados: 0 ✓
 
 ---
 *Requisitos definidos: 2026-07-10*
-*Última atualização: 2026-07-10 após definição inicial*
+*Última atualização: 2026-07-10 após criação do roadmap*
