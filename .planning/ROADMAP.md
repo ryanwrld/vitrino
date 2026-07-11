@@ -38,7 +38,7 @@ Fases decimais aparecem entre suas fases inteiras vizinhas, em ordem numérica.
   6. Teste de isolamento entre dois tenants passa: dados de um revendedor nunca aparecem para outro (RLS habilitado em toda tabela)
   7. Teste de fumaça confirma que `/loja/[slug]` responde sem auth (middleware escopado apenas a `/admin/:path*`) e o slug tem constraint UNIQUE no banco
 
-**Plans**: 2/5 plans executed
+**Plans**: 3/5 plans executed
 **Wave 1**
 
 - [x] 01-01-PLAN.md — Walking Skeleton: scaffold Next 16 + clientes Supabase + middleware `/admin` escopado + placeholder público
@@ -49,7 +49,7 @@ Fases decimais aparecem entre suas fases inteiras vizinhas, em ordem numérica.
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
-- [ ] 01-03-PLAN.md — Auth: cadastro (grava stores+settings), login, logout, SessionWatcher, guard de onboarding
+- [x] 01-03-PLAN.md — Auth: cadastro (grava stores+settings), login, logout, SessionWatcher, guard de onboarding
 
 **Wave 4** *(blocked on Wave 3 completion)*
 
@@ -153,7 +153,7 @@ As fases executam em ordem numérica: 1 → 2 → 3 → 4 → 5 → 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Fundação, Conta e Isolamento Multi-Tenant | 2/5 | In Progress|  |
+| 1. Fundação, Conta e Isolamento Multi-Tenant | 3/5 | In Progress|  |
 | 2. Link Compartilhável da Vitrine | 0/TBD | Not started | - |
 | 3. CRUD de Produtos e Pipeline de Mídia | 0/TBD | Not started | - |
 | 4. Vitrine Pública e Filtragem | 0/TBD | Not started | - |
