@@ -7,6 +7,7 @@ Vitrino nasce da base para o pico de conversão. Primeiro estabelecemos a funda�
 ## Phases
 
 **Numeração de Fases:**
+
 - Fases inteiras (1, 2, 3): trabalho planejado do milestone
 - Fases decimais (2.1, 2.2): inserções urgentes (marcadas com INSERTED)
 
@@ -22,11 +23,13 @@ Fases decimais aparecem entre suas fases inteiras vizinhas, em ordem numérica.
 ## Phase Details
 
 ### Phase 1: Fundação, Conta e Isolamento Multi-Tenant
+
 **Goal**: O revendedor consegue criar conta, entrar, recuperar senha esquecida e sair do painel, sobre uma base de dados multi-tenant onde cada revendedor só enxerga os próprios dados e a vitrine pública nunca é bloqueada por autenticação. Logo após o cadastro, um onboarding coleta a identidade da loja (nome, logo, cor, frase) e o WhatsApp (número normalizado + template de mensagem) antes de liberar o Dashboard.
 **Mode:** mvp
 **Depends on**: Nada (primeira fase)
 **Requirements**: AUTH-01, AUTH-02, AUTH-03, AUTH-04, AUTH-05, LOJA-01, WPP-01, WPP-02
 **Success Criteria** (o que precisa ser VERDADE):
+
   1. Revendedor cria conta com email e senha e é levado ao onboarding inicial
   2. Revendedor faz login e continua logado após refresh do navegador; faz logout a partir de qualquer página do painel
   3. Revendedor pode solicitar redefinição de senha via link enviado por email
@@ -34,61 +37,85 @@ Fases decimais aparecem entre suas fases inteiras vizinhas, em ordem numérica.
   5. Onboarding pós-cadastro coleta nome da loja, logo, cor de destaque, frase de apresentação e WhatsApp (número normalizado + template de mensagem) antes de liberar o Dashboard
   6. Teste de isolamento entre dois tenants passa: dados de um revendedor nunca aparecem para outro (RLS habilitado em toda tabela)
   7. Teste de fumaça confirma que `/loja/[slug]` responde sem auth (middleware escopado apenas a `/admin/:path*`) e o slug tem constraint UNIQUE no banco
+
 **Plans**: 5 plans
+**Wave 1**
+
 - [ ] 01-01-PLAN.md — Walking Skeleton: scaffold Next 16 + clientes Supabase + middleware `/admin` escopado + placeholder público
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
 - [ ] 01-02-PLAN.md — Schema multi-tenant (stores/store_settings) + RLS + [BLOCKING] push + teste de isolamento
+
+**Wave 3** *(blocked on Wave 2 completion)*
+
 - [ ] 01-03-PLAN.md — Auth: cadastro (grava stores+settings), login, logout, SessionWatcher, guard de onboarding
+
+**Wave 4** *(blocked on Wave 3 completion)*
+
 - [ ] 01-04-PLAN.md — Recuperação de senha (resetPasswordForEmail + verifyOtp + updateUser)
 - [ ] 01-05-PLAN.md — Onboarding: identidade da loja + WhatsApp normalizado + template (libphonenumber-js gate)
+
 **UI hint**: yes
 
 ### Phase 2: Link Compartilhável da Vitrine
+
 **Goal**: O revendedor consegue definir um slug personalizado para a vitrine, gerar o QR Code e copiar o link com um clique — além de poder revisitar e editar as configurações de loja e WhatsApp definidas no onboarding da Fase 1.
 **Mode:** mvp
 **Depends on**: Phase 1
 **Requirements**: LOJA-02, LOJA-03, LOJA-04
 **Success Criteria** (o que precisa ser VERDADE):
+
   1. Revendedor define um slug personalizado com validação de unicidade em tempo real; slug duplicado é rejeitado com mensagem amigável
   2. Revendedor gera e baixa o QR Code do link da vitrine
   3. Revendedor copia o link da vitrine com um clique
   4. Revendedor pode revisitar e editar nome da loja, logo, cor, frase de apresentação e configuração de WhatsApp definidos no onboarding da Fase 1
+
 **Plans**: TBD
 **UI hint**: yes
 
 ### Phase 3: CRUD de Produtos e Pipeline de Mídia
+
 **Goal**: O revendedor consegue cadastrar, editar, excluir e organizar produtos completos com fotos comprimidas, controlando disponibilidade por produto e por tamanho, sempre com feedback visual imediato.
 **Mode:** mvp
 **Depends on**: Phase 2
 **Requirements**: PROD-01, PROD-02, PROD-03, PROD-04, PROD-05, PROD-06, PROD-07
 **Success Criteria** (o que precisa ser VERDADE):
+
   1. Revendedor cadastra produto com nome do modelo, marca, tipo de solado, categoria, modalidade, preço em BRL e tamanhos disponíveis (grid 36-45)
   2. Revendedor faz upload de até 5 fotos por produto com compressão automática no cliente, limite rígido de 5MB por imagem e feedback de progresso; orientação EXIF exibida corretamente
   3. Revendedor marca o produto inteiro ou um tamanho específico como disponível ou esgotado
   4. Revendedor edita, exclui, lista, busca por nome, filtra (status/marca/solado) e ordena (mais recente/nome/preço) produtos no painel
   5. Cada ação (salvar, editar, excluir, marcar esgotado) dispara toast de sucesso ou erro imediato
+
 **Plans**: TBD
 **UI hint**: yes
 
 ### Phase 4: Vitrine Pública e Filtragem
+
 **Goal**: O cliente final consegue acessar a vitrine pública via link/slug sem login, filtrar produtos com estado compartilhável na URL, navegar por carregamento paginado e ver o estado de estoque atualizado, sem layout quebrado por imagens com erro.
 **Mode:** mvp
 **Depends on**: Phase 3
 **Requirements**: VITR-01, VITR-02, VITR-03, VITR-04, VITR-05
 **Success Criteria** (o que precisa ser VERDADE):
+
   1. Cliente final abre a vitrine pública pelo slug sem necessidade de login ou cadastro
   2. Cliente filtra produtos por marca, solado e modalidade, com os filtros persistidos em parâmetros de query da URL; abrir a URL filtrada nova reproduz a mesma visualização
   3. Estado de estoque (disponível/esgotado) exibido na vitrine reflete o painel do revendedor com delay máximo de segundos
   4. Vitrine carrega produtos paginados (~20 por carga) em vez de renderizar tudo de uma vez, sem reload completo
   5. Imagem com erro de carregamento exibe um placeholder visual padrão sem quebrar o layout do card
+
 **Plans**: TBD
 **UI hint**: yes
 
 ### Phase 5: Fluxo de Pedido no WhatsApp (CRÍTICO)
+
 **Goal**: O cliente final consegue selecionar um tamanho disponível e disparar uma mensagem de pedido pronta e corretamente codificada no WhatsApp do revendedor — a única conversão que importa — funcionando de forma confiável em toda a matriz obrigatória de dispositivos e navegadores.
 **Mode:** mvp
 **Depends on**: Phase 1 (número de WhatsApp normalizado), Phase 4
 **Requirements**: PED-01, PED-02, PED-03, PED-04
 **Success Criteria** (o que precisa ser VERDADE):
+
   1. Botão "Pedir agora" só fica ativo/clicável depois que um tamanho disponível é selecionado
   2. Tamanhos esgotados não são clicáveis/selecionáveis (visual riscado + `pointer-events: none`), com revalidação no momento do clique (incluindo clique rápido e Enter no teclado)
   3. "Pedir agora" abre o WhatsApp com a mensagem pré-preenchida (modelo, solado, tamanho, preço) codificada via `encodeURIComponent` exatamente uma vez, com acentos e caracteres especiais exibidos corretamente e sem codificação dupla
@@ -96,6 +123,7 @@ Fases decimais aparecem entre suas fases inteiras vizinhas, em ordem numérica.
   5. Fallback de copiar mensagem/número para a área de transferência funciona caso o link falhe; clique no WhatsApp é registrado (fire-and-forget)
 
 **Matriz de teste obrigatória (bloqueador de encerramento):**
+
 - Android: Chrome, Samsung Internet, Firefox
 - iOS: Safari, Chrome
 - In-app: navegador do Instagram, navegador do WhatsApp
@@ -105,13 +133,16 @@ Fases decimais aparecem entre suas fases inteiras vizinhas, em ordem numérica.
 **UI hint**: yes
 
 ### Phase 6: Métricas e Dashboard
+
 **Goal**: O revendedor consegue visualizar métricas básicas de desempenho da vitrine e um resumo do estado da loja, agregando os eventos coletados nas fases anteriores em contadores simples e úteis.
 **Mode:** mvp
 **Depends on**: Phase 4 (pageviews), Phase 5 (cliques no WhatsApp)
 **Requirements**: MTR-01, MTR-02
 **Success Criteria** (o que precisa ser VERDADE):
+
   1. Revendedor visualiza métricas básicas: acessos à vitrine, produtos mais visualizados e cliques no botão WhatsApp por produto
   2. Dashboard exibe métricas resumidas (total de produtos, disponíveis, esgotados, acessos) e uma lista de produtos recentes
+
 **Plans**: TBD
 **UI hint**: yes
 
