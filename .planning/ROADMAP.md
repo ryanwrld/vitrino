@@ -38,7 +38,7 @@ Fases decimais aparecem entre suas fases inteiras vizinhas, em ordem numérica.
   6. Teste de isolamento entre dois tenants passa: dados de um revendedor nunca aparecem para outro (RLS habilitado em toda tabela)
   7. Teste de fumaça confirma que `/loja/[slug]` responde sem auth (middleware escopado apenas a `/admin/:path*`) e o slug tem constraint UNIQUE no banco
 
-**Plans**: 5/5 plans complete
+**Plans**: 5/5 plans complete + 2 gap-closure (UAT)
 **Wave 1**
 
 - [x] 01-01-PLAN.md — Walking Skeleton: scaffold Next 16 + clientes Supabase + middleware `/admin` escopado + placeholder público
@@ -55,6 +55,11 @@ Fases decimais aparecem entre suas fases inteiras vizinhas, em ordem numérica.
 
 - [x] 01-04-PLAN.md — Recuperação de senha (resetPasswordForEmail + verifyOtp + updateUser)
 - [x] 01-05-PLAN.md — Onboarding: identidade da loja + WhatsApp normalizado + template (libphonenumber-js gate)
+
+**Gap Closure (UAT)** *(2 gaps diagnosticados no 01-UAT.md)*
+
+- [ ] 01-06-PLAN.md — Contraste dark mode: neutraliza `@media prefers-color-scheme:dark` em globals.css + `color-scheme:light` + `bg-white` em todo `<main>` admin (gap M-4)
+- [ ] 01-07-PLAN.md — Mensagem de erro de rede no login: `isAuthRetryableFetchError` diferencia falha de rede de credencial inválida, preservando anti-enumeração (gap teste 5)
 
 **UI hint**: yes
 
