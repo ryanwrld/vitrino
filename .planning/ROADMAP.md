@@ -77,7 +77,26 @@ Fases decimais aparecem entre suas fases inteiras vizinhas, em ordem numérica.
   3. Revendedor copia o link da vitrine com um clique
   4. Revendedor pode revisitar e editar nome da loja, logo, cor, frase de apresentação e configuração de WhatsApp definidos no onboarding da Fase 1
 
-**Plans**: TBD
+**Plans**: 6 plans
+
+**Wave 1**
+
+- [ ] 02-01-PLAN.md — Instala qrcode + lucide-react (gate de legitimidade [SUS] antes do install)
+- [ ] 02-02-PLAN.md — Fundação de slug: slugify (fold de acento), schema Zod, buildStoreUrl, hook de debounce + fix do generateStoreSlug
+
+**Wave 2** *(blocked on Wave 1)*
+
+- [ ] 02-03-PLAN.md — Migration RPC `is_slug_available` (SECURITY DEFINER) + [BLOCKING] push + typegen + Server Actions (checkSlugAvailability/updateStoreSlug/saveStoreSettings) + testes de integração
+
+**Wave 3** *(blocked on Wave 2)*
+
+- [ ] 02-04-PLAN.md — Rota `/configuracoes` + formulário Loja/WhatsApp (revisita do onboarding) + shells das seções slug/QR
+
+**Wave 4** *(blocked on Wave 3)*
+
+- [ ] 02-05-PLAN.md — Slug editor: slugify ao digitar + checagem de unicidade com debounce + diálogo nativo de confirmação
+- [ ] 02-06-PLAN.md — Painel Link e QR Code: preview + Baixar PNG + copiar link com toast
+
 **UI hint**: yes
 
 ### Phase 3: CRUD de Produtos e Pipeline de Mídia
