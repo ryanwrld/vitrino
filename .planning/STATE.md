@@ -6,7 +6,7 @@ current_phase: 2
 current_phase_name: Link Compartilhável da Vitrine
 status: executing
 stopped_at: Plan 02-05 concluído
-last_updated: "2026-07-12T22:28:59.970Z"
+last_updated: "2026-07-12T22:32:19.716Z"
 progress:
   total_phases: 6
   completed_phases: 1
@@ -118,6 +118,7 @@ Arquivo de retomada: Nenhum
 - [Phase 02]: generateStoreSlug refatorado para delegar ao slugify() compartilhado — elimina o segundo algoritmo de slug que 02-CONTEXT.md proibia
 - [Phase 02]: RPC is_slug_available (SECURITY DEFINER, boolean-only, search_path fixado) aplicada no projeto remoto — padrão para futuras checagens cross-tenant sob RLS restritiva
 - [Phase 02]: settings-form.tsx escrito do zero (D-07) reusando onboardingSchema, sem importar onboarding-wizard.tsx — inclui o campo de logo (já suportado por saveStoreSettings) além de nome/cor/tagline/WhatsApp
+- [Phase 02]: status checking/idle do slug-editor derivado no render (needsCheck + useTransition isPending) em vez de setState síncrono no useEffect, para conformidade com react-hooks/set-state-in-effect
 
 ### Blockers
 
