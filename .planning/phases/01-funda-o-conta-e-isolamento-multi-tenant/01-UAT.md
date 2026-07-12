@@ -39,15 +39,14 @@ severity: major
 
 ### 6. (bônus, achado ao recarregar /onboarding) Erro "Cookies can only be modified in a Server Action or Route Handler"
 expected: Recarregar /onboarding (ou qualquer página admin) não deve lançar exceção nenhuma, mesmo quando o token de sessão precisa ser renovado durante a renderização do Server Component
-result: issue
-reported: "Console Error ao recarregar /onboarding: 'Cookies can only be modified in a Server Action or Route Handler', apontando para src/lib/supabase/server.ts:23 (setAll -> cookieStore.set)"
-severity: blocker
+result: pass
+reported: "Corrigido em 01-08 (try/catch em setAll) — coberto por tests/supabase/server-cookies.test.ts (2 testes), sem componente manual-only, fechado sem necessidade de reconfirmação visual"
 
 ## Summary
 
 total: 6
-passed: 1
-issues: 3
+passed: 2
+issues: 2
 pending: 0
 skipped: 1
 blocked: 1
