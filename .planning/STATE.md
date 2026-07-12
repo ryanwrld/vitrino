@@ -2,17 +2,17 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-current_phase: 1
-current_phase_name: Fundação, Conta e Isolamento Multi-Tenant
-status: executing
-stopped_at: Contexto da Fase 1 coletado
-last_updated: "2026-07-11T22:52:27.363Z"
+current_phase: 2
+current_phase_name: Link Compartilhável da Vitrine
+status: ready_to_plan
+stopped_at: Contexto da Fase 2 coletado
+last_updated: "2026-07-12T15:22:19.187Z"
 progress:
   total_phases: 6
-  completed_phases: 0
-  total_plans: 5
-  completed_plans: 1
-  percent: 0
+  completed_phases: 1
+  total_plans: 8
+  completed_plans: 8
+  percent: 17
 ---
 
 # Estado do Projeto
@@ -22,16 +22,16 @@ progress:
 Ver: .planning/PROJECT.md (atualizado 2026-07-10)
 
 **Valor central:** O cliente final consegue escolher um modelo e tamanho na vitrine e disparar uma mensagem de pedido pronta no WhatsApp do revendedor — sem fricção, sem cadastro, sem o revendedor precisar estar online.
-**Foco atual:** Phase 1 — Fundação, Conta e Isolamento Multi-Tenant
+**Foco atual:** Phase 2 — Link Compartilhável da Vitrine
 
 ## Posição Atual
 
-Phase: 1 de 6 (Fundação, Conta e Isolamento Multi-Tenant)
-Plan: 0 de TBD na fase atual
-Status: Executing Phase 01
-Última atividade: 2026-07-10 — Roadmap criado (6 fases, 28 requisitos mapeados)
+Phase: 2 de 6 (Link Compartilhável da Vitrine)
+Plan: 0 de TBD na fase atual (ainda não planejada)
+Status: Phase 1 completa — pronto para discutir/planejar Fase 2
+Última atividade: 2026-07-12 — UAT da Fase 1 concluído (4 passed, 0 issues, 1 skipped, 1 blocked/deferido)
 
-Progresso: [░░░░░░░░░░] 0%
+Progresso: [██░░░░░░░░] 17%
 
 ## Métricas de Desempenho
 
@@ -72,7 +72,8 @@ Nenhum ainda.
 ### Bloqueadores/Preocupações
 
 - [Fase 5] Compatibilidade do `wa.me` com navegadores in-app (Instagram/WhatsApp) tem confiança BAIXA — validar em dispositivos reais durante a fase.
-- [Fase 2] Normalização de telefone é focada no BR (55DDXXXXXXXXX) — deve estar travada e testada antes da Fase 5 consumi-la.
+- [Fase 2] Normalização de telefone é focada no BR (55DDXXXXXXXXX) — deve estar travada e testada antes da Fase 5 consumi-la. (Já implementada e testada na Fase 1 — `normalizeWhatsAppBR`.)
+- [Fase 1 — deferido] M-3 (AUTH-05, reset de senha por email real) ficou bloqueado no UAT: depende de configurar o template de email "Reset Password" no Supabase Dashboard (usar `{{ .TokenHash }}`) e de SMTP customizado no tier free (ver memória `project_supabase_free_tier_email_template`). Código está implementado e testado via integração — só falta a configuração manual + validação end-to-end com email real.
 
 ## Itens Adiados
 
@@ -90,9 +91,9 @@ Arquivo de retomada: Nenhum
 
 ## Session
 
-**Last session:** 2026-07-11T00:43:52.441Z
-**Stopped at:** Contexto da Fase 1 coletado
-**Resume file:** .planning/phases/01-funda-o-conta-e-isolamento-multi-tenant/01-CONTEXT.md
+**Last session:** 2026-07-12T15:22:19.176Z
+**Stopped at:** Contexto da Fase 2 coletado
+**Resume file:** .planning/phases/02-link-compartilh-vel-da-vitrine/02-CONTEXT.md
 
 ## Accumulated Context
 
