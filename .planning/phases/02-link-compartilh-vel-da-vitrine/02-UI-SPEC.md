@@ -128,6 +128,7 @@ Additional interaction copy specific to this phase (not in the template's fixed 
   3. A QR code preview (rendered on page load) with a "Baixar PNG" button beside it (D-09–D-11).
 - **Slug input behavior:** auto-slugify on every keystroke (lowercase, strip accents, spaces→hyphens); debounce ~400ms before firing the uniqueness check; show inline status (checking/available/taken) directly under the input, per the copy table above (D-01–D-03).
 - **Confirmation dialog:** triggered only by "Salvar novo link", never by the Loja/WhatsApp save action. Must state in plain, non-technical language that the old link stops working (no "404" jargon) — see Destructive confirmation copy above (D-04, D-08, and the `<specifics>` note in `02-CONTEXT.md`).
+- **Primary visual anchor:** the "Salvar alterações" button at the bottom of the Loja/WhatsApp form — highest-contrast CTA (accent green `#00C46A`), largest interactive element on the page after section headings. The "Salvar novo link" and "Baixar PNG" buttons are secondary actions scoped to their own section.
 
 ---
 
