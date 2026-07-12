@@ -18,7 +18,8 @@ result: pass
 
 ### 2. M-2 (AUTH-04) — renovação silenciosa vs. aviso em falha real
 expected: TOKEN_REFRESHED nunca produz UI; SIGNED_OUT dispara toast "Sua sessão expirou..." apenas quando a renovação falha de verdade
-result: pass
+result: skipped
+reason: "Token de sessão dura 1h (jwt_expiry); o navegador só tenta renovar perto do vencimento. Cortar o wifi por ~30s no meio da sessão não chega a disparar uma tentativa de renovação real — nem o caminho silencioso nem o de falha foram de fato exercitados. User confirmou que o toast \"Sua sessão expirou...\" nunca apareceu, o que é consistente com nenhuma tentativa de renovação ter ocorrido na janela testada, não com um bug. Requer testar com wifi desligado próximo da marca de ~59min de sessão para exercitar de verdade — impraticável nesta sessão de UAT."
 
 ### 3. M-3 (AUTH-05) — ciclo completo de reset de senha com email real
 expected: Link do email leva a /auth/confirm?token_hash=...&type=recovery, verifyOtp estabelece sessão, redireciona a /redefinir-senha, updateUser troca a senha
@@ -39,10 +40,10 @@ severity: major
 ## Summary
 
 total: 5
-passed: 2
+passed: 1
 issues: 2
 pending: 0
-skipped: 0
+skipped: 1
 blocked: 1
 
 ## Gaps
