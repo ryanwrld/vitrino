@@ -38,7 +38,7 @@ Fases decimais aparecem entre suas fases inteiras vizinhas, em ordem numérica.
   6. Teste de isolamento entre dois tenants passa: dados de um revendedor nunca aparecem para outro (RLS habilitado em toda tabela)
   7. Teste de fumaça confirma que `/loja/[slug]` responde sem auth (middleware escopado apenas a `/admin/:path*`) e o slug tem constraint UNIQUE no banco
 
-**Plans**: 5/5 plans complete + 3 gap-closure (UAT)
+**Plans**: 8/8 plans complete
 **Wave 1**
 
 - [x] 01-01-PLAN.md — Walking Skeleton: scaffold Next 16 + clientes Supabase + middleware `/admin` escopado + placeholder público
@@ -58,9 +58,9 @@ Fases decimais aparecem entre suas fases inteiras vizinhas, em ordem numérica.
 
 **Gap Closure (UAT)** *(3 gaps diagnosticados no 01-UAT.md)*
 
-- [ ] 01-06-PLAN.md — Contraste dark mode: neutraliza `@media prefers-color-scheme:dark` em globals.css + `color-scheme:light` + `bg-white` em todo `<main>` admin (gap M-4)
-- [ ] 01-07-PLAN.md — Mensagem de erro de rede no login: `isAuthRetryableFetchError` diferencia falha de rede de credencial inválida, preservando anti-enumeração (gap teste 5)
-- [ ] 01-08-PLAN.md — Cookie write em Server Component: try/catch no `setAll` de `src/lib/supabase/server.ts` (padrão oficial `@supabase/ssr`), engolindo a exceção de refresh redundante que o middleware já cobre (gap teste 6, blocker)
+- [x] 01-06-PLAN.md — Contraste dark mode: neutraliza `@media prefers-color-scheme:dark` em globals.css + `color-scheme:light` + `bg-white` em todo `<main>` admin (gap M-4)
+- [x] 01-07-PLAN.md — Mensagem de erro de rede no login: `isAuthRetryableFetchError` diferencia falha de rede de credencial inválida, preservando anti-enumeração (gap teste 5)
+- [x] 01-08-PLAN.md — Cookie write em Server Component: try/catch no `setAll` de `src/lib/supabase/server.ts` (padrão oficial `@supabase/ssr`), engolindo a exceção de refresh redundante que o middleware já cobre (gap teste 6, blocker)
 
 **UI hint**: yes
 
@@ -159,7 +159,7 @@ As fases executam em ordem numérica: 1 → 2 → 3 → 4 → 5 → 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Fundação, Conta e Isolamento Multi-Tenant | 5/5 | Complete   | 2026-07-12 |
+| 1. Fundação, Conta e Isolamento Multi-Tenant | 8/8 | Complete   | 2026-07-12 |
 | 2. Link Compartilhável da Vitrine | 0/TBD | Not started | - |
 | 3. CRUD de Produtos e Pipeline de Mídia | 0/TBD | Not started | - |
 | 4. Vitrine Pública e Filtragem | 0/TBD | Not started | - |
