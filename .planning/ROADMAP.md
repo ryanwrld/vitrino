@@ -14,7 +14,7 @@ Vitrino nasce da base para o pico de conversão. Primeiro estabelecemos a funda�
 Fases decimais aparecem entre suas fases inteiras vizinhas, em ordem numérica.
 
 - [x] **Phase 1: Fundação, Conta e Isolamento Multi-Tenant** - Revendedor cria conta, entra, recupera senha e passa por onboarding (identidade da loja + WhatsApp), sobre uma base de dados isolada por RLS com rota pública garantidamente sem auth (completed 2026-07-12)
-- [ ] **Phase 2: Link Compartilhável da Vitrine** - Revendedor define slug personalizado, gera QR Code e copia o link; pode revisitar/editar configurações do onboarding
+- [x] **Phase 2: Link Compartilhável da Vitrine** - Revendedor define slug personalizado, gera QR Code e copia o link; pode revisitar/editar configurações do onboarding (completed 2026-07-12)
 - [ ] **Phase 3: CRUD de Produtos e Pipeline de Mídia** - Revendedor cadastra, edita e gerencia produtos com fotos comprimidas e controle de estoque
 - [ ] **Phase 4: Vitrine Pública e Filtragem** - Cliente final acessa a vitrine sem login, filtra e navega produtos paginados com estoque atualizado
 - [ ] **Phase 5: Fluxo de Pedido no WhatsApp (CRÍTICO)** - Cliente seleciona tamanho e dispara mensagem de pedido pronta no WhatsApp, validada em matriz de dispositivos
@@ -77,7 +77,7 @@ Fases decimais aparecem entre suas fases inteiras vizinhas, em ordem numérica.
   3. Revendedor copia o link da vitrine com um clique
   4. Revendedor pode revisitar e editar nome da loja, logo, cor, frase de apresentação e configuração de WhatsApp definidos no onboarding da Fase 1
 
-**Plans**: 5/6 plans executed
+**Plans**: 6/6 plans complete
 
 **Wave 1**
 
@@ -95,7 +95,7 @@ Fases decimais aparecem entre suas fases inteiras vizinhas, em ordem numérica.
 **Wave 4** *(blocked on Wave 3)*
 
 - [x] 02-05-PLAN.md — Slug editor: slugify ao digitar + checagem de unicidade com debounce + diálogo nativo de confirmação
-- [ ] 02-06-PLAN.md — Painel Link e QR Code: preview + Baixar PNG + copiar link com toast
+- [x] 02-06-PLAN.md — Painel Link e QR Code: preview + Baixar PNG + copiar link com toast
 
 **UI hint**: yes
 
@@ -179,7 +179,7 @@ As fases executam em ordem numérica: 1 → 2 → 3 → 4 → 5 → 6
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Fundação, Conta e Isolamento Multi-Tenant | 8/8 | Complete   | 2026-07-12 |
-| 2. Link Compartilhável da Vitrine | 5/6 | In Progress|  |
+| 2. Link Compartilhável da Vitrine | 6/6 | Complete   | 2026-07-12 |
 | 3. CRUD de Produtos e Pipeline de Mídia | 0/TBD | Not started | - |
 | 4. Vitrine Pública e Filtragem | 0/TBD | Not started | - |
 | 5. Fluxo de Pedido no WhatsApp (CRÍTICO) | 0/TBD | Not started | - |

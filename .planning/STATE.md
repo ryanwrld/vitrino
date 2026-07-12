@@ -5,14 +5,14 @@ milestone_name: milestone
 current_phase: 2
 current_phase_name: Link Compartilhável da Vitrine
 status: executing
-stopped_at: Plan 02-05 concluído
-last_updated: "2026-07-12T22:32:19.716Z"
+stopped_at: Plan 02-06 concluído — Fase 2 completa
+last_updated: "2026-07-12T22:34:47.029Z"
 progress:
   total_phases: 6
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 14
-  completed_plans: 13
-  percent: 93
+  completed_plans: 14
+  percent: 33
 ---
 
 # Estado do Projeto
@@ -27,11 +27,11 @@ Ver: .planning/PROJECT.md (atualizado 2026-07-10)
 ## Posição Atual
 
 Phase: 2 de 6 (Link Compartilhável da Vitrine)
-Plan: 5 de 6 na fase atual (02-05 concluído)
-Status: Executing Phase 02
-Última atividade: 2026-07-12 — Plan 02-05 concluído (editor real de slug: auto-slugify, disponibilidade em tempo real debounced, diálogo de confirmação nativo)
+Plan: 6 de 6 na fase atual (02-06 concluído — Fase 2 completa)
+Status: Fase 2 completa — pronto para discutir/planejar Fase 3
+Última atividade: 2026-07-12 — Plan 02-06 concluído (painel real de QR Code + copiar link; as três seções de /configuracoes estão implementadas)
 
-Progresso: [█████████░] 93%
+Progresso: [██████████] 100% (dos 14 plans já planejados; Fases 3-6 ainda não planejadas)
 
 ## Métricas de Desempenho
 
@@ -91,8 +91,8 @@ Arquivo de retomada: Nenhum
 
 ## Session
 
-**Last session:** 2026-07-12T22:28:59.963Z
-**Stopped at:** Plan 02-05 concluído
+**Last session:** 2026-07-12T22:34:47.023Z
+**Stopped at:** Plan 02-06 concluído — Fase 2 completa
 **Resume file:** .planning/phases/02-link-compartilh-vel-da-vitrine/02-05-PLAN.md
 
 ## Accumulated Context
@@ -111,6 +111,7 @@ Arquivo de retomada: Nenhum
 | Phase 02 P03 | 50min | 3 tasks | 6 files |
 | Phase 02 P04 | 20min | 2 tasks | 4 files |
 | Phase 02 P05 | 12min | 2 tasks | 1 files |
+| Phase 02 P06 | 15min | 2 tasks | 5 files |
 
 ## Decisions
 
@@ -119,6 +120,7 @@ Arquivo de retomada: Nenhum
 - [Phase 02]: RPC is_slug_available (SECURITY DEFINER, boolean-only, search_path fixado) aplicada no projeto remoto — padrão para futuras checagens cross-tenant sob RLS restritiva
 - [Phase 02]: settings-form.tsx escrito do zero (D-07) reusando onboardingSchema, sem importar onboarding-wizard.tsx — inclui o campo de logo (já suportado por saveStoreSettings) além de nome/cor/tagline/WhatsApp
 - [Phase 02]: status checking/idle do slug-editor derivado no render (needsCheck + useTransition isPending) em vez de setState síncrono no useEffect, para conformidade com react-hooks/set-state-in-effect
+- [Phase 02]: readyUrl derivado no render (comparado com publicUrl) em vez de setState síncrono no efeito do QrCodePanel — mesma correção de react-hooks/set-state-in-effect aplicada proativamente
 
 ### Blockers
 
