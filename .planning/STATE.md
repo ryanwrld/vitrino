@@ -5,14 +5,14 @@ milestone_name: milestone
 current_phase: 2
 current_phase_name: Link Compartilhável da Vitrine
 status: executing
-stopped_at: Plan 02-04 concluído
-last_updated: "2026-07-12T22:22:08.945Z"
+stopped_at: Plan 02-05 concluído
+last_updated: "2026-07-12T22:28:59.970Z"
 progress:
   total_phases: 6
   completed_phases: 1
   total_plans: 14
-  completed_plans: 12
-  percent: 86
+  completed_plans: 13
+  percent: 93
 ---
 
 # Estado do Projeto
@@ -27,11 +27,11 @@ Ver: .planning/PROJECT.md (atualizado 2026-07-10)
 ## Posição Atual
 
 Phase: 2 de 6 (Link Compartilhável da Vitrine)
-Plan: 4 de 6 na fase atual (02-04 concluído)
+Plan: 5 de 6 na fase atual (02-05 concluído)
 Status: Executing Phase 02
-Última atividade: 2026-07-12 — Plan 02-04 concluído (rota /configuracoes guardada + formulário Loja/WhatsApp funcional via saveStoreSettings + shells de slug/QR)
+Última atividade: 2026-07-12 — Plan 02-05 concluído (editor real de slug: auto-slugify, disponibilidade em tempo real debounced, diálogo de confirmação nativo)
 
-Progresso: [█████████░] 86%
+Progresso: [█████████░] 93%
 
 ## Métricas de Desempenho
 
@@ -91,8 +91,8 @@ Arquivo de retomada: Nenhum
 
 ## Session
 
-**Last session:** 2026-07-12T22:22:08.945Z
-**Stopped at:** Plan 02-04 concluído
+**Last session:** 2026-07-12T22:28:59.963Z
+**Stopped at:** Plan 02-05 concluído
 **Resume file:** .planning/phases/02-link-compartilh-vel-da-vitrine/02-05-PLAN.md
 
 ## Accumulated Context
@@ -110,6 +110,7 @@ Arquivo de retomada: Nenhum
 | Phase 02 P02 | 7min | 3 tasks | 8 files |
 | Phase 02 P03 | 50min | 3 tasks | 6 files |
 | Phase 02 P04 | 20min | 2 tasks | 4 files |
+| Phase 02 P05 | 12min | 2 tasks | 1 files |
 
 ## Decisions
 
