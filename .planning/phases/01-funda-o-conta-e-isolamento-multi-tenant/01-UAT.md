@@ -1,9 +1,9 @@
 ---
-status: diagnosed
+status: partial
 phase: 01-funda-o-conta-e-isolamento-multi-tenant
 source: [01-VERIFICATION.md]
 started: 2026-07-12T00:17:59Z
-updated: 2026-07-12T01:20:00Z
+updated: 2026-07-12T02:10:00Z
 ---
 
 ## Current Test
@@ -27,15 +27,13 @@ result: [blocked]
 
 ### 4. M-4 (LOJA-01/WPP-01) — confirmação visual do wizard de onboarding
 expected: Prévia do número formatado aparece corretamente; template vem pré-preenchido; Dashboard é liberado só após concluir
-result: issue (fix aplicado em 01-06, aguardando reconfirmação visual do usuário)
-reported: "ui horrivel — labels (Nome da loja, Logo, Cor de destaque, Frase, WhatsApp, Template) e placeholders quase invisíveis, texto escuro sobre fundo preto, praticamente ilegível"
-severity: major
+result: pass
+reported: "Confirmado pelo usuário: todos os labels (Nome da loja, Logo, Cor de destaque, Frase, WhatsApp, Template) legíveis após fix 01-06 — texto escuro sobre fundo branco"
 
 ### 5. (bônus, achado durante M-2) Mensagem de erro de login com rede offline
 expected: Tentar logar sem conexão de rede deve mostrar um erro de conexão/rede, não "Email ou senha inválidos" (mensagem enganosa — sugere senha errada quando na verdade é falha de rede)
-result: issue (fix aplicado em 01-07, aguardando reconfirmação do usuário)
-reported: "o único bug identificado foi essa mensagem de 'email ou senha inválidos' aparecendo com o wifi desligado"
-severity: major
+result: pass
+reported: "Confirmado pelo usuário: mensagem agora mostra 'Não foi possível conectar. Verifique sua internet e tente novamente.' — fix 01-07 funcionando. Labels do /login também confirmados legíveis (contraste OK)."
 
 ### 6. (bônus, achado ao recarregar /onboarding) Erro "Cookies can only be modified in a Server Action or Route Handler"
 expected: Recarregar /onboarding (ou qualquer página admin) não deve lançar exceção nenhuma, mesmo quando o token de sessão precisa ser renovado durante a renderização do Server Component
@@ -45,8 +43,8 @@ reported: "Corrigido em 01-08 (try/catch em setAll) — coberto por tests/supaba
 ## Summary
 
 total: 6
-passed: 2
-issues: 2
+passed: 4
+issues: 0
 pending: 0
 skipped: 1
 blocked: 1
