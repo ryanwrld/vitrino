@@ -182,3 +182,20 @@ None — nenhuma configuração externa adicional além do que já está documen
 ---
 *Phase: 01-funda-o-conta-e-isolamento-multi-tenant*
 *Completed: 2026-07-11*
+
+## Self-Check: PASSED
+
+- FOUND: src/lib/phone/normalize-br.ts
+- FOUND: src/lib/validation/onboarding.ts
+- FOUND: src/lib/onboarding/actions.ts
+- FOUND: src/app/(admin)/onboarding/page.tsx
+- FOUND: src/app/(admin)/onboarding/onboarding-wizard.tsx
+- FOUND: tests/phone/normalize-br.test.ts
+- FOUND: tests/onboarding/store-settings.test.ts
+- FOUND: tests/onboarding/message-template.test.ts
+- FOUND commit: 93a3b66
+- FOUND commit: 9adc09f
+- FOUND commit: 92d5352
+- FOUND commit: 906dc19
+- FOUND commit: cfd0532
+- FOUND commit: ba36579
