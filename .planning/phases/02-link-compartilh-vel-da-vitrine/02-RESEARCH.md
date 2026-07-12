@@ -451,7 +451,7 @@ async function handleCopy(publicUrl: string) {
 
 **If this table is empty:** N/A — see entries above.
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Should `is_slug_available` also be granted to the `anon` role?**
    - What we know: `/configuracoes` is only reachable by an authenticated revendedor (behind `requireCompletedOnboarding`), so `authenticated`-only grant is sufficient for this phase's UI.
