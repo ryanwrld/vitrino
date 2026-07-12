@@ -1,0 +1,72 @@
+import Link from "next/link";
+import { requireCompletedOnboarding } from "@/lib/auth/onboarding-guard";
+import { createClient } from "@/lib/supabase/server";
+import { buildStoreUrl } from "@/lib/slug/store-url";
+import { SettingsForm } from "./settings-form";
+import { SlugEditor } from "./slug-editor";
+import { QrCodePanel } from "./qr-code-panel";
+
+/**
+ * Rota `/configuracoes` (D-05, LOJA-02/03/04 — revisitar e editar). Mesmo
+ * gate combinado de auth + onboarding que `/dashboard` (`requireCompletedOnboarding`
+ * como primeira linha, nunca uma condição fundida). Página totalmente
+ * dinâmica — NUNCA adicionar `"use cache"` aqui, pois o slug/estoque
+ * precisa refletir mudanças imediatamente (D-04, 02-RESEARCH.md).
+ *
+ * Layout de página única com rolagem, três seções empilhadas nesta ordem
+ * (D-06, sem abas): Loja+WhatsApp (SettingsForm) → Link e QR Code
+ * (SlugEditor + QrCodePanel).
+ */
+export default async function ConfiguracoesPage() {
+  await requireCompletedOnboarding();
+
+  const supabase = await createClient();
+  const { data: userData } = await supabase.auth.getUser();
+
+  const { data: store } = await supabase
+    .from("stores")
+    .select("id, name, slug, logo_url, accent_color, tagline")
+    .eq("owner_id", userData.user!.id)
+    .single();
+
+  const { data: settings } = await supabase
+    .from("store_settings")
+    .select("whatsapp_e164, message_template")
+    .eq("store_id", store!.id)
+    .single();
+
+  const publicUrl = buildStoreUrl(store!.slug);
+
+  return (
+    <main className="bg-white mx-auto flex min-h-dvh w-full max-w-md flex-col gap-6 px-4 py-10">
+      <div>
+        <h1 className="text-2xl font-bold text-[#0D3D2B]">Configurações</h1>
+      </div>
+
+      <SettingsForm
+        store={{
+          name: store!.name,
+          accentColor: store!.accent_color,
+          tagline: store!.tagline,
+        }}
+        settings={{
+          whatsapp: settings?.whatsapp_e164 ?? "",
+          messageTemplate: settings?.message_template ?? "",
+        }}
+      />
+
+      <div className="flex flex-col gap-4">
+        <h2 className="text-xl font-medium text-[#111111]">Link e QR Code</h2>
+        <SlugEditor currentSlug={store!.slug} />
+        <QrCodePanel publicUrl={publicUrl} />
+      </div>
+
+      <Link
+        href="/dashboard"
+        className="rounded-lg border border-[#0D3D2B] px-4 py-2 text-center font-medium text-[#0D3D2B] transition hover:bg-[#0D3D2B] hover:text-white"
+      >
+        Voltar ao painel
+      </Link>
+    </main>
+  );
+}
