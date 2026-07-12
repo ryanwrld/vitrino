@@ -6,12 +6,12 @@ current_phase: 2
 current_phase_name: Link Compartilhável da Vitrine
 status: executing
 stopped_at: Phase 2 UI-SPEC approved
-last_updated: "2026-07-12T21:06:56.971Z"
+last_updated: "2026-07-12T21:18:17.811Z"
 progress:
   total_phases: 6
   completed_phases: 1
   total_plans: 14
-  completed_plans: 9
+  completed_plans: 10
   percent: 17
 ---
 
@@ -27,11 +27,11 @@ Ver: .planning/PROJECT.md (atualizado 2026-07-10)
 ## Posição Atual
 
 Phase: 2 de 6 (Link Compartilhável da Vitrine)
-Plan: 1 de 6 na fase atual (02-01 concluído)
+Plan: 2 de 6 na fase atual (02-02 concluído)
 Status: Executing Phase 02
-Última atividade: 2026-07-12 — Plan 02-01 concluído (qrcode, lucide-react e @types/qrcode instalados; gate de legitimidade T-02-SC aprovado)
+Última atividade: 2026-07-12 — Plan 02-02 concluído (slugify com fold de diacríticos, slugSchema D-02, buildStoreUrl e useDebouncedValue)
 
-Progresso: [██░░░░░░░░] 17%
+Progresso: [███████░░░] 71%
 
 ## Métricas de Desempenho
 
@@ -91,7 +91,7 @@ Arquivo de retomada: Nenhum
 
 ## Session
 
-**Last session:** 2026-07-12T21:06:25.426Z
+**Last session:** 2026-07-12T21:16:35.551Z
 **Stopped at:** Phase 2 UI-SPEC approved
 **Resume file:** .planning/phases/02-link-compartilh-vel-da-vitrine/02-UI-SPEC.md
 
@@ -107,7 +107,9 @@ Arquivo de retomada: Nenhum
 | Phase | Plan | Duration | Notes |
 |-------|------|----------|-------|
 | Phase 02 P01 | 8min | 2 tasks | 2 files |
+| Phase 02 P02 | 7min | 3 tasks | 8 files |
 
 ## Decisions
 
 - [Phase 2]: lucide-react aprovado no gate de legitimidade (T-02-SC) — repositório github.com/lucide-icons/lucide confirmado, sem postinstall
+- [Phase 02]: generateStoreSlug refatorado para delegar ao slugify() compartilhado — elimina o segundo algoritmo de slug que 02-CONTEXT.md proibia
