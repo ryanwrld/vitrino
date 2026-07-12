@@ -121,6 +121,7 @@ Arquivo de retomada: Nenhum
 - [Phase 02]: settings-form.tsx escrito do zero (D-07) reusando onboardingSchema, sem importar onboarding-wizard.tsx — inclui o campo de logo (já suportado por saveStoreSettings) além de nome/cor/tagline/WhatsApp
 - [Phase 02]: status checking/idle do slug-editor derivado no render (needsCheck + useTransition isPending) em vez de setState síncrono no useEffect, para conformidade com react-hooks/set-state-in-effect
 - [Phase 02]: readyUrl derivado no render (comparado com publicUrl) em vez de setState síncrono no efeito do QrCodePanel — mesma correção de react-hooks/set-state-in-effect aplicada proativamente
+- [Phase 02]: Plan 02-06 fechado formalmente por sessão de closeout (implementação foi feita fora do fluxo normal de orquestração) — todos os acceptance_criteria e artifacts reverificados, sem defeitos encontrados; único ajuste foi sincronizar REQUIREMENTS.md (LOJA-03/LOJA-04 Pendente para Completo)
 
 ### Blockers
 

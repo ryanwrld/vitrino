@@ -89,6 +89,41 @@ status: complete
 
 **`generateQrDataUrl`/`copyText` extraídos como fronteiras puras e node-testáveis (3/3 testes), e o `QrCodePanel` real renderiza o QR no canvas ao carregar, baixa PNG via `<a download>`, e copia a URL pública com toast "Link copiado!" — fechando as três seções de `/configuracoes` desta fase.**
 
+## Nota de Fechamento (Closeout)
+
+**Este plano foi implementado e commitado por um processo fora do fluxo normal de orquestração (anomalia out-of-band, já sinalizada ao usuário), não executado do zero por esta sessão.** Esta sessão atuou exclusivamente em modo de fechamento formal: cada `acceptance_criteria` das duas tasks do `02-06-PLAN.md` foi reverificado individualmente contra o código já commitado (`src/lib/qr.ts`, `src/lib/clipboard.ts`, `src/app/(admin)/configuracoes/qr-code-panel.tsx`, e os dois arquivos de teste), a seção "Artifacts this plan produces" do plano foi conferida artefato-por-artefato, e os comandos de verificação (`npx vitest run tests/settings/qr-code.test.ts tests/settings/copy-link.test.ts`, `npx tsc --noEmit`) foram re-executados de forma independente nesta sessão — todos passando, sem nenhuma regressão ou lacuna encontrada. Nenhum código de implementação foi escrito ou reescrito por esta sessão de fechamento; o único ajuste feito aqui foi de tracking (traçabilidade de requisitos em `REQUIREMENTS.md`, ver "Deviations" abaixo).
+
+### Verificação de `acceptance_criteria` (reconfirmada nesta sessão)
+
+**Task 1 — helpers de QR + clipboard (LOJA-03, LOJA-04):**
+
+| Critério | Resultado |
+|---|---|
+| `tests/settings/qr-code.test.ts` prova PNG data URL para URL construída | PASS — reexecutado, 1/1 verde |
+| `tests/settings/copy-link.test.ts` prova texto exato escrito + `true`/`false` sem lançar | PASS — reexecutado, 2/2 verde |
+| `src/lib/clipboard.ts` não importa `sonner` | PASS — confirmado via leitura direta do arquivo |
+
+**Task 2 — painel real (D-09–D-13):**
+
+| Critério | Resultado |
+|---|---|
+| Preview de QR renderiza no load; "Baixar PNG" baixa PNG; "Copiar" copia `publicUrl` exato e mostra toast "Link copiado!" | PASS — `QRCode.toCanvas` no `useEffect`, download via `canvas.toDataURL` + `<a download>`, `copyText` + `toast.success`/`toast.error` confirmados por leitura de código |
+| Botões ícone-only com touch target ≥44×44px | PASS — `p-3` em ambos os botões (Copiar, Baixar PNG) |
+| `npx tsc --noEmit` passa | PASS — reexecutado nesta sessão; únicos erros restantes são pré-existentes e fora de escopo em `tests/supabase/server-cookies.test.ts` (débito técnico já registrado, não relacionado a este plano) |
+
+### Verificação de `<artifacts>` (todos presentes)
+
+| Artefato | Status |
+|---|---|
+| `generateQrDataUrl(url): Promise<string>` — `src/lib/qr.ts` | PASS |
+| `copyText(text): Promise<boolean>` — `src/lib/clipboard.ts` | PASS |
+| `QrCodePanel` (real) — `qr-code-panel.tsx` | PASS |
+| `tests/settings/qr-code.test.ts`, `tests/settings/copy-link.test.ts` | PASS |
+| `key_links`: `qr-code-panel` recebe `publicUrl` de `page.tsx` via `buildStoreUrl(store.slug)` | PASS — confirmado em `page.tsx` linha 38/61 |
+| `key_links`: `copyText` escreve o `publicUrl` exato; `generateQrDataUrl` codifica a mesma URL | PASS — `copyText(publicUrl)` no painel; `generateQrDataUrl` é o equivalente node-testável (o painel usa `QRCode.toCanvas` diretamente por precisar do `<canvas>` real do DOM para o download, decisão já documentada no plano) |
+
+Nenhum defeito genuíno encontrado. Nenhuma reimplementação foi necessária.
+
 ## Performance
 
 - **Duration:** ~15 min
@@ -127,7 +162,16 @@ Cada task foi commitada atomicamente, seguindo RED → GREEN (TDD) na Task 1:
 
 ## Deviations from Plan
 
-None - plano executado exatamente como escrito. A escolha de `readyUrl` derivado (em vez de um boolean `setState` síncrono) segue a mesma disciplina já estabelecida no fix do plan 02-05 para a mesma regra de lint — aplicada proativamente aqui, não uma correção pós-commit.
+Nenhum defeito de implementação encontrado — plano executado (fora de banda) exatamente como escrito. A escolha de `readyUrl` derivado (em vez de um boolean `setState` síncrono) segue a mesma disciplina já estabelecida no fix do plan 02-05 para a mesma regra de lint — aplicada proativamente ali, não uma correção pós-commit.
+
+### Auto-fixed Issues (fechamento desta sessão)
+
+**1. [Rule 2 - tracking] Tabela de rastreabilidade em `REQUIREMENTS.md` desatualizada para LOJA-03/LOJA-04**
+- **Encontrado durante:** fechamento formal desta sessão (checagem de "Artifacts this plan produces" / requirements)
+- **Problema:** os checkboxes `- [x] LOJA-03` / `- [x] LOJA-04` na seção "Requisitos v1" já estavam marcados, mas a tabela "Rastreabilidade" no fim do arquivo ainda listava ambos como `Pendente` — o commit de fechamento anterior (`194e57c`, fora de banda) atualizou `STATE.md`/`ROADMAP.md` mas não tocou `REQUIREMENTS.md`.
+- **Fix:** `gsd-tools query requirements.mark-complete LOJA-03 LOJA-04` para sincronizar a tabela de rastreabilidade com os checkboxes já marcados.
+- **Arquivos modificados:** `.planning/REQUIREMENTS.md`
+- **Commit:** (ver commit de fechamento desta sessão)
 
 ## Issues Encountered
 Nenhum. `npx tsc --noEmit`, `npx eslint` e `npm run build` limpos (só os erros pré-existentes e fora de escopo em `tests/supabase/server-cookies.test.ts`, já registrados em `deferred-items.md`). Um `curl` deslogado contra um servidor de dev local confirmou o redirect `307` para `/login` em `/configuracoes` (guard inalterado por este plano).
