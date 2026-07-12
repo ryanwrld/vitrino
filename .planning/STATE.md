@@ -5,14 +5,14 @@ milestone_name: milestone
 current_phase: 2
 current_phase_name: Link Compartilhável da Vitrine
 status: executing
-stopped_at: Plan 02-03 concluído
-last_updated: "2026-07-12T22:14:09.122Z"
+stopped_at: Plan 02-04 concluído
+last_updated: "2026-07-12T22:22:08.945Z"
 progress:
   total_phases: 6
   completed_phases: 1
   total_plans: 14
-  completed_plans: 11
-  percent: 79
+  completed_plans: 12
+  percent: 86
 ---
 
 # Estado do Projeto
@@ -27,11 +27,11 @@ Ver: .planning/PROJECT.md (atualizado 2026-07-10)
 ## Posição Atual
 
 Phase: 2 de 6 (Link Compartilhável da Vitrine)
-Plan: 3 de 6 na fase atual (02-03 concluído)
+Plan: 4 de 6 na fase atual (02-04 concluído)
 Status: Executing Phase 02
-Última atividade: 2026-07-12 — Plan 02-03 concluído (RPC is_slug_available aplicada no remoto + Server Actions de configurações: checkSlugAvailability, updateStoreSlug, saveStoreSettings)
+Última atividade: 2026-07-12 — Plan 02-04 concluído (rota /configuracoes guardada + formulário Loja/WhatsApp funcional via saveStoreSettings + shells de slug/QR)
 
-Progresso: [████████░░] 79%
+Progresso: [█████████░] 86%
 
 ## Métricas de Desempenho
 
@@ -91,9 +91,9 @@ Arquivo de retomada: Nenhum
 
 ## Session
 
-**Last session:** 2026-07-12T22:14:09.113Z
-**Stopped at:** Plan 02-03 concluído
-**Resume file:** .planning/phases/02-link-compartilh-vel-da-vitrine/02-UI-SPEC.md
+**Last session:** 2026-07-12T22:22:08.945Z
+**Stopped at:** Plan 02-04 concluído
+**Resume file:** .planning/phases/02-link-compartilh-vel-da-vitrine/02-05-PLAN.md
 
 ## Accumulated Context
 
@@ -109,12 +109,14 @@ Arquivo de retomada: Nenhum
 | Phase 02 P01 | 8min | 2 tasks | 2 files |
 | Phase 02 P02 | 7min | 3 tasks | 8 files |
 | Phase 02 P03 | 50min | 3 tasks | 6 files |
+| Phase 02 P04 | 20min | 2 tasks | 4 files |
 
 ## Decisions
 
 - [Phase 2]: lucide-react aprovado no gate de legitimidade (T-02-SC) — repositório github.com/lucide-icons/lucide confirmado, sem postinstall
 - [Phase 02]: generateStoreSlug refatorado para delegar ao slugify() compartilhado — elimina o segundo algoritmo de slug que 02-CONTEXT.md proibia
 - [Phase 02]: RPC is_slug_available (SECURITY DEFINER, boolean-only, search_path fixado) aplicada no projeto remoto — padrão para futuras checagens cross-tenant sob RLS restritiva
+- [Phase 02]: settings-form.tsx escrito do zero (D-07) reusando onboardingSchema, sem importar onboarding-wizard.tsx — inclui o campo de logo (já suportado por saveStoreSettings) além de nome/cor/tagline/WhatsApp
 
 ### Blockers
 
