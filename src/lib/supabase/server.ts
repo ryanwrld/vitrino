@@ -19,9 +19,15 @@ export async function createClient() {
       cookies: {
         getAll: () => cookieStore.getAll(),
         setAll: (cookiesToSet) => {
-          cookiesToSet.forEach(({ name, value, options }) =>
-            cookieStore.set(name, value, options)
-          );
+          try {
+            cookiesToSet.forEach(({ name, value, options }) =>
+              cookieStore.set(name, value, options)
+            );
+          } catch {
+            // Chamado a partir de um Server Component — pode ser ignorado com
+            // segurança porque middleware.ts já renova a sessão via
+            // updateSession() em toda request.
+          }
         },
       },
     }
