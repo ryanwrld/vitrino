@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { isAuthRetryableFetchError } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
 import { signInSchema, signUpSchema } from "@/lib/validation/auth";
 
@@ -78,9 +79,14 @@ export async function signUpAction(formData: FormData): Promise<AuthActionResult
 }
 
 /**
- * Login (AUTH-02). Mensagem de erro genérica em qualquer falha — nunca
- * enumerar se o email existe ou não (mitiga Information Disclosure, ver
- * threat_model T-01-08 do plano).
+ * Login (AUTH-02). Mensagem de erro genérica em qualquer falha de
+ * credencial — nunca enumerar se o email existe ou não (mitiga Information
+ * Disclosure, ver threat_model T-01-08 do plano original e T-01-07-01 do
+ * gap-closure). Exceção: falha de rede (`AuthRetryableFetchError`, quando o
+ * fetch() interno do Supabase nem chega a sair do servidor) não carrega
+ * nenhuma informação sobre a existência da conta, então recebe uma mensagem
+ * própria e honesta em vez de ser colapsada na mensagem de credenciais —
+ * ver `.planning/debug/login-network-error-message.md`.
  */
 export async function signInAction(formData: FormData): Promise<AuthActionResult> {
   const parsed = signInSchema.safeParse({
@@ -100,6 +106,9 @@ export async function signInAction(formData: FormData): Promise<AuthActionResult
   });
 
   if (error) {
+    if (isAuthRetryableFetchError(error)) {
+      return { error: "Não foi possível conectar. Verifique sua internet e tente novamente." };
+    }
     return { error: 'Email ou senha inválidos' };
   }
 
