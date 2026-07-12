@@ -27,21 +27,27 @@ result: [blocked]
 
 ### 4. M-4 (LOJA-01/WPP-01) — confirmação visual do wizard de onboarding
 expected: Prévia do número formatado aparece corretamente; template vem pré-preenchido; Dashboard é liberado só após concluir
-result: issue
+result: issue (fix aplicado em 01-06, aguardando reconfirmação visual do usuário)
 reported: "ui horrivel — labels (Nome da loja, Logo, Cor de destaque, Frase, WhatsApp, Template) e placeholders quase invisíveis, texto escuro sobre fundo preto, praticamente ilegível"
 severity: major
 
 ### 5. (bônus, achado durante M-2) Mensagem de erro de login com rede offline
 expected: Tentar logar sem conexão de rede deve mostrar um erro de conexão/rede, não "Email ou senha inválidos" (mensagem enganosa — sugere senha errada quando na verdade é falha de rede)
-result: issue
+result: issue (fix aplicado em 01-07, aguardando reconfirmação do usuário)
 reported: "o único bug identificado foi essa mensagem de 'email ou senha inválidos' aparecendo com o wifi desligado"
 severity: major
 
+### 6. (bônus, achado ao recarregar /onboarding) Erro "Cookies can only be modified in a Server Action or Route Handler"
+expected: Recarregar /onboarding (ou qualquer página admin) não deve lançar exceção nenhuma, mesmo quando o token de sessão precisa ser renovado durante a renderização do Server Component
+result: issue
+reported: "Console Error ao recarregar /onboarding: 'Cookies can only be modified in a Server Action or Route Handler', apontando para src/lib/supabase/server.ts:23 (setAll -> cookieStore.set)"
+severity: blocker
+
 ## Summary
 
-total: 5
+total: 6
 passed: 1
-issues: 2
+issues: 3
 pending: 0
 skipped: 1
 blocked: 1
@@ -88,3 +94,16 @@ blocked: 1
     - "Importar isAuthRetryableFetchError de @supabase/supabase-js (já re-exportado, sem nova dependência) e checar esse caso ANTES do fallback genérico em signInAction"
     - "Retornar mensagem distinta para falha de rede (ex: 'Não foi possível conectar. Verifique sua internet e tente novamente.'), mantendo a mensagem genérica atual só para AuthApiError real (preserva o padrão anti-enumeração intacto — falha de rede não carrega informação sobre existência de conta)"
   debug_session: ".planning/debug/login-network-error-message.md"
+
+- truth: "Recarregar qualquer página admin não lança exceção mesmo quando o token de sessão precisa ser renovado durante a renderização do Server Component"
+  status: failed
+  reason: "User reported: Console Error ao recarregar /onboarding: 'Cookies can only be modified in a Server Action or Route Handler', apontando para src/lib/supabase/server.ts:23"
+  severity: blocker
+  test: 6
+  root_cause: "src/lib/supabase/server.ts:21-25 (createClient, usado em Server Components/Server Actions/Route Handlers) implementa setAll sem o try/catch recomendado pela documentação oficial do @supabase/ssr. Quando getUser() é chamado a partir de um Server Component (ex: onboarding-guard.ts / page.tsx via requireCompletedOnboarding) e o token de sessão precisa de refresh, o cliente Supabase tenta escrever os cookies renovados via setAll -> cookieStore.set(), mas o Next.js App Router só permite escrita de cookies em Server Actions e Route Handlers, nunca durante a renderização de um Server Component — lançando a exceção. O middleware já faz o refresh de sessão por request (updateSession), então esse setAll redundante disparado por um Server Component pode ser seguramente ignorado."
+  artifacts:
+    - path: "src/lib/supabase/server.ts"
+      issue: "setAll (linhas 21-25) sem try/catch — lança quando chamado durante render de Server Component"
+  missing:
+    - "Envolver o forEach de cookieStore.set dentro de um try/catch vazio (ou com comentário), conforme o padrão oficial documentado pelo @supabase/ssr para uso em Server Components — o middleware já garante o refresh real da sessão via updateSession"
+  debug_session: ""
