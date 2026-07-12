@@ -13,7 +13,7 @@ Vitrino nasce da base para o pico de conversão. Primeiro estabelecemos a funda�
 
 Fases decimais aparecem entre suas fases inteiras vizinhas, em ordem numérica.
 
-- [ ] **Phase 1: Fundação, Conta e Isolamento Multi-Tenant** - Revendedor cria conta, entra, recupera senha e passa por onboarding (identidade da loja + WhatsApp), sobre uma base de dados isolada por RLS com rota pública garantidamente sem auth
+- [x] **Phase 1: Fundação, Conta e Isolamento Multi-Tenant** - Revendedor cria conta, entra, recupera senha e passa por onboarding (identidade da loja + WhatsApp), sobre uma base de dados isolada por RLS com rota pública garantidamente sem auth (completed 2026-07-12)
 - [ ] **Phase 2: Link Compartilhável da Vitrine** - Revendedor define slug personalizado, gera QR Code e copia o link; pode revisitar/editar configurações do onboarding
 - [ ] **Phase 3: CRUD de Produtos e Pipeline de Mídia** - Revendedor cadastra, edita e gerencia produtos com fotos comprimidas e controle de estoque
 - [ ] **Phase 4: Vitrine Pública e Filtragem** - Cliente final acessa a vitrine sem login, filtra e navega produtos paginados com estoque atualizado
@@ -38,7 +38,7 @@ Fases decimais aparecem entre suas fases inteiras vizinhas, em ordem numérica.
   6. Teste de isolamento entre dois tenants passa: dados de um revendedor nunca aparecem para outro (RLS habilitado em toda tabela)
   7. Teste de fumaça confirma que `/loja/[slug]` responde sem auth (middleware escopado apenas a `/admin/:path*`) e o slug tem constraint UNIQUE no banco
 
-**Plans**: 3/5 plans executed
+**Plans**: 5/5 plans complete
 **Wave 1**
 
 - [x] 01-01-PLAN.md — Walking Skeleton: scaffold Next 16 + clientes Supabase + middleware `/admin` escopado + placeholder público
@@ -53,8 +53,8 @@ Fases decimais aparecem entre suas fases inteiras vizinhas, em ordem numérica.
 
 **Wave 4** *(blocked on Wave 3 completion)*
 
-- [ ] 01-04-PLAN.md — Recuperação de senha (resetPasswordForEmail + verifyOtp + updateUser)
-- [ ] 01-05-PLAN.md — Onboarding: identidade da loja + WhatsApp normalizado + template (libphonenumber-js gate)
+- [x] 01-04-PLAN.md — Recuperação de senha (resetPasswordForEmail + verifyOtp + updateUser)
+- [x] 01-05-PLAN.md — Onboarding: identidade da loja + WhatsApp normalizado + template (libphonenumber-js gate)
 
 **UI hint**: yes
 
@@ -153,7 +153,7 @@ As fases executam em ordem numérica: 1 → 2 → 3 → 4 → 5 → 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Fundação, Conta e Isolamento Multi-Tenant | 3/5 | In Progress|  |
+| 1. Fundação, Conta e Isolamento Multi-Tenant | 5/5 | Complete   | 2026-07-12 |
 | 2. Link Compartilhável da Vitrine | 0/TBD | Not started | - |
 | 3. CRUD de Produtos e Pipeline de Mídia | 0/TBD | Not started | - |
 | 4. Vitrine Pública e Filtragem | 0/TBD | Not started | - |
