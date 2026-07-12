@@ -6,7 +6,7 @@ current_phase: 2
 current_phase_name: Link Compartilhável da Vitrine
 status: executing
 stopped_at: Phase 2 UI-SPEC approved
-last_updated: "2026-07-12T21:18:17.811Z"
+last_updated: "2026-07-12T21:23:24.076Z"
 progress:
   total_phases: 6
   completed_phases: 1
@@ -91,7 +91,7 @@ Arquivo de retomada: Nenhum
 
 ## Session
 
-**Last session:** 2026-07-12T21:16:35.551Z
+**Last session:** 2026-07-12T21:22:54.797Z
 **Stopped at:** Phase 2 UI-SPEC approved
 **Resume file:** .planning/phases/02-link-compartilh-vel-da-vitrine/02-UI-SPEC.md
 
@@ -113,3 +113,7 @@ Arquivo de retomada: Nenhum
 
 - [Phase 2]: lucide-react aprovado no gate de legitimidade (T-02-SC) — repositório github.com/lucide-icons/lucide confirmado, sem postinstall
 - [Phase 02]: generateStoreSlug refatorado para delegar ao slugify() compartilhado — elimina o segundo algoritmo de slug que 02-CONTEXT.md proibia
+
+### Blockers
+
+- [Fase 2, Plano 03] supabase db push bloqueado: sem SUPABASE_ACCESS_TOKEN e sem login interativo disponível neste ambiente. Usuário precisa fornecer SUPABASE_ACCESS_TOKEN (Dashboard > Account > Access Tokens) ou rodar 'supabase db push' manualmente para aplicar 0002_slug_availability_rpc.sql.
