@@ -36,8 +36,8 @@ export function SlugEditor({ currentSlug }: SlugEditorProps) {
   const router = useRouter();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [rawSlug, setRawSlug] = useState(currentSlug);
-  const [status, setStatus] = useState<AvailabilityStatus>("idle");
-  const [, startCheckTransition] = useTransition();
+  const [status, setStatus] = useState<"idle" | "available" | "taken">("idle");
+  const [isCheckPending, startCheckTransition] = useTransition();
   const [isSaving, startSaveTransition] = useTransition();
 
   const slug = slugify(rawSlug);
@@ -46,26 +46,41 @@ export function SlugEditor({ currentSlug }: SlugEditorProps) {
   const formatResult = slugSchema.safeParse(slug);
   const formatError = formatResult.success ? null : formatResult.error.issues[0]?.message ?? null;
 
+  // Só há algo a checar quando o formato é válido e o valor debounced
+  // diverge do slug atual — tudo derivado no render, nunca via setState
+  // síncrono dentro do efeito (anti-padrão "adjusting state on prop
+  // change" que o react-hooks/set-state-in-effect sinaliza; ver
+  // https://react.dev/learn/you-might-not-need-an-effect). O estado
+  // "checking" vem de `isCheckPending` (useTransition), que o próprio
+  // React atualiza de forma síncrona ao chamar `startCheckTransition` —
+  // não precisamos de um `setStatus("checking")` manual.
+  const needsCheck = formatResult.success && debouncedSlug !== currentSlug;
+  const displayStatus: AvailabilityStatus = !needsCheck
+    ? "idle"
+    : isCheckPending
+      ? "checking"
+      : status;
+
   useEffect(() => {
-    if (!formatResult.success || debouncedSlug === currentSlug) {
-      setStatus("idle");
+    if (!needsCheck) {
       return;
     }
 
-    setStatus("checking");
+    let cancelled = false;
     startCheckTransition(async () => {
       const result = await checkSlugAvailability(debouncedSlug);
-      // Evita aplicar um resultado obsoleto se o usuário já digitou algo
-      // diferente enquanto a checagem estava em voo.
-      if (slugify(rawSlug) !== debouncedSlug) {
+      if (cancelled) {
         return;
       }
       setStatus(result.available ? "available" : "taken");
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSlug, currentSlug]);
 
-  const canSave = status === "available" && !isSaving;
+    return () => {
+      cancelled = true;
+    };
+  }, [debouncedSlug, currentSlug, needsCheck]);
+
+  const canSave = displayStatus === "available" && !isSaving;
 
   function openConfirmDialog() {
     if (!canSave) return;
@@ -103,7 +118,7 @@ export function SlugEditor({ currentSlug }: SlugEditorProps) {
         {formatError ? (
           <span className="text-sm text-[#FF4D4D]">{formatError}</span>
         ) : (
-          <StatusPill status={status} />
+          <StatusPill status={displayStatus} />
         )}
       </div>
 
