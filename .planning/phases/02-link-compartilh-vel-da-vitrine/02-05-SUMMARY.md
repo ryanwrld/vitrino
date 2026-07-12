@@ -98,6 +98,7 @@ Cada task foi commitada atomicamente:
 
 1. **Task 1: Input de slug com auto-slugify + checagem debounced (D-01, D-02, D-03)** - `837c642` (feat)
 2. **Task 2: Botão "Salvar novo link" + diálogo de confirmação nativo (D-04, D-08, Pitfall 4)** - `5ff545f` (feat)
+3. **Correção de deviation: remove setState síncrono no efeito de checagem** - `584437f` (fix)
 
 **Plan metadata:** (este commit)
 
@@ -109,11 +110,26 @@ Cada task foi commitada atomicamente:
 
 ## Deviations from Plan
 
-None - plano executado exatamente como escrito.
+### Auto-fixed Issues
+
+**1. [Rule 1 - Bug] Removidas chamadas síncronas de `setState` dentro do `useEffect`**
+- **Encontrado durante:** Verificação pós-execução (`npx eslint`), após ambas as tasks já estarem commitadas
+- **Problema:** O código de referência do 02-PATTERNS.md (Pattern 2) chama `setStatus("idle")` e `setStatus("checking")` diretamente como primeira instrução do `useEffect` disparado pelo debounce. A config de ESLint do projeto (`react-hooks/set-state-in-effect`) sinaliza isso como o anti-padrão "adjusting state on prop change", bloqueando um `npx eslint` limpo — um critério de sucesso do plano.
+- **Fix:** As transições manuais `"idle"`/`"checking"` foram substituídas por valores derivados diretamente no render: `needsCheck` (formato válido E o slug debounced diverge do atual) e `isCheckPending` (do próprio `useTransition`, que o React já atualiza de forma síncrona ao chamar `startCheckTransition`, sem `setState` manual). As únicas chamadas `setStatus` restantes ficam dentro do callback assíncrono de `checkSlugAvailability` (available/taken), que a regra não sinaliza.
+- **Arquivos modificados:** `src/app/(admin)/configuracoes/slug-editor.tsx`
+- **Verificação:** `npx tsc --noEmit` e `npx eslint src/app/(admin)/configuracoes/slug-editor.tsx` limpos; comportamento inalterado (a pill de status continua mostrando checking → available/taken com o mesmo debounce de 400ms)
+- **Committed in:** `584437f`
+
+---
+
+**Total de deviations:** 1 auto-corrigida (Rule 1 - bug/conformidade de lint)
+**Impacto no plano:** Necessário para um `npx eslint` limpo conforme a config de lint deste projeto; sem mudança de comportamento, copy ou escopo.
 
 ## Issues Encountered
 
-Nenhum. `npx tsc --noEmit` limpo em ambas as tasks (só os erros pré-existentes e fora de escopo em `tests/supabase/server-cookies.test.ts`, já registrados em `deferred-items.md`). `npm run build` lista `/configuracoes` como rota dinâmica (`ƒ`), sem erros; um `curl` deslogado contra um servidor de dev local confirmou o redirect `307` para `/login` (guard herdado de `requireCompletedOnboarding`, inalterado por este plano).
+`npx tsc --noEmit` limpo em ambas as tasks (só os erros pré-existentes e fora de escopo em `tests/supabase/server-cookies.test.ts`, já registrados em `deferred-items.md`). `npm run build` lista `/configuracoes` como rota dinâmica (`ƒ`), sem erros; um `curl` deslogado contra um servidor de dev local confirmou o redirect `307` para `/login` (guard herdado de `requireCompletedOnboarding`, inalterado por este plano).
+
+Execuções repetidas de `npm test` durante a verificação dispararam "Request rate limit reached" do Supabase Auth nos testes de integração de `tests/settings/*.test.ts` (que criam contas reais no projeto Supabase real a cada execução). Isso é um comportamento pré-existente da infraestrutura de testes (sem emulador local de Supabase Auth), não relacionado ao único arquivo modificado por este plano (`slug-editor.tsx`, que não é `files_modified` de nenhum desses testes). Confirmado como não-relacionado rodando `tests/settings/store-settings-update.test.ts` isoladamente (2/2 passaram) antes do rate limit ser atingido por execuções cumulativas nesta mesma sessão. Não corrigido — fora de escopo para este plano de UI; sinalizado para uma futura fase considerar um stub local de Supabase Auth para a suite de testes.
 
 ## User Setup Required
 None - nenhuma configuração de serviço externo necessária.
