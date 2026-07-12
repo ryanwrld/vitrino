@@ -4,14 +4,14 @@ milestone: v1.0
 milestone_name: milestone
 current_phase: 2
 current_phase_name: Link Compartilhável da Vitrine
-status: ready_to_plan
+status: executing
 stopped_at: Phase 2 UI-SPEC approved
-last_updated: "2026-07-12T15:43:06.491Z"
+last_updated: "2026-07-12T21:06:56.971Z"
 progress:
   total_phases: 6
   completed_phases: 1
-  total_plans: 8
-  completed_plans: 8
+  total_plans: 14
+  completed_plans: 9
   percent: 17
 ---
 
@@ -27,9 +27,9 @@ Ver: .planning/PROJECT.md (atualizado 2026-07-10)
 ## Posição Atual
 
 Phase: 2 de 6 (Link Compartilhável da Vitrine)
-Plan: 0 de TBD na fase atual (ainda não planejada)
-Status: Phase 1 completa — pronto para discutir/planejar Fase 2
-Última atividade: 2026-07-12 — UAT da Fase 1 concluído (4 passed, 0 issues, 1 skipped, 1 blocked/deferido)
+Plan: 1 de 6 na fase atual (02-01 concluído)
+Status: Executing Phase 02
+Última atividade: 2026-07-12 — Plan 02-01 concluído (qrcode, lucide-react e @types/qrcode instalados; gate de legitimidade T-02-SC aprovado)
 
 Progresso: [██░░░░░░░░] 17%
 
@@ -91,7 +91,7 @@ Arquivo de retomada: Nenhum
 
 ## Session
 
-**Last session:** 2026-07-12T15:43:06.480Z
+**Last session:** 2026-07-12T21:06:25.426Z
 **Stopped at:** Phase 2 UI-SPEC approved
 **Resume file:** .planning/phases/02-link-compartilh-vel-da-vitrine/02-UI-SPEC.md
 
@@ -101,3 +101,13 @@ Arquivo de retomada: Nenhum
 
 - Phase 1 edited: Escopo expandido: onboarding pós-cadastro absorve identidade da loja e WhatsApp (LOJA-01, WPP-01, WPP-02); novo requisito AUTH-05 (recuperação de senha)
 - Phase 2 edited: Escopo reduzido: agora só link compartilhável (LOJA-02, LOJA-03, LOJA-04); identidade da loja e WhatsApp migraram para a Fase 1
+
+## Performance Metrics
+
+| Phase | Plan | Duration | Notes |
+|-------|------|----------|-------|
+| Phase 02 P01 | 8min | 2 tasks | 2 files |
+
+## Decisions
+
+- [Phase 2]: lucide-react aprovado no gate de legitimidade (T-02-SC) — repositório github.com/lucide-icons/lucide confirmado, sem postinstall

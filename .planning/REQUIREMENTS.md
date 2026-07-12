@@ -18,9 +18,9 @@ Requisitos para o lançamento inicial. Cada um mapeia para fases do roadmap.
 ### Loja
 
 - [ ] **LOJA-01**: Revendedor pode configurar nome da loja, logo, cor de destaque e frase de apresentação (máx. 100 caracteres)
-- [ ] **LOJA-02**: Revendedor pode definir um slug personalizado (vitrino.app/loja/[slug]) com validação de unicidade em tempo real
-- [ ] **LOJA-03**: Revendedor pode gerar e baixar QR Code do link da vitrine
-- [ ] **LOJA-04**: Revendedor pode copiar o link da vitrine com um clique
+- [x] **LOJA-02**: Revendedor pode definir um slug personalizado (vitrino.app/loja/[slug]) com validação de unicidade em tempo real
+- [x] **LOJA-03**: Revendedor pode gerar e baixar QR Code do link da vitrine
+- [x] **LOJA-04**: Revendedor pode copiar o link da vitrine com um clique
 
 ### WhatsApp
 
@@ -127,6 +127,7 @@ Quais fases cobrem quais requisitos. Atualizado durante a criação do roadmap.
 | MTR-02 | Phase 6 | Pendente |
 
 **Cobertura:**
+
 - Requisitos v1: 29 total (AUTH-05 adicionado na discussão da Fase 1)
 - Mapeados para fases: 29 ✓
 - Não mapeados: 0 ✓
