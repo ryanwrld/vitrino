@@ -77,7 +77,7 @@ Fases decimais aparecem entre suas fases inteiras vizinhas, em ordem numérica.
   3. Revendedor copia o link da vitrine com um clique
   4. Revendedor pode revisitar e editar nome da loja, logo, cor, frase de apresentação e configuração de WhatsApp definidos no onboarding da Fase 1
 
-**Plans**: 2/6 plans executed
+**Plans**: 3/6 plans executed
 
 **Wave 1**
 
@@ -86,7 +86,7 @@ Fases decimais aparecem entre suas fases inteiras vizinhas, em ordem numérica.
 
 **Wave 2** *(blocked on Wave 1)*
 
-- [ ] 02-03-PLAN.md — Migration RPC `is_slug_available` (SECURITY DEFINER) + [BLOCKING] push + typegen + Server Actions (checkSlugAvailability/updateStoreSlug/saveStoreSettings) + testes de integração
+- [x] 02-03-PLAN.md — Migration RPC `is_slug_available` (SECURITY DEFINER) + [BLOCKING] push + typegen + Server Actions (checkSlugAvailability/updateStoreSlug/saveStoreSettings) + testes de integração
 
 **Wave 3** *(blocked on Wave 2)*
 
@@ -179,7 +179,7 @@ As fases executam em ordem numérica: 1 → 2 → 3 → 4 → 5 → 6
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Fundação, Conta e Isolamento Multi-Tenant | 8/8 | Complete   | 2026-07-12 |
-| 2. Link Compartilhável da Vitrine | 2/6 | In Progress|  |
+| 2. Link Compartilhável da Vitrine | 3/6 | In Progress|  |
 | 3. CRUD de Produtos e Pipeline de Mídia | 0/TBD | Not started | - |
 | 4. Vitrine Pública e Filtragem | 0/TBD | Not started | - |
 | 5. Fluxo de Pedido no WhatsApp (CRÍTICO) | 0/TBD | Not started | - |

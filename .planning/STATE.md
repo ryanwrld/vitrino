@@ -5,14 +5,14 @@ milestone_name: milestone
 current_phase: 2
 current_phase_name: Link Compartilhável da Vitrine
 status: executing
-stopped_at: Phase 2 UI-SPEC approved
-last_updated: "2026-07-12T21:23:24.076Z"
+stopped_at: Plan 02-03 concluído
+last_updated: "2026-07-12T22:14:09.122Z"
 progress:
   total_phases: 6
   completed_phases: 1
   total_plans: 14
-  completed_plans: 10
-  percent: 17
+  completed_plans: 11
+  percent: 79
 ---
 
 # Estado do Projeto
@@ -27,11 +27,11 @@ Ver: .planning/PROJECT.md (atualizado 2026-07-10)
 ## Posição Atual
 
 Phase: 2 de 6 (Link Compartilhável da Vitrine)
-Plan: 2 de 6 na fase atual (02-02 concluído)
+Plan: 3 de 6 na fase atual (02-03 concluído)
 Status: Executing Phase 02
-Última atividade: 2026-07-12 — Plan 02-02 concluído (slugify com fold de diacríticos, slugSchema D-02, buildStoreUrl e useDebouncedValue)
+Última atividade: 2026-07-12 — Plan 02-03 concluído (RPC is_slug_available aplicada no remoto + Server Actions de configurações: checkSlugAvailability, updateStoreSlug, saveStoreSettings)
 
-Progresso: [███████░░░] 71%
+Progresso: [████████░░] 79%
 
 ## Métricas de Desempenho
 
@@ -91,8 +91,8 @@ Arquivo de retomada: Nenhum
 
 ## Session
 
-**Last session:** 2026-07-12T21:22:54.797Z
-**Stopped at:** Phase 2 UI-SPEC approved
+**Last session:** 2026-07-12T22:14:09.113Z
+**Stopped at:** Plan 02-03 concluído
 **Resume file:** .planning/phases/02-link-compartilh-vel-da-vitrine/02-UI-SPEC.md
 
 ## Accumulated Context
@@ -108,12 +108,14 @@ Arquivo de retomada: Nenhum
 |-------|------|----------|-------|
 | Phase 02 P01 | 8min | 2 tasks | 2 files |
 | Phase 02 P02 | 7min | 3 tasks | 8 files |
+| Phase 02 P03 | 50min | 3 tasks | 6 files |
 
 ## Decisions
 
 - [Phase 2]: lucide-react aprovado no gate de legitimidade (T-02-SC) — repositório github.com/lucide-icons/lucide confirmado, sem postinstall
 - [Phase 02]: generateStoreSlug refatorado para delegar ao slugify() compartilhado — elimina o segundo algoritmo de slug que 02-CONTEXT.md proibia
+- [Phase 02]: RPC is_slug_available (SECURITY DEFINER, boolean-only, search_path fixado) aplicada no projeto remoto — padrão para futuras checagens cross-tenant sob RLS restritiva
 
 ### Blockers
 
-- [Fase 2, Plano 03] supabase db push bloqueado: sem SUPABASE_ACCESS_TOKEN e sem login interativo disponível neste ambiente. Usuário precisa fornecer SUPABASE_ACCESS_TOKEN (Dashboard > Account > Access Tokens) ou rodar 'supabase db push' manualmente para aplicar 0002_slug_availability_rpc.sql.
+None
