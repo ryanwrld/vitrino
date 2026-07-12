@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { isAuthRetryableFetchError } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
 import { signInSchema, signUpSchema } from "@/lib/validation/auth";
+import { slugify } from "@/lib/slug/slugify";
 
 export type AuthActionResult = { error: string } | void;
 
@@ -16,12 +17,7 @@ export type AuthActionResult = { error: string } | void;
  * na migration do Plan 02).
  */
 function generateStoreSlug(email: string): string {
-  const base =
-    email
-      .split("@")[0]
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "") || "loja";
+  const base = slugify(email.split("@")[0]) || "loja";
   const suffix = Math.random().toString(36).slice(2, 8);
   return `${base}-${suffix}`;
 }
