@@ -5,13 +5,13 @@ milestone_name: milestone
 current_phase: 3
 current_phase_name: CRUD de Produtos e Pipeline de Mídia
 status: executing
-stopped_at: Completed 03-04-PLAN.md
-last_updated: "2026-07-13T17:51:26.330Z"
+stopped_at: Completed 03-05-PLAN.md
+last_updated: "2026-07-13T18:21:35.424Z"
 progress:
   total_phases: 6
   completed_phases: 2
   total_plans: 20
-  completed_plans: 18
+  completed_plans: 19
   percent: 33
 ---
 
@@ -27,11 +27,11 @@ Ver: .planning/PROJECT.md (atualizado 2026-07-10)
 ## Posição Atual
 
 Phase: 3 de 6 (CRUD de Produtos e Pipeline de Mídia)
-Plan: 4 de 6 na fase atual (03-04 concluído — pipeline de fotos de produto)
+Plan: 5 de 6 na fase atual (03-05 concluído — editar/excluir/publicar produtos)
 Status: Executing Phase 3
-Última atividade: 2026-07-13 — Plan 03-04 concluído (upload de até 5 fotos com compressão client-side via browser-image-compression, validação de magic bytes/5MB/recontagem server-side, reordenação drag-and-drop via @dnd-kit com capa = posição 1, remoção individual; checkpoint humano em dispositivo móvel real aprovado; PROD-03 marcado como Completo, PROD-07 reforçado)
+Última atividade: 2026-07-13 — Plan 03-05 concluído (updateProduct/deleteProduct/publishProduct/unpublishProduct como Server Actions owner-scoped; deleteProduct limpa storage.remove ANTES do cascade — Pitfall 1; rota /produtos/[id]/editar pré-preenchida com campos/tamanhos/fotos; diálogo nativo de exclusão e botões editar/publicar na UI; PROD-05 marcado como Completo)
 
-Progresso: [█████████-] 18/20 plans totais concluídos (Fases 4-6 ainda não planejadas em detalhe)
+Progresso: [██████████] 19/20 plans totais concluídos (Fases 4-6 ainda não planejadas em detalhe)
 
 ## Métricas de Desempenho
 
@@ -91,8 +91,8 @@ Arquivo de retomada: Nenhum
 
 ## Session
 
-**Last session:** 2026-07-13T17:51:26.330Z
-**Stopped at:** Completed 03-04-PLAN.md
+**Last session:** 2026-07-13T18:21:27.176Z
+**Stopped at:** Completed 03-05-PLAN.md
 **Resume file:** None
 
 ## Accumulated Context
@@ -116,6 +116,7 @@ Arquivo de retomada: Nenhum
 | Phase 03 P02 | 47min | 3 tasks | 10 files |
 | Phase 03 P03 | 12min | 2 tasks | 6 files |
 | Phase 03 P04 | 50min | 3 tasks | 6 files |
+| Phase 03 P05 | 15min | 3 tasks | 6 files |
 
 ## Decisions
 
@@ -139,6 +140,9 @@ Arquivo de retomada: Nenhum
 - [Phase 03 P04, pós-checkpoint]: handleFilesSelected copia FileList para array antes de limpar input.value (bug em Edge/Chromium); crypto.randomUUID() trocado por localSlotId() com fallback não-criptográfico (exige contexto seguro, falhava via IP local em HTTP) — commit f8be197, aplicado pelo orquestrador durante a pausa do checkpoint humano
 - [Phase 03 P04, pós-checkpoint]: next.config.ts ganhou allowedDevOrigins para permitir acesso ao dev server via IP de rede local (necessário para o próprio checkpoint mobile) — commit d5bbe75
 - [Phase 03 P04, pós-checkpoint]: photo-uploader.tsx — notificação de fotos pendentes movida para useEffect (evita setState do pai durante render do filho) e handleDragEnd computa reorder fora do updater de setSlots (evita duplicar persistência sob Strict Mode); botões de drag/remover encolhidos mantendo 44x44px de área de toque — commit cddd237
+- [Phase 03 P05]: parseProductFormData extraído de saveProduct para reuso em updateProduct — nunca duas implementações divergentes da mesma validação
+- [Phase 03 P05]: product_sizes reescrito via delete+insert em updateProduct (não diff parcial), aceitável dado o tamanho pequeno do conjunto (max 10 linhas)
+- [Phase 03 P05]: publishProduct/unpublishProduct sem gate de completude e sem diálogo de confirmação — toggle manual reversível (D-10, T-03-12)
 
 ### Blockers
 
