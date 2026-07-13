@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition, type ChangeEvent } from "react";
+import { useEffect, useState, useTransition, type ChangeEvent } from "react";
 import Image from "next/image";
 import imageCompression from "browser-image-compression";
 import {
@@ -118,6 +118,15 @@ export function PhotoUploader({ productId, initialPhotos, onPendingFilesChange }
 
   const emptySlotCount = Math.max(0, MAX_PHOTOS - slots.length - processingCount);
 
+  // Notifica o form pai (modo criação) DEPOIS do commit, nunca de dentro do
+  // updater de `setSlots` — chamar o setState do pai ali dentro disparava
+  // "Cannot update a component while rendering a different component".
+  useEffect(() => {
+    if (!productId) {
+      onPendingFilesChange?.(pendingFilesOf(slots));
+    }
+  }, [slots, productId, onPendingFilesChange]);
+
   async function handleFilesSelected(event: ChangeEvent<HTMLInputElement>) {
     const fileList = event.target.files;
     // Copiar para um array ANTES de limpar o input: em alguns navegadores
@@ -163,14 +172,10 @@ export function PhotoUploader({ productId, initialPhotos, onPendingFilesChange }
           }
         } else {
           const previewUrl = URL.createObjectURL(compressed);
-          setSlots((prev) => {
-            const next: Slot[] = [
-              ...prev,
-              { kind: "pending" as const, localId: localSlotId(), file: compressed, previewUrl },
-            ];
-            onPendingFilesChange?.(pendingFilesOf(next));
-            return next;
-          });
+          setSlots((prev) => [
+            ...prev,
+            { kind: "pending" as const, localId: localSlotId(), file: compressed, previewUrl },
+          ]);
         }
       } catch {
         toast.error("Não foi possível processar essa foto. Tente novamente.");
@@ -183,11 +188,7 @@ export function PhotoUploader({ productId, initialPhotos, onPendingFilesChange }
   function handleRemove(slot: Slot) {
     if (slot.kind === "pending") {
       URL.revokeObjectURL(slot.previewUrl);
-      setSlots((prev) => {
-        const next = prev.filter((item) => slotKey(item) !== slotKey(slot));
-        onPendingFilesChange?.(pendingFilesOf(next));
-        return next;
-      });
+      setSlots((prev) => prev.filter((item) => slotKey(item) !== slotKey(slot)));
       return;
     }
 
@@ -208,33 +209,33 @@ export function PhotoUploader({ productId, initialPhotos, onPendingFilesChange }
       return;
     }
 
-    setSlots((prev) => {
-      const oldIndex = prev.findIndex((slot) => slotKey(slot) === active.id);
-      const newIndex = prev.findIndex((slot) => slotKey(slot) === over.id);
-      if (oldIndex === -1 || newIndex === -1) {
-        return prev;
-      }
+    const oldIndex = slots.findIndex((slot) => slotKey(slot) === active.id);
+    const newIndex = slots.findIndex((slot) => slotKey(slot) === over.id);
+    if (oldIndex === -1 || newIndex === -1) {
+      return;
+    }
 
-      const reordered = arrayMove(prev, oldIndex, newIndex);
+    // Reordenar é um evento discreto (soltar o drag), não uma atualização
+    // derivada de state anterior — computar fora do updater evita repetir a
+    // Server Action de persistência caso o updater rode 2x (Strict Mode).
+    const reordered = arrayMove(slots, oldIndex, newIndex);
+    setSlots(reordered);
 
-      if (productId) {
-        const order = reordered
-          .filter((slot): slot is Extract<Slot, { kind: "saved" }> => slot.kind === "saved")
-          .map((slot, index) => ({ id: slot.id, position: index }));
+    if (productId) {
+      const order = reordered
+        .filter((slot): slot is Extract<Slot, { kind: "saved" }> => slot.kind === "saved")
+        .map((slot, index) => ({ id: slot.id, position: index }));
 
-        // Otimista (D-12): reordena na hora, persiste em background, toast só em falha.
-        startBackgroundTransition(async () => {
-          const result = await updatePhotoOrder(order);
-          if ("error" in result) {
-            toast.error(result.error);
-          }
-        });
-      } else {
-        onPendingFilesChange?.(pendingFilesOf(reordered));
-      }
-
-      return reordered;
-    });
+      // Otimista (D-12): reordena na hora, persiste em background, toast só em falha.
+      startBackgroundTransition(async () => {
+        const result = await updatePhotoOrder(order);
+        if ("error" in result) {
+          toast.error(result.error);
+        }
+      });
+    }
+    // Modo criação (!productId): a notificação ao form pai acontece no
+    // useEffect acima, disparado pela mudança de `slots`.
   }
 
   return (
@@ -314,23 +315,33 @@ function PhotoSlotItem({ slot, isCover, onRemove }: PhotoSlotItemProps) {
         <span className="absolute left-1 top-1 rounded-full bg-[#00C46A] px-2 py-0.5 text-xs text-white">Capa</span>
       )}
 
+      {/*
+        Área de toque (botão) mantém 44x44px cheio — mínimo recomendado para
+        alvo tocável no mobile — mas o círculo VISÍVEL dentro dela é bem menor,
+        para não tampar a miniatura da foto. Sombra + leve zoom no hover dá um
+        alvo preciso e discreto pro usuário de mouse/desktop também.
+      */}
       <button
         type="button"
         {...attributes}
         {...listeners}
         aria-label="Reordenar foto"
-        className="absolute bottom-1 left-1 flex h-11 w-11 items-center justify-center rounded-full bg-white/90 p-2 text-[#111111]"
+        className="group absolute bottom-0 left-0 flex h-11 w-11 items-center justify-center"
       >
-        <GripVertical className="h-4 w-4" aria-hidden="true" />
+        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/85 text-[#111111] shadow-sm transition group-hover:scale-110 group-hover:bg-white">
+          <GripVertical className="h-3 w-3" aria-hidden="true" />
+        </span>
       </button>
 
       <button
         type="button"
         onClick={onRemove}
         aria-label="Remover foto"
-        className="absolute right-1 top-1 flex h-11 w-11 items-center justify-center rounded-full bg-white p-2 text-[#FF4D4D]"
+        className="group absolute right-0 top-0 flex h-11 w-11 items-center justify-center"
       >
-        <X className="h-4 w-4" aria-hidden="true" />
+        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/85 text-[#FF4D4D] shadow-sm transition group-hover:scale-110 group-hover:bg-white">
+          <X className="h-3 w-3" aria-hidden="true" />
+        </span>
       </button>
     </div>
   );
