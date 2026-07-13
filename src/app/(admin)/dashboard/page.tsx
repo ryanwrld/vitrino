@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { requireCompletedOnboarding } from "@/lib/auth/onboarding-guard";
 import { signOutAction } from "@/lib/auth/actions";
 
@@ -18,6 +19,13 @@ export default async function DashboardPage() {
         <h1 className="text-2xl font-bold text-[#0D3D2B]">Bem-vindo(a) de volta!</h1>
         <p className="mt-1 text-sm text-[#6B6B6B]">Sua vitrine está pronta para receber pedidos.</p>
       </div>
+
+      <Link
+        href="/produtos"
+        className="rounded-lg border border-[#0D3D2B] px-4 py-2 text-center font-medium text-[#0D3D2B] transition hover:bg-[#0D3D2B] hover:text-white"
+      >
+        Produtos
+      </Link>
 
       <form action={signOutAction}>
         <button
