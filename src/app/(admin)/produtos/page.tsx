@@ -4,6 +4,7 @@ import { requireCompletedOnboarding } from "@/lib/auth/onboarding-guard";
 import { createClient } from "@/lib/supabase/server";
 import { queryProducts, type QueryProductsParams } from "@/lib/products/list";
 import { ProductList } from "./product-list";
+import { ProductToolbar } from "./product-toolbar";
 
 type ProdutosSearchParams = {
   q?: string;
@@ -31,11 +32,9 @@ type ProdutosSearchParams = {
  * o filtro/busca atual não bateu com nenhum. A distinção exige uma segunda
  * contagem (`totalCount`, sem filtro nenhum) além do resultado filtrado.
  *
- * Esta fatia (Plan 03-06 Task 2) já lê/aplica os filtros via `searchParams`
- * (a URL é a fonte de verdade — reabrir a mesma URL reproduz a mesma
- * visualização mesmo sem nenhuma UI de filtro ainda). A toolbar de busca/
- * filtro/ordenação (`<ProductToolbar>`) é adicionada na Task 3, que também
- * estende esta rota para renderizá-la.
+ * A toolbar de busca/filtro/ordenação (`<ProductToolbar>`, Plan 03-06 Task 3)
+ * só é renderizada quando a loja já tem pelo menos 1 produto — não há o que
+ * filtrar/buscar quando o catálogo está vazio.
  */
 export default async function ProdutosPage({
   searchParams,
@@ -96,9 +95,12 @@ export default async function ProdutosPage({
       </div>
 
       {hasAnyProduct && (
-        <p className="text-xs text-[#6B6B6B]">
-          {products.length} {products.length === 1 ? "produto" : "produtos"}
-        </p>
+        <div className="flex flex-col gap-2">
+          <ProductToolbar currentParams={params} />
+          <p className="text-xs text-[#6B6B6B]">
+            {products.length} {products.length === 1 ? "produto" : "produtos"}
+          </p>
+        </div>
       )}
 
       {hasFilteredResults ? (

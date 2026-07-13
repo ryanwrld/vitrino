@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState, useTransition } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -16,6 +17,13 @@ export type ProductListItem = {
   line: string | null;
   price: number;
   status: string;
+  /** Disponibilidade derivada (queryProducts, Plan 03-06) — EXISTS sobre
+   * product_sizes.available=true. Rollup no nível do produto: mostra
+   * "Disponível"/"Esgotado" sem strikethrough (reservado para os pills de
+   * tamanho individual, 03-UI-SPEC.md §Product list page). */
+  disponivel: boolean;
+  /** URL pública da foto de posição 0 (capa, D-11), ou null sem foto ainda. */
+  coverUrl: string | null;
 };
 
 export type ProductListProps = {
@@ -24,16 +32,24 @@ export type ProductListProps = {
 
 /**
  * Listagem de produtos (03-UI-SPEC.md §Product list page). Base (Plan 03-02)
- * renderiza nome/marca/linha/preço/status — thumbnail de capa e filtros/
- * busca/ordenação (PROD-06) ficam para o Plan 03-06.
+ * renderiza nome/marca/linha/preço/status.
  *
- * Esta fatia (Plan 03-05) adiciona os botões editar (`Pencil`, link para
+ * Plan 03-05 adicionou os botões editar (`Pencil`, link para
  * `/produtos/[id]/editar`) e excluir (`Trash2`, abre o diálogo nativo de
  * confirmação — mesmo padrão `<dialog>` do slug-editor.tsx, Fase 2). Um
  * único `<dialog>` compartilhado no fim da lista (controlado por
  * `deleteTarget`) evita duplicar um `<dialog>` por linha. `deleteProduct` só
  * é chamado a partir do onClick explícito de "Sim, excluir" — nunca do
  * cancelamento/close/escape do dialog (mesma disciplina do slug-editor).
+ *
+ * Esta fatia (Plan 03-06 Task 3) adiciona a thumbnail de capa (`coverUrl` via
+ * `next/image`, com `ImageOff` como fallback quando o produto não tem foto
+ * ainda) e o indicador de disponibilidade derivada (`disponivel`, rollup via
+ * `queryProducts`) — "Disponível" (dot verde) ou "Esgotado" (dot cinza, sem
+ * strikethrough neste nível de rollup — strikethrough é reservado para os
+ * pills de tamanho individual no formulário). Os dois empty states (nenhum
+ * produto vs. filtro sem resultado) são decididos e renderizados por
+ * `page.tsx`, não por este componente.
  */
 export function ProductList({ products }: ProductListProps) {
   const router = useRouter();
@@ -75,13 +91,36 @@ export function ProductList({ products }: ProductListProps) {
               key={product.id}
               className="flex items-center gap-3 rounded-lg border border-[#F5F5F3] bg-white p-3"
             >
-              <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg bg-[#F5F5F3]">
-                <ImageOff className="h-6 w-6 text-[#6B6B6B]" aria-hidden="true" />
+              <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-[#F5F5F3]">
+                {product.coverUrl ? (
+                  <Image
+                    src={product.coverUrl}
+                    alt={product.name}
+                    fill
+                    sizes="64px"
+                    className="object-cover"
+                  />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center">
+                    <ImageOff className="h-6 w-6 text-[#6B6B6B]" aria-hidden="true" />
+                  </div>
+                )}
               </div>
 
               <div className="flex min-w-0 flex-1 flex-col gap-0.5">
                 <span className="truncate font-medium text-[#111111]">{product.name}</span>
                 {secondaryLine && <span className="truncate text-xs text-[#6B6B6B]">{secondaryLine}</span>}
+                <span
+                  className={`flex items-center gap-1 text-xs ${
+                    product.disponivel ? "text-[#00C46A]" : "text-[#6B6B6B]"
+                  }`}
+                >
+                  <span
+                    className={`h-1.5 w-1.5 rounded-full ${product.disponivel ? "bg-[#00C46A]" : "bg-[#6B6B6B]"}`}
+                    aria-hidden="true"
+                  />
+                  {product.disponivel ? "Disponível" : "Esgotado"}
+                </span>
               </div>
 
               <div className="flex shrink-0 flex-col items-end gap-1">
