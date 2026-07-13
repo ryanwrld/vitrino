@@ -237,7 +237,7 @@ describe("deleteProduct — remoção da linha (cascade) + limpeza do Storage (P
     expect(productError).toBeNull();
     expect(productAfter).toEqual([]);
 
-    const { data: sizesAfter } = await client.from("product_sizes").select("id").eq("product_id", productId);
+    const { data: sizesAfter } = await client.from("product_sizes").select("size").eq("product_id", productId);
     expect(sizesAfter).toEqual([]);
 
     const { data: photosAfter } = await client.from("product_photos").select("id").eq("product_id", productId);

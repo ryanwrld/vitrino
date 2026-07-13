@@ -155,17 +155,28 @@ async function getOwnedStore(): Promise<
   return { supabase, userId: userData.user.id, storeId: store.id };
 }
 
+type ParsedProductFields = {
+  name: string;
+  brand: string;
+  brandOther: string | null;
+  line: string | null;
+  sole: string | null;
+  category: string | null;
+  fulfillment: "sob_encomenda" | "pronta_entrega" | "ambos" | null;
+  price: number;
+  description: string | null;
+  sizes: { size: number; available: boolean }[];
+};
+
 /**
- * Cadastra um produto novo (PROD-01/PROD-02, D-08/D-09). Campos obrigatórios
- * são só nome/marca/preço — os demais (line/sole/category/fulfillment/
- * description) ficam `null` quando vazios, permitindo o rascunho rápido que
- * D-09 exige. `status` nasce `'draft'` por padrão (coluna `default 'draft'`
- * da migration 0003) — nenhum produto entra publicado.
- *
- * NÃO toca em `product_sizes`/`product_photos` aqui — essas são fatias
- * separadas (Plans 03-03/03-04).
+ * Validação de campos de produto compartilhada por `saveProduct` (criação) e
+ * `updateProduct` (edição, Plan 03-05) — nunca duas implementações
+ * divergentes da mesma checagem (Zod + brandOther + parseBRLPrice + parse de
+ * sizes), mesmo espírito de `uploadAndInsertPhotos` para o pipeline de fotos.
+ * NÃO chama `getOwnedStore()` nem toca o banco — é só parse+validação de
+ * `FormData`.
  */
-export async function saveProduct(formData: FormData): Promise<ProductActionResult> {
+function parseProductFormData(formData: FormData): { error: string } | { data: ParsedProductFields } {
   const parsed = productSchema.safeParse({
     name: formData.get("name"),
     brand: formData.get("brand"),
@@ -196,7 +207,7 @@ export async function saveProduct(formData: FormData): Promise<ProductActionResu
   // "sizes" (convenção documentada em productSchema.ts e usada por
   // product-form.tsx no onSubmit) — revalidados aqui mesmo formato
   // (size inteiro 36-45, available boolean, T-03-08) antes de qualquer
-  // insert em `products`/`product_sizes`.
+  // insert/update em `products`/`product_sizes`.
   const sizesRaw = formData.get("sizes");
   let sizesInput: unknown = [];
   if (typeof sizesRaw === "string" && sizesRaw.trim().length > 0) {
@@ -211,7 +222,39 @@ export async function saveProduct(formData: FormData): Promise<ProductActionResu
   if (!sizesParsed.success) {
     return { error: "Dados de tamanhos inválidos." };
   }
-  const sizes = sizesParsed.data ?? [];
+
+  return {
+    data: {
+      name: parsed.data.name,
+      brand: parsed.data.brand,
+      brandOther: isBrandOther ? parsed.data.brandOther || null : null,
+      line: parsed.data.line || null,
+      sole: parsed.data.sole || null,
+      category: parsed.data.category || null,
+      fulfillment: parsed.data.fulfillment ?? null,
+      price,
+      description: parsed.data.description || null,
+      sizes: sizesParsed.data ?? [],
+    },
+  };
+}
+
+/**
+ * Cadastra um produto novo (PROD-01/PROD-02, D-08/D-09). Campos obrigatórios
+ * são só nome/marca/preço — os demais (line/sole/category/fulfillment/
+ * description) ficam `null` quando vazios, permitindo o rascunho rápido que
+ * D-09 exige. `status` nasce `'draft'` por padrão (coluna `default 'draft'`
+ * da migration 0003) — nenhum produto entra publicado.
+ *
+ * NÃO toca em `product_sizes`/`product_photos` aqui — essas são fatias
+ * separadas (Plans 03-03/03-04).
+ */
+export async function saveProduct(formData: FormData): Promise<ProductActionResult> {
+  const parsedFields = parseProductFormData(formData);
+  if ("error" in parsedFields) {
+    return { error: parsedFields.error };
+  }
+  const fields = parsedFields.data;
 
   const owned = await getOwnedStore();
   if ("error" in owned) {
@@ -222,15 +265,15 @@ export async function saveProduct(formData: FormData): Promise<ProductActionResu
     .from("products")
     .insert({
       store_id: owned.storeId,
-      name: parsed.data.name,
-      brand: parsed.data.brand,
-      brand_other: isBrandOther ? parsed.data.brandOther || null : null,
-      line: parsed.data.line || null,
-      sole: parsed.data.sole || null,
-      category: parsed.data.category || null,
-      fulfillment: parsed.data.fulfillment ?? null,
-      price,
-      description: parsed.data.description || null,
+      name: fields.name,
+      brand: fields.brand,
+      brand_other: fields.brandOther,
+      line: fields.line,
+      sole: fields.sole,
+      category: fields.category,
+      fulfillment: fields.fulfillment,
+      price: fields.price,
+      description: fields.description,
     })
     .select("id")
     .single();
@@ -242,9 +285,9 @@ export async function saveProduct(formData: FormData): Promise<ProductActionResu
   // Só as linhas escolhidas (nunca a grade inteira) — um produto sem
   // nenhum tamanho marcado fica sem linhas em `product_sizes` (rascunho,
   // D-10 — a Fase 4 deriva "esgotado" via EXISTS falso).
-  if (sizes.length > 0) {
+  if (fields.sizes.length > 0) {
     const { error: sizesInsertError } = await owned.supabase.from("product_sizes").insert(
-      sizes.map((item) => ({
+      fields.sizes.map((item) => ({
         product_id: product.id,
         size: item.size,
         available: item.available,
@@ -270,6 +313,146 @@ export async function saveProduct(formData: FormData): Promise<ProductActionResu
   }
 
   return { success: true, id: product.id };
+}
+
+/**
+ * Edita um produto existente (PROD-05, Plan 03-05). Mesma validação de
+ * `saveProduct` via `parseProductFormData` — nunca uma segunda implementação
+ * divergente. `owned.supabase.from("products").update(...).eq("id", productId)`
+ * é escopado pela RLS (`owner_full_access_products`, subquery por
+ * `stores.owner_id`): um `productId` de outra loja simplesmente afeta 0
+ * linhas, sem erro (T-03-11, testado em edit-delete-product.test.ts) — nunca
+ * confiar no `productId` isoladamente.
+ *
+ * Reescreve `product_sizes` com a estratégia delete+insert (nunca um diff
+ * parcial): apaga todas as linhas atuais daquele `product_id` e insere as
+ * novas conforme o array recebido — aceitável dado o tamanho pequeno do
+ * conjunto (no máximo 10 tamanhos, 36-45).
+ *
+ * NÃO mexe em `product_photos` aqui — fotos têm suas próprias actions
+ * dedicadas (`addProductPhotos`/`updatePhotoOrder`/`removePhoto`, Plan 03-04).
+ */
+export async function updateProduct(productId: string, formData: FormData): Promise<ProductActionResult> {
+  const parsedFields = parseProductFormData(formData);
+  if ("error" in parsedFields) {
+    return { error: parsedFields.error };
+  }
+  const fields = parsedFields.data;
+
+  const owned = await getOwnedStore();
+  if ("error" in owned) {
+    return { error: owned.error };
+  }
+
+  const { error: updateError } = await owned.supabase
+    .from("products")
+    .update({
+      name: fields.name,
+      brand: fields.brand,
+      brand_other: fields.brandOther,
+      line: fields.line,
+      sole: fields.sole,
+      category: fields.category,
+      fulfillment: fields.fulfillment,
+      price: fields.price,
+      description: fields.description,
+    })
+    .eq("id", productId);
+
+  if (updateError) {
+    return { error: "Não foi possível salvar as alterações. Verifique sua conexão e tente novamente." };
+  }
+
+  const { error: deleteSizesError } = await owned.supabase
+    .from("product_sizes")
+    .delete()
+    .eq("product_id", productId);
+
+  if (deleteSizesError) {
+    return { error: "Não foi possível atualizar os tamanhos do produto. Tente novamente." };
+  }
+
+  if (fields.sizes.length > 0) {
+    const { error: sizesInsertError } = await owned.supabase.from("product_sizes").insert(
+      fields.sizes.map((item) => ({
+        product_id: productId,
+        size: item.size,
+        available: item.available,
+      }))
+    );
+
+    if (sizesInsertError) {
+      return { error: "Não foi possível salvar os tamanhos do produto. Tente novamente." };
+    }
+  }
+
+  return { success: true, id: productId };
+}
+
+/**
+ * Exclui um produto (PROD-05, hard delete, Plan 03-05). Storage é um sistema
+ * separado do Postgres, então `on delete cascade` (products -> product_sizes/
+ * product_photos) NUNCA apaga os blobs no bucket (03-RESEARCH.md Pitfall 1) —
+ * por isso a limpeza via `deleteProductPhotosStorage` acontece ANTES do
+ * `DELETE FROM products`, enquanto as linhas de `product_photos` (e portanto
+ * os `storage_path`) ainda existem para serem lidas. RLS escopa por dono
+ * (T-03-11): um `productId` de outra loja não retorna nenhuma foto (loop
+ * vazio, nenhuma chamada de storage) e o delete final afeta 0 linhas, sem
+ * erro.
+ */
+export async function deleteProduct(productId: string): Promise<ProductActionResult> {
+  const owned = await getOwnedStore();
+  if ("error" in owned) {
+    return { error: owned.error };
+  }
+
+  await deleteProductPhotosStorage(owned.supabase, productId);
+
+  const { error: deleteError } = await owned.supabase.from("products").delete().eq("id", productId);
+  if (deleteError) {
+    return { error: "Não foi possível excluir o produto. Tente novamente." };
+  }
+
+  return { success: true, id: productId };
+}
+
+/**
+ * Publica um produto rascunho (D-10, Plan 03-05) — toggle manual SEM gate de
+ * completude (03-RESEARCH.md Open Question 2: não bloquear publicação por
+ * falta de foto/tamanho). `status='published'` é o portão que a vitrine
+ * pública (Fase 4) consome. RLS escopa por dono (T-03-11).
+ */
+export async function publishProduct(productId: string): Promise<ProductActionResult> {
+  const owned = await getOwnedStore();
+  if ("error" in owned) {
+    return { error: owned.error };
+  }
+
+  const { error } = await owned.supabase.from("products").update({ status: "published" }).eq("id", productId);
+  if (error) {
+    return { error: "Não foi possível publicar o produto. Tente novamente." };
+  }
+
+  return { success: true, id: productId };
+}
+
+/**
+ * Volta um produto publicado para rascunho (D-10, Plan 03-05) — mesmo toggle
+ * manual reversível de `publishProduct`, sem diálogo de confirmação (baixo
+ * risco, T-03-12).
+ */
+export async function unpublishProduct(productId: string): Promise<ProductActionResult> {
+  const owned = await getOwnedStore();
+  if ("error" in owned) {
+    return { error: owned.error };
+  }
+
+  const { error } = await owned.supabase.from("products").update({ status: "draft" }).eq("id", productId);
+  if (error) {
+    return { error: "Não foi possível mover o produto para rascunho. Tente novamente." };
+  }
+
+  return { success: true, id: productId };
 }
 
 /**
