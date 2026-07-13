@@ -31,7 +31,7 @@ Requisitos para o lançamento inicial. Cada um mapeia para fases do roadmap.
 
 - [x] **PROD-01**: Revendedor pode cadastrar produto com nome do modelo, marca, tipo de solado, categoria e modalidade (sob encomenda/pronta entrega/ambos)
 - [x] **PROD-02**: Revendedor pode definir preço em BRL e os tamanhos disponíveis (grid 36-45)
-- [ ] **PROD-03**: Revendedor pode fazer upload de até 5 fotos por produto, com compressão automática no cliente e limite de 5MB por imagem
+- [x] **PROD-03**: Revendedor pode fazer upload de até 5 fotos por produto, com compressão automática no cliente e limite de 5MB por imagem
 - [x] **PROD-04**: Revendedor pode marcar produto (ou tamanho específico) como disponível ou esgotado
 - [ ] **PROD-05**: Revendedor pode editar e excluir produtos existentes
 - [ ] **PROD-06**: Revendedor pode listar, buscar por nome, filtrar (status/marca/solado) e ordenar produtos (mais recente/nome/preço) no painel
@@ -109,8 +109,8 @@ Quais fases cobrem quais requisitos. Atualizado durante a criação do roadmap.
 | WPP-02 | Phase 1 | Pendente |
 | PROD-01 | Phase 3 | Completo |
 | PROD-02 | Phase 3 | Completo |
-| PROD-03 | Phase 3 | Pendente |
-| PROD-04 | Phase 3 | Pendente |
+| PROD-03 | Phase 3 | Completo |
+| PROD-04 | Phase 3 | Completo |
 | PROD-05 | Phase 3 | Pendente |
 | PROD-06 | Phase 3 | Pendente |
 | PROD-07 | Phase 3 | Completo |

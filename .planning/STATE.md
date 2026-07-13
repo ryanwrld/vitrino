@@ -5,13 +5,13 @@ milestone_name: milestone
 current_phase: 3
 current_phase_name: CRUD de Produtos e Pipeline de Mídia
 status: executing
-stopped_at: Completed 03-03-PLAN.md
-last_updated: "2026-07-13T15:18:53.011Z"
+stopped_at: Completed 03-04-PLAN.md
+last_updated: "2026-07-13T17:51:26.330Z"
 progress:
   total_phases: 6
   completed_phases: 2
   total_plans: 20
-  completed_plans: 17
+  completed_plans: 18
   percent: 33
 ---
 
@@ -27,11 +27,11 @@ Ver: .planning/PROJECT.md (atualizado 2026-07-10)
 ## Posição Atual
 
 Phase: 3 de 6 (CRUD de Produtos e Pipeline de Mídia)
-Plan: 3 de 6 na fase atual (03-03 concluído — tamanhos e disponibilidade por produto)
+Plan: 4 de 6 na fase atual (03-04 concluído — pipeline de fotos de produto)
 Status: Executing Phase 3
-Última atividade: 2026-07-13 — Plan 03-03 concluído (size-grid.tsx com useFieldArray e ciclo de 3 estados, persistência de product_sizes em saveProduct, Server Action markProductEsgotado, clsx+tailwind-merge instaladas; PROD-04 marcado como Completo, PROD-02/PROD-07 reforçados)
+Última atividade: 2026-07-13 — Plan 03-04 concluído (upload de até 5 fotos com compressão client-side via browser-image-compression, validação de magic bytes/5MB/recontagem server-side, reordenação drag-and-drop via @dnd-kit com capa = posição 1, remoção individual; checkpoint humano em dispositivo móvel real aprovado; PROD-03 marcado como Completo, PROD-07 reforçado)
 
-Progresso: [█████████-] 17/20 plans totais concluídos (Fases 4-6 ainda não planejadas em detalhe)
+Progresso: [█████████-] 18/20 plans totais concluídos (Fases 4-6 ainda não planejadas em detalhe)
 
 ## Métricas de Desempenho
 
@@ -91,8 +91,8 @@ Arquivo de retomada: Nenhum
 
 ## Session
 
-**Last session:** 2026-07-13T15:18:53.005Z
-**Stopped at:** Completed 03-03-PLAN.md
+**Last session:** 2026-07-13T17:51:26.330Z
+**Stopped at:** Completed 03-04-PLAN.md
 **Resume file:** None
 
 ## Accumulated Context
@@ -115,6 +115,7 @@ Arquivo de retomada: Nenhum
 | Phase 03 P01 | 25min | 3 tasks | 4 files |
 | Phase 03 P02 | 47min | 3 tasks | 10 files |
 | Phase 03 P03 | 12min | 2 tasks | 6 files |
+| Phase 03 P04 | 50min | 3 tasks | 6 files |
 
 ## Decisions
 
@@ -132,6 +133,10 @@ Arquivo de retomada: Nenhum
 - [Phase 03 P02]: getOwnedStore() duplicado em products/actions.ts (mesma convenção de settings/actions.ts)
 - [Phase 03 P03]: productSchema.sizes usa `.optional()` em vez de `.default([])` — `.default()` quebra a compatibilidade de tipos entre zodResolver (zod 4.4.3 + @hookform/resolvers 5.4.0) e useForm<ProductInput>; fallback `?? []` aplicado explicitamente no client e no servidor
 - [Phase 03 P03]: atalho "Marcar tudo como esgotado" no size-grid.tsx diferencia modo criação (só form state, via `replace`) de modo edição (chama markProductEsgotado + toast) via prop opcional `productId` em ProductForm — preparação para o Plan 03-05
+- [Phase 03 P04]: uploadAndInsertPhotos compartilhado entre saveProduct (criação) e addProductPhotos (edição) — nunca duas implementações do pipeline de validação/recontagem
+- [Phase 03 P04]: updatePhotoOrder em duas fases (offset negativo temporário → posição final) para nunca violar UNIQUE(product_id, position) ao reordenar
+- [Phase 03 P04]: PhotoUploader com dois modos no mesmo componente (criação: File[] pendente via onPendingFilesChange; edição: Server Actions chamadas imediatamente) — preparação para o Plan 03-05
+- [Phase 03 P04, pós-checkpoint]: handleFilesSelected copia FileList para array antes de limpar input.value (bug em Edge/Chromium); crypto.randomUUID() trocado por localSlotId() com fallback não-criptográfico (exige contexto seguro, falhava via IP local em HTTP) — commit f8be197, aplicado pelo orquestrador durante a pausa do checkpoint humano
 
 ### Blockers
 
