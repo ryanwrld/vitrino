@@ -48,3 +48,15 @@ export function formatBRLPrice(value: number): string {
     .format(value)
     .replace(/ /g, " ");
 }
+
+/**
+ * Formata um `number` (ex.: vindo de `products.price`) como o valor bruto que
+ * o campo de preço do formulário espera — "199,90", "1.299,90" (sem o
+ * prefixo "R$", que já é renderizado como texto estático separado no input;
+ * ver product-form.tsx). Usado só ao pré-preencher o formulário em modo
+ * edição (Plan 03-05) — o resultado é sempre um formato que `parseBRLPrice`
+ * sabe interpretar de volta, fechando o ciclo string<->numeric<->string.
+ */
+export function formatBRLPriceInput(value: number): string {
+  return new Intl.NumberFormat("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
+}

@@ -6,10 +6,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { productSchema, type ProductInput } from "@/lib/validation/product";
-import { saveProduct } from "@/lib/products/actions";
+import { saveProduct, updateProduct, publishProduct, unpublishProduct } from "@/lib/products/actions";
 import { BRANDS, SOLES, CATEGORIES, FULFILLMENTS, DEFAULT_SIZE_RANGE } from "@/lib/products/constants";
 import { SizeGrid } from "./size-grid";
-import { PhotoUploader } from "./photo-uploader";
+import { PhotoUploader, type SavedPhoto } from "./photo-uploader";
 
 /**
  * Formulário de produto de tela única (D-08), espelhando
@@ -24,19 +24,34 @@ import { PhotoUploader } from "./photo-uploader";
  * Aceita `defaultValues` opcional para reuso no Plan 03-05 (edição) — nesta
  * fatia só o modo criação é exercido (sem prop, formulário em branco).
  *
- * `productId` (opcional, Plan 03-05) diferencia modo edição de criação para
- * a seção Tamanhos: em criação, "Marcar tudo como esgotado" só mexe no form
- * state; em edição, chama a Server Action `markProductEsgotado` (ver
- * size-grid.tsx).
+ * `productId` (opcional, Plan 03-05) diferencia modo edição de criação:
+ * - Seção Tamanhos: em criação, "Marcar tudo como esgotado" só mexe no form
+ *   state; em edição, chama a Server Action `markProductEsgotado` (ver
+ *   size-grid.tsx).
+ * - Fotos: em edição, `initialPhotos` pré-carrega o uploader com as fotos já
+ *   salvas (URLs públicas) e cada ação chama as Server Actions dedicadas
+ *   imediatamente (ver photo-uploader.tsx).
+ * - Submit: em criação chama `saveProduct`; em edição chama
+ *   `updateProduct(productId, formData)`.
+ * - `status` (só relevante em edição) habilita o botão secundário
+ *   "Publicar"/"Voltar para rascunho" (D-10) — ação distinta de salvar os
+ *   campos, nunca disparada pelo submit do formulário.
  */
 export type ProductFormProps = {
   defaultValues?: Partial<ProductInput>;
   productId?: string;
+  status?: string;
+  initialPhotos?: SavedPhoto[];
 };
 
-export function ProductForm({ defaultValues, productId }: ProductFormProps) {
+export function ProductForm({ defaultValues, productId, status, initialPhotos }: ProductFormProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const [isPublishPending, startPublishTransition] = useTransition();
+  // Espelha o status do produto (edição) só para atualizar o rótulo do botão
+  // Publicar/Voltar-para-rascunho sem precisar de router.refresh() — a
+  // listagem (Server Component) reflete o status real na próxima navegação.
+  const [currentStatus, setCurrentStatus] = useState(status ?? "draft");
   // Modo criação (sem productId): PhotoUploader mantém as fotos comprimidas
   // como File[] local, notificadas aqui via onPendingFilesChange, para
   // serem anexadas ao mesmo FormData de saveProduct (Task 3, 03-04-PLAN.md).
@@ -88,15 +103,37 @@ export function ProductForm({ defaultValues, productId }: ProductFormProps) {
     }
 
     startTransition(async () => {
-      const result = await saveProduct(formData);
+      const result = productId ? await updateProduct(productId, formData) : await saveProduct(formData);
       if ("error" in result) {
         toast.error(result.error);
         return;
       }
-      toast.success("Produto salvo!");
+      toast.success(productId ? "Produto atualizado!" : "Produto salvo!");
       router.push("/produtos");
     });
   };
+
+  /**
+   * Publicar/despublicar (D-10) é uma ação distinta de "Salvar produto" —
+   * nunca disparada pelo submit do form, sempre pelo próprio botão
+   * secundário, com seu próprio `useTransition` para não desabilitar o botão
+   * de salvar enquanto alterna o status. Sem diálogo de confirmação
+   * (reversível, baixo risco — T-03-12, 03-UI-SPEC.md).
+   */
+  function handleTogglePublish() {
+    if (!productId) return;
+    const willPublish = currentStatus !== "published";
+
+    startPublishTransition(async () => {
+      const result = willPublish ? await publishProduct(productId) : await unpublishProduct(productId);
+      if ("error" in result) {
+        toast.error(result.error);
+        return;
+      }
+      setCurrentStatus(willPublish ? "published" : "draft");
+      toast.success(willPublish ? "Produto publicado!" : "Produto movido para rascunho.");
+    });
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-6">
@@ -249,7 +286,7 @@ export function ProductForm({ defaultValues, productId }: ProductFormProps) {
 
       <SizeGrid control={control} productId={productId} />
 
-      <PhotoUploader productId={productId} onPendingFilesChange={setPendingPhotoFiles} />
+      <PhotoUploader productId={productId} initialPhotos={initialPhotos} onPendingFilesChange={setPendingPhotoFiles} />
 
       <div className="flex flex-col gap-4">
         <h2 className="text-xl font-medium text-[#111111]">Descrição</h2>
@@ -270,13 +307,32 @@ export function ProductForm({ defaultValues, productId }: ProductFormProps) {
         </div>
       </div>
 
-      <button
-        type="submit"
-        disabled={isPending}
-        className="rounded-lg bg-[#00C46A] px-4 py-2 font-medium text-white transition disabled:opacity-60"
-      >
-        {isPending ? "Salvando…" : "Salvar produto"}
-      </button>
+      <div className="flex flex-col gap-3 sm:flex-row">
+        <button
+          type="submit"
+          disabled={isPending}
+          className="flex-1 rounded-lg bg-[#00C46A] px-4 py-2 font-medium text-white transition disabled:opacity-60"
+        >
+          {isPending ? "Salvando…" : "Salvar produto"}
+        </button>
+
+        {/* Publicar/Voltar para rascunho (D-10) só existe em modo edição —
+            ação separada do submit, nunca renderizada na criação. */}
+        {productId && (
+          <button
+            type="button"
+            onClick={handleTogglePublish}
+            disabled={isPublishPending}
+            className="rounded-lg border border-[#0D3D2B] px-4 py-2 font-medium text-[#0D3D2B] transition disabled:opacity-60"
+          >
+            {isPublishPending
+              ? "Salvando…"
+              : currentStatus === "published"
+                ? "Voltar para rascunho"
+                : "Publicar"}
+          </button>
+        )}
+      </div>
     </form>
   );
 }
