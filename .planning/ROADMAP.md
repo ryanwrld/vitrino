@@ -113,7 +113,32 @@ Fases decimais aparecem entre suas fases inteiras vizinhas, em ordem numérica.
   4. Revendedor edita, exclui, lista, busca por nome, filtra (status/marca/solado) e ordena (mais recente/nome/preço) produtos no painel
   5. Cada ação (salvar, editar, excluir, marcar esgotado) dispara toast de sucesso ou erro imediato
 
-**Plans**: TBD
+**Plans**: 6 plans
+
+**Wave 1**
+
+- [ ] 03-01-PLAN.md — Fundação: schema products/product_sizes/product_photos + RLS + bucket product-images + [BLOCKING] push + teste de isolamento
+
+**Wave 2** *(blocked on Wave 1)*
+
+- [ ] 03-02-PLAN.md — Cadastrar e listar produto mínimo: parser BRL + Zod + constants + saveProduct + formulário tela única + listagem base
+
+**Wave 3** *(blocked on Wave 2)*
+
+- [ ] 03-03-PLAN.md — Tamanhos e disponibilidade: size-grid (ciclo 3 estados, 37-43 esgotado default) + persistência + atalho "esgotar tudo"
+
+**Wave 4** *(blocked on Wave 3)*
+
+- [ ] 03-04-PLAN.md — Fotos: upload multi-arquivo + compressão client (EXIF) + magic bytes/5MB/recontagem + drag-and-drop (@dnd-kit) + remover/capa
+
+**Wave 5** *(blocked on Wave 4)*
+
+- [ ] 03-05-PLAN.md — Gerenciar: editar (pré-preenchido) + excluir (cleanup de storage + diálogo) + publicar/despublicar (D-10)
+
+**Wave 6** *(blocked on Wave 5)*
+
+- [ ] 03-06-PLAN.md — Buscar/filtrar/ordenar no painel (searchParams) + rollup de disponibilidade + checkpoint do fluxo completo
+
 **UI hint**: yes
 
 ### Phase 4: Vitrine Pública e Filtragem
@@ -180,7 +205,7 @@ As fases executam em ordem numérica: 1 → 2 → 3 → 4 → 5 → 6
 |-------|----------------|--------|-----------|
 | 1. Fundação, Conta e Isolamento Multi-Tenant | 8/8 | Complete   | 2026-07-12 |
 | 2. Link Compartilhável da Vitrine | 6/6 | Complete   | 2026-07-12 |
-| 3. CRUD de Produtos e Pipeline de Mídia | 0/TBD | Not started | - |
+| 3. CRUD de Produtos e Pipeline de Mídia | 0/6 | Not started | - |
 | 4. Vitrine Pública e Filtragem | 0/TBD | Not started | - |
 | 5. Fluxo de Pedido no WhatsApp (CRÍTICO) | 0/TBD | Not started | - |
 | 6. Métricas e Dashboard | 0/TBD | Not started | - |
