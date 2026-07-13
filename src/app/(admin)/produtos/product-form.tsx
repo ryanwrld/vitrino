@@ -7,7 +7,8 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { productSchema, type ProductInput } from "@/lib/validation/product";
 import { saveProduct } from "@/lib/products/actions";
-import { BRANDS, SOLES, CATEGORIES, FULFILLMENTS } from "@/lib/products/constants";
+import { BRANDS, SOLES, CATEGORIES, FULFILLMENTS, DEFAULT_SIZE_RANGE } from "@/lib/products/constants";
+import { SizeGrid } from "./size-grid";
 
 /**
  * Formulário de produto de tela única (D-08), espelhando
@@ -21,18 +22,25 @@ import { BRANDS, SOLES, CATEGORIES, FULFILLMENTS } from "@/lib/products/constant
  *
  * Aceita `defaultValues` opcional para reuso no Plan 03-05 (edição) — nesta
  * fatia só o modo criação é exercido (sem prop, formulário em branco).
+ *
+ * `productId` (opcional, Plan 03-05) diferencia modo edição de criação para
+ * a seção Tamanhos: em criação, "Marcar tudo como esgotado" só mexe no form
+ * state; em edição, chama a Server Action `markProductEsgotado` (ver
+ * size-grid.tsx).
  */
 export type ProductFormProps = {
   defaultValues?: Partial<ProductInput>;
+  productId?: string;
 };
 
-export function ProductForm({ defaultValues }: ProductFormProps) {
+export function ProductForm({ defaultValues, productId }: ProductFormProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const {
     register,
     handleSubmit,
     watch,
+    control,
     formState: { errors },
   } = useForm<ProductInput>({
     resolver: zodResolver(productSchema),
@@ -47,6 +55,11 @@ export function ProductForm({ defaultValues }: ProductFormProps) {
       price: "",
       description: "",
       ...defaultValues,
+      // Pré-seleção 37-43 esgotada por padrão ao criar (D-02/D-03); 36/44/45
+      // ficam fora até o revendedor adicioná-las manualmente (D-01). Fica
+      // depois do spread para garantir o tipo não-opcional (sempre um
+      // array), nunca `undefined`.
+      sizes: defaultValues?.sizes ?? DEFAULT_SIZE_RANGE.map((size) => ({ size, available: false })),
     },
   });
 
@@ -64,6 +77,7 @@ export function ProductForm({ defaultValues }: ProductFormProps) {
     formData.set("fulfillment", values.fulfillment ?? "");
     formData.set("price", values.price);
     formData.set("description", values.description ?? "");
+    formData.set("sizes", JSON.stringify(values.sizes ?? []));
 
     startTransition(async () => {
       const result = await saveProduct(formData);
@@ -224,6 +238,8 @@ export function ProductForm({ defaultValues }: ProductFormProps) {
           {errors.price && <span className="text-sm text-[#FF4D4D]">{errors.price.message}</span>}
         </div>
       </div>
+
+      <SizeGrid control={control} productId={productId} />
 
       <div className="flex flex-col gap-4">
         <h2 className="text-xl font-medium text-[#111111]">Descrição</h2>

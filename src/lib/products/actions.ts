@@ -75,6 +75,27 @@ export async function saveProduct(formData: FormData): Promise<ProductActionResu
     return { error: "Informe um preço válido, ex.: 199,90." };
   }
 
+  // Tamanhos escolhidos (D-01) chegam como JSON string num único campo
+  // "sizes" (convenção documentada em productSchema.ts e usada por
+  // product-form.tsx no onSubmit) — revalidados aqui mesmo formato
+  // (size inteiro 36-45, available boolean, T-03-08) antes de qualquer
+  // insert em `products`/`product_sizes`.
+  const sizesRaw = formData.get("sizes");
+  let sizesInput: unknown = [];
+  if (typeof sizesRaw === "string" && sizesRaw.trim().length > 0) {
+    try {
+      sizesInput = JSON.parse(sizesRaw);
+    } catch {
+      return { error: "Dados de tamanhos inválidos." };
+    }
+  }
+
+  const sizesParsed = productSchema.shape.sizes.safeParse(sizesInput);
+  if (!sizesParsed.success) {
+    return { error: "Dados de tamanhos inválidos." };
+  }
+  const sizes = sizesParsed.data ?? [];
+
   const owned = await getOwnedStore();
   if ("error" in owned) {
     return { error: owned.error };
@@ -101,5 +122,49 @@ export async function saveProduct(formData: FormData): Promise<ProductActionResu
     return { error: "Não foi possível salvar o produto. Verifique sua conexão e tente novamente." };
   }
 
+  // Só as linhas escolhidas (nunca a grade inteira) — um produto sem
+  // nenhum tamanho marcado fica sem linhas em `product_sizes` (rascunho,
+  // D-10 — a Fase 4 deriva "esgotado" via EXISTS falso).
+  if (sizes.length > 0) {
+    const { error: sizesInsertError } = await owned.supabase.from("product_sizes").insert(
+      sizes.map((item) => ({
+        product_id: product.id,
+        size: item.size,
+        available: item.available,
+      }))
+    );
+
+    if (sizesInsertError) {
+      return { error: "Não foi possível salvar os tamanhos do produto. Tente novamente." };
+    }
+  }
+
   return { success: true, id: product.id };
+}
+
+/**
+ * Atalho "Marcar produto inteiro como esgotado" (D-04). Resolução de
+ * ambiguidade documentada em 03-RESEARCH.md: um único UPDATE em lote sobre
+ * `product_sizes`, sem coluna extra de disponibilidade agregada em
+ * `products`. A policy RLS de `product_sizes` (subquery
+ * product_id -> products -> stores.owner_id) garante que só afeta linhas de
+ * produtos da própria loja — chamado num produto de outra loja atualiza 0
+ * linhas, sem erro (T-03-09, testado em tests/products/availability.test.ts).
+ */
+export async function markProductEsgotado(productId: string): Promise<ProductActionResult> {
+  const owned = await getOwnedStore();
+  if ("error" in owned) {
+    return { error: owned.error };
+  }
+
+  const { error } = await owned.supabase
+    .from("product_sizes")
+    .update({ available: false })
+    .eq("product_id", productId);
+
+  if (error) {
+    return { error: "Não foi possível marcar o produto como esgotado. Tente novamente." };
+  }
+
+  return { success: true, id: productId };
 }

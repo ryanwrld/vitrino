@@ -20,6 +20,14 @@ export const productSchema = z.object({
   fulfillment: z.enum(["sob_encomenda", "pronta_entrega", "ambos"]).optional(),
   price: z.string().trim().min(1, "Informe o preço"),
   description: z.string().trim().optional(),
+  /**
+   * Tamanhos escolhidos (D-01), grid 36-45 (03-RESEARCH.md §Code Examples).
+   * Adicionado no Plan 03-03 — necessário para tipar `useFieldArray` (name
+   * "sizes") em size-grid.tsx/product-form.tsx; a mesma forma é reusada no
+   * servidor (`productSchema.shape.sizes.safeParse`) para revalidar o JSON
+   * recebido em `saveProduct` antes de inserir em `product_sizes`.
+   */
+  sizes: z.array(z.object({ size: z.number().int().min(36).max(45), available: z.boolean() })).optional(),
 });
 
 export type ProductInput = z.infer<typeof productSchema>;
