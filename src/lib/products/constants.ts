@@ -5,15 +5,18 @@
  * `productSchema`, evitando migration de correção se a lista mudar.
  */
 
-/** Marca (D-05): lista fixa + "Outra" (texto livre via campo brandOther). */
+/**
+ * Marca (D-05): lista fixa + "Outra" (texto livre via campo brandOther).
+ * Under Armour e Umbro foram removidas deliberadamente (fora do ICP do
+ * usuário — revendedor de chuteiras importadas não trabalha com essas
+ * marcas), ajuste feito diretamente durante a execução deste plano.
+ */
 export const BRANDS = [
   "Nike",
   "Adidas",
   "Puma",
   "Mizuno",
-  "Under Armour",
   "New Balance",
-  "Umbro",
   "Outra",
 ] as const;
 
