@@ -61,6 +61,19 @@ function slotKey(slot: Slot): string {
   return slot.kind === "saved" ? slot.id : slot.localId;
 }
 
+/**
+ * `crypto.randomUUID()` só existe em contexto seguro (HTTPS ou localhost) —
+ * indisponível ao testar via IP de rede local em HTTP puro. Este id é só uma
+ * key de UI para um slot ainda não enviado (nunca persiste no banco), então
+ * um fallback não-criptográfico é suficiente.
+ */
+function localSlotId(): string {
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID();
+  }
+  return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+}
+
 function pendingFilesOf(slots: Slot[]): File[] {
   return slots
     .filter((slot): slot is Extract<Slot, { kind: "pending" }> => slot.kind === "pending")
@@ -107,13 +120,16 @@ export function PhotoUploader({ productId, initialPhotos, onPendingFilesChange }
 
   async function handleFilesSelected(event: ChangeEvent<HTMLInputElement>) {
     const fileList = event.target.files;
+    // Copiar para um array ANTES de limpar o input: em alguns navegadores
+    // (ex.: Edge/Chromium) `FileList` é esvaziada junto com `input.value`,
+    // então limpar antes de ler os arquivos perde a seleção silenciosamente.
+    const incoming = fileList ? Array.from(fileList) : [];
     // Permite escolher o mesmo arquivo de novo no futuro (ex.: depois de remover).
     event.target.value = "";
-    if (!fileList || fileList.length === 0) {
+    if (incoming.length === 0) {
       return;
     }
 
-    const incoming = Array.from(fileList);
     const roomLeft = MAX_PHOTOS - slots.length;
     if (roomLeft <= 0) {
       toast.error("Você já atingiu o limite de 5 fotos por produto.");
@@ -150,7 +166,7 @@ export function PhotoUploader({ productId, initialPhotos, onPendingFilesChange }
           setSlots((prev) => {
             const next: Slot[] = [
               ...prev,
-              { kind: "pending" as const, localId: crypto.randomUUID(), file: compressed, previewUrl },
+              { kind: "pending" as const, localId: localSlotId(), file: compressed, previewUrl },
             ];
             onPendingFilesChange?.(pendingFilesOf(next));
             return next;
