@@ -1,6 +1,6 @@
 "use client";
 
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -9,6 +9,7 @@ import { productSchema, type ProductInput } from "@/lib/validation/product";
 import { saveProduct } from "@/lib/products/actions";
 import { BRANDS, SOLES, CATEGORIES, FULFILLMENTS, DEFAULT_SIZE_RANGE } from "@/lib/products/constants";
 import { SizeGrid } from "./size-grid";
+import { PhotoUploader } from "./photo-uploader";
 
 /**
  * Formulário de produto de tela única (D-08), espelhando
@@ -36,6 +37,10 @@ export type ProductFormProps = {
 export function ProductForm({ defaultValues, productId }: ProductFormProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  // Modo criação (sem productId): PhotoUploader mantém as fotos comprimidas
+  // como File[] local, notificadas aqui via onPendingFilesChange, para
+  // serem anexadas ao mesmo FormData de saveProduct (Task 3, 03-04-PLAN.md).
+  const [pendingPhotoFiles, setPendingPhotoFiles] = useState<File[]>([]);
   const {
     register,
     handleSubmit,
@@ -78,6 +83,9 @@ export function ProductForm({ defaultValues, productId }: ProductFormProps) {
     formData.set("price", values.price);
     formData.set("description", values.description ?? "");
     formData.set("sizes", JSON.stringify(values.sizes ?? []));
+    for (const photoFile of pendingPhotoFiles) {
+      formData.append("photos", photoFile);
+    }
 
     startTransition(async () => {
       const result = await saveProduct(formData);
@@ -240,6 +248,8 @@ export function ProductForm({ defaultValues, productId }: ProductFormProps) {
       </div>
 
       <SizeGrid control={control} productId={productId} />
+
+      <PhotoUploader productId={productId} onPendingFilesChange={setPendingPhotoFiles} />
 
       <div className="flex flex-col gap-4">
         <h2 className="text-xl font-medium text-[#111111]">Descrição</h2>
