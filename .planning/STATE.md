@@ -5,13 +5,13 @@ milestone_name: milestone
 current_phase: 3
 current_phase_name: CRUD de Produtos e Pipeline de Mídia
 status: executing
-stopped_at: Plan 03-01 concluído — schema/RLS/bucket aplicados ao Supabase remoto
-last_updated: "2026-07-13T23:55:00.000Z"
+stopped_at: Completed 03-02-PLAN.md
+last_updated: "2026-07-13T15:03:30.805Z"
 progress:
   total_phases: 6
   completed_phases: 2
   total_plans: 20
-  completed_plans: 15
+  completed_plans: 16
   percent: 33
 ---
 
@@ -27,11 +27,11 @@ Ver: .planning/PROJECT.md (atualizado 2026-07-10)
 ## Posição Atual
 
 Phase: 3 de 6 (CRUD de Produtos e Pipeline de Mídia)
-Plan: 1 de 6 na fase atual (03-01 concluído — schema/RLS/bucket de produtos)
+Plan: 2 de 6 na fase atual (03-02 concluído — cadastro e listagem mínima de produtos)
 Status: Executing Phase 3
-Última atividade: 2026-07-13 — Plan 03-01 concluído (migration 0003 aplicada ao Supabase remoto; tipos regenerados; isolamento RLS provado com 7 testes de integração cobrindo products/product_sizes/product_photos)
+Última atividade: 2026-07-13 — Plan 03-02 concluído (parseBRLPrice/formatBRLPrice, productSchema, constants de listas fixas, Server Action saveProduct, formulário de tela única em /produtos/novo e listagem em /produtos; PROD-01/PROD-02/PROD-07 marcados como Completo)
 
-Progresso: [███-------] 15/20 plans totais concluídos (Fases 4-6 ainda não planejadas em detalhe)
+Progresso: [████------] 16/20 plans totais concluídos (Fases 4-6 ainda não planejadas em detalhe)
 
 ## Métricas de Desempenho
 
@@ -91,8 +91,8 @@ Arquivo de retomada: Nenhum
 
 ## Session
 
-**Last session:** 2026-07-13T23:55:00.000Z
-**Stopped at:** Plan 03-01 concluído — pronto para 03-02 (cadastrar e listar produto mínimo)
+**Last session:** 2026-07-13T15:03:30.799Z
+**Stopped at:** Completed 03-02-PLAN.md
 **Resume file:** None
 
 ## Accumulated Context
@@ -113,6 +113,7 @@ Arquivo de retomada: Nenhum
 | Phase 02 P05 | 12min | 2 tasks | 1 files |
 | Phase 02 P06 | 15min | 2 tasks | 5 files |
 | Phase 03 P01 | 25min | 3 tasks | 4 files |
+| Phase 03 P02 | 47min | 3 tasks | 10 files |
 
 ## Decisions
 
@@ -126,6 +127,8 @@ Arquivo de retomada: Nenhum
 - [Phase 03 P01]: brand/sole/category/fulfillment ficam text nullable sem check constraint de enumeração — validação de listas fixas só na camada de aplicação (Zod + constants.ts no Plan 03-02), evitando migration de correção se a lista mudar
 - [Phase 03 P01]: atalho "esgotar produto inteiro" (D-04) implementado como UPDATE em lote de product_sizes, sem coluna extra de disponibilidade agregada em products — a Fase 4 deriva disponibilidade via EXISTS
 - [Phase 03 P01]: PROD-01/PROD-02 NÃO marcados como Completo em REQUIREMENTS.md ainda — 03-01 entrega só a fundação de schema/RLS; 03-02-PLAN.md lista os mesmos IDs como requisito porque é lá que a UI de cadastro (o comportamento visível ao usuário) é entregue. Marcar como Completo será feito ao fechar 03-02.
+- [Phase 03 P02]: BRANDS removeu Under Armour e Umbro (pedido do usuário — fora do ICP)
+- [Phase 03 P02]: getOwnedStore() duplicado em products/actions.ts (mesma convenção de settings/actions.ts)
 
 ### Blockers
 
