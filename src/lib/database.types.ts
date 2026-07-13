@@ -39,6 +39,120 @@ export type Database = {
   }
   public: {
     Tables: {
+      product_photos: {
+        Row: {
+          created_at: string
+          id: string
+          position: number
+          product_id: string
+          storage_path: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          position: number
+          product_id: string
+          storage_path: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          position?: number
+          product_id?: string
+          storage_path?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_photos_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_sizes: {
+        Row: {
+          available: boolean
+          product_id: string
+          size: number
+        }
+        Insert: {
+          available?: boolean
+          product_id: string
+          size: number
+        }
+        Update: {
+          available?: boolean
+          product_id?: string
+          size?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_sizes_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      products: {
+        Row: {
+          brand: string
+          brand_other: string | null
+          category: string | null
+          created_at: string
+          description: string | null
+          fulfillment: string | null
+          id: string
+          line: string | null
+          name: string
+          price: number
+          sole: string | null
+          status: string
+          store_id: string
+        }
+        Insert: {
+          brand: string
+          brand_other?: string | null
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          fulfillment?: string | null
+          id?: string
+          line?: string | null
+          name: string
+          price: number
+          sole?: string | null
+          status?: string
+          store_id: string
+        }
+        Update: {
+          brand?: string
+          brand_other?: string | null
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          fulfillment?: string | null
+          id?: string
+          line?: string | null
+          name?: string
+          price?: number
+          sole?: string | null
+          status?: string
+          store_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "products_store_id_fkey"
+            columns: ["store_id"]
+            isOneToOne: false
+            referencedRelation: "stores"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       store_settings: {
         Row: {
           message_template: string | null
