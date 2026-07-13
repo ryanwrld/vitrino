@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-current_phase: 2
-current_phase_name: Link Compartilhável da Vitrine
+current_phase: 3
+current_phase_name: CRUD de Produtos e Pipeline de Mídia
 status: executing
-stopped_at: Phase 3 UI-SPEC approved
-last_updated: "2026-07-13T03:18:54.163Z"
+stopped_at: Plan 03-01 concluído — schema/RLS/bucket aplicados ao Supabase remoto
+last_updated: "2026-07-13T23:55:00.000Z"
 progress:
   total_phases: 6
   completed_phases: 2
-  total_plans: 14
-  completed_plans: 14
+  total_plans: 20
+  completed_plans: 15
   percent: 33
 ---
 
@@ -22,16 +22,16 @@ progress:
 Ver: .planning/PROJECT.md (atualizado 2026-07-10)
 
 **Valor central:** O cliente final consegue escolher um modelo e tamanho na vitrine e disparar uma mensagem de pedido pronta no WhatsApp do revendedor — sem fricção, sem cadastro, sem o revendedor precisar estar online.
-**Foco atual:** Phase 2 — Link Compartilhável da Vitrine
+**Foco atual:** Phase 3 — CRUD de Produtos e Pipeline de Mídia
 
 ## Posição Atual
 
-Phase: 2 de 6 (Link Compartilhável da Vitrine)
-Plan: 6 de 6 na fase atual (02-06 concluído — Fase 2 completa)
-Status: Fase 2 completa — pronto para discutir/planejar Fase 3
-Última atividade: 2026-07-12 — Plan 02-06 concluído (painel real de QR Code + copiar link; as três seções de /configuracoes estão implementadas)
+Phase: 3 de 6 (CRUD de Produtos e Pipeline de Mídia)
+Plan: 1 de 6 na fase atual (03-01 concluído — schema/RLS/bucket de produtos)
+Status: Executing Phase 3
+Última atividade: 2026-07-13 — Plan 03-01 concluído (migration 0003 aplicada ao Supabase remoto; tipos regenerados; isolamento RLS provado com 7 testes de integração cobrindo products/product_sizes/product_photos)
 
-Progresso: [██████████] 100% (dos 14 plans já planejados; Fases 3-6 ainda não planejadas)
+Progresso: [███-------] 15/20 plans totais concluídos (Fases 4-6 ainda não planejadas em detalhe)
 
 ## Métricas de Desempenho
 
@@ -91,9 +91,9 @@ Arquivo de retomada: Nenhum
 
 ## Session
 
-**Last session:** 2026-07-13T03:18:54.150Z
-**Stopped at:** Phase 3 UI-SPEC approved
-**Resume file:** .planning/phases/03-crud-de-produtos-e-pipeline-de-m-dia/03-UI-SPEC.md
+**Last session:** 2026-07-13T23:55:00.000Z
+**Stopped at:** Plan 03-01 concluído — pronto para 03-02 (cadastrar e listar produto mínimo)
+**Resume file:** None
 
 ## Accumulated Context
 
@@ -112,6 +112,7 @@ Arquivo de retomada: Nenhum
 | Phase 02 P04 | 20min | 2 tasks | 4 files |
 | Phase 02 P05 | 12min | 2 tasks | 1 files |
 | Phase 02 P06 | 15min | 2 tasks | 5 files |
+| Phase 03 P01 | 25min | 3 tasks | 4 files |
 
 ## Decisions
 
@@ -122,6 +123,9 @@ Arquivo de retomada: Nenhum
 - [Phase 02]: status checking/idle do slug-editor derivado no render (needsCheck + useTransition isPending) em vez de setState síncrono no useEffect, para conformidade com react-hooks/set-state-in-effect
 - [Phase 02]: readyUrl derivado no render (comparado com publicUrl) em vez de setState síncrono no efeito do QrCodePanel — mesma correção de react-hooks/set-state-in-effect aplicada proativamente
 - [Phase 02]: Plan 02-06 fechado formalmente por sessão de closeout (implementação foi feita fora do fluxo normal de orquestração) — todos os acceptance_criteria e artifacts reverificados, sem defeitos encontrados; único ajuste foi sincronizar REQUIREMENTS.md (LOJA-03/LOJA-04 Pendente para Completo)
+- [Phase 03 P01]: brand/sole/category/fulfillment ficam text nullable sem check constraint de enumeração — validação de listas fixas só na camada de aplicação (Zod + constants.ts no Plan 03-02), evitando migration de correção se a lista mudar
+- [Phase 03 P01]: atalho "esgotar produto inteiro" (D-04) implementado como UPDATE em lote de product_sizes, sem coluna extra de disponibilidade agregada em products — a Fase 4 deriva disponibilidade via EXISTS
+- [Phase 03 P01]: PROD-01/PROD-02 NÃO marcados como Completo em REQUIREMENTS.md ainda — 03-01 entrega só a fundação de schema/RLS; 03-02-PLAN.md lista os mesmos IDs como requisito porque é lá que a UI de cadastro (o comportamento visível ao usuário) é entregue. Marcar como Completo será feito ao fechar 03-02.
 
 ### Blockers
 

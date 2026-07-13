@@ -113,11 +113,11 @@ Fases decimais aparecem entre suas fases inteiras vizinhas, em ordem numérica.
   4. Revendedor edita, exclui, lista, busca por nome, filtra (status/marca/solado) e ordena (mais recente/nome/preço) produtos no painel
   5. Cada ação (salvar, editar, excluir, marcar esgotado) dispara toast de sucesso ou erro imediato
 
-**Plans**: 6 plans
+**Plans**: 1/6 plans complete
 
 **Wave 1**
 
-- [ ] 03-01-PLAN.md — Fundação: schema products/product_sizes/product_photos + RLS + bucket product-images + [BLOCKING] push + teste de isolamento
+- [x] 03-01-PLAN.md — Fundação: schema products/product_sizes/product_photos + RLS + bucket product-images + [BLOCKING] push + teste de isolamento
 
 **Wave 2** *(blocked on Wave 1)*
 
@@ -205,7 +205,7 @@ As fases executam em ordem numérica: 1 → 2 → 3 → 4 → 5 → 6
 |-------|----------------|--------|-----------|
 | 1. Fundação, Conta e Isolamento Multi-Tenant | 8/8 | Complete   | 2026-07-12 |
 | 2. Link Compartilhável da Vitrine | 6/6 | Complete   | 2026-07-12 |
-| 3. CRUD de Produtos e Pipeline de Mídia | 0/6 | Not started | - |
+| 3. CRUD de Produtos e Pipeline de Mídia | 1/6 | In Progress | - |
 | 4. Vitrine Pública e Filtragem | 0/TBD | Not started | - |
 | 5. Fluxo de Pedido no WhatsApp (CRÍTICO) | 0/TBD | Not started | - |
 | 6. Métricas e Dashboard | 0/TBD | Not started | - |
