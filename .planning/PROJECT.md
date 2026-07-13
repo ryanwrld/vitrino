@@ -19,12 +19,11 @@ O cliente final consegue escolher um modelo e tamanho na vitrine e disparar uma 
 
 ### Validated
 
-(None yet — ship to validate)
+- [x] CRUD completo de produtos (nome, marca, solado, categoria, modalidade, preço, tamanhos, até 5 fotos, descrição, status) — Validado na Fase 3: CRUD de Produtos e Pipeline de Mídia (2026-07-13)
 
 ### Active
 
 - [ ] Cadastro e login do revendedor (email/senha, sem OAuth no MVP)
-- [ ] CRUD completo de produtos (nome, marca, solado, categoria, modalidade, preço, tamanhos, até 5 fotos, descrição, status)
 - [ ] Configuração da loja (nome, logo, cor de destaque, frase de apresentação)
 - [ ] Configuração de WhatsApp (número com validação/formatação, template de mensagem com variáveis)
 - [ ] Vitrine pública (sem login) com filtros por marca, solado e modalidade
@@ -45,12 +44,14 @@ O cliente final consegue escolher um modelo e tamanho na vitrine e disparar uma 
 ## Context
 
 **Identidade visual:**
+
 - Paleta: verde escuro `#0D3D2B` (fundo/destaque), verde vibrante `#00C46A` (CTAs, badges disponível), branco `#FFFFFF`, cinza claro `#F5F5F3`, preto suave `#111111`, cinza médio `#6B6B6B`, vermelho suave `#FF4D4D` (badge esgotado)
 - Tipografia: Syne 700 para display/títulos, Inter 400/500 para body/interface (Google Fonts). Base 16px, escala 12/14/16/20/28/40px
 - Border radius: 12px cards, 8px botões, 999px pills/badges
 - Animações: entrada de cards com fade+slide-up e stagger de 80ms; hover com elevação (translateY -4px, 200ms); pulse leve no botão WhatsApp idle; transições suaves em filtros; skeleton loader antes de carregar
 
 **Perfis de acesso:**
+
 - Revendedor (admin): cadastra/gerencia produtos, configura loja e WhatsApp, gera link público, vê métricas básicas
 - Cliente final: acessa vitrine pública sem login, filtra, seleciona tamanho, dispara pedido no WhatsApp
 
@@ -58,6 +59,7 @@ O cliente final consegue escolher um modelo e tamanho na vitrine e disparar uma 
 Cliente seleciona tamanho disponível → botão "Pedir agora" ativa → abre WhatsApp com mensagem pré-formatada (modelo, solado, tamanho, preço). Se clicar sem selecionar tamanho, deve haver shake animation + tooltip "Selecione um tamanho" — nunca abrir a mensagem incompleta.
 
 **Alertas críticos de desenvolvimento (levar a sério sem exceção):**
+
 1. O fluxo WhatsApp é a única conversão que importa — testar exaustivamente em Android/iOS, Chrome/Safari/Samsung Internet, números com e sem DDI/espaços
 2. Mobile é a plataforma principal, não secundária — tudo mobile-first
 3. Upload/exibição de imagem deve ser rápido e confiável — feedback visual, limite comunicado, compressão automática no servidor
@@ -66,6 +68,7 @@ Cliente seleciona tamanho disponível → botão "Pedir agora" ativa → abre Wh
 6. Mensagem do WhatsApp deve passar por `encodeURIComponent` — testar com acentos e caracteres especiais
 
 **Bugs que não podem ser cometidos (catálogo de erros conhecidos):**
+
 1. Botão "Pedir agora" ativo sem tamanho selecionado
 2. Pills de tamanho esgotado clicáveis (precisam de `pointer-events: none` + visual riscado)
 3. Slug duplicado sem validação em tempo real
@@ -78,11 +81,13 @@ Cliente seleciona tamanho disponível → botão "Pedir agora" ativa → abre Wh
 10. Sessão expirando silenciosamente e perdendo trabalho não salvo do revendedor
 
 **Copy principal:**
+
 - CTA: "Criar minha vitrine grátis"
 - Headline: "Seu catálogo de chuteiras em português, funcionando 24h"
 - Sub: "Pare de mandar foto por foto. Compartilhe um link, receba pedidos prontos no WhatsApp."
 
 **Template padrão de mensagem WhatsApp:**
+
 ```
 Olá! Vi sua vitrine e tenho interesse no seguinte produto:
 
@@ -106,13 +111,13 @@ Poderia confirmar a disponibilidade?
 
 ## Key Decisions
 
-| Decision | Rationale | Outcome |
-|----------|-----------|---------|
-| Sem cobrança/gateway de pagamento no MVP | Validar o produto (revendedores recebendo pedidos) antes de construir monetização | — Pending |
-| Stack sugerida: Next.js 14 + Supabase + Vercel | Custo ~$0/mês em tier gratuito até ~500 usuários, velocidade de desenvolvimento | — Pending |
-| Mobile-first em toda a interface | Cliente final acessa majoritariamente via link no WhatsApp/Instagram, no celular | — Pending |
-| Sem OAuth no MVP, só email/senha | Simplicidade para revendedor não-técnico, reduz escopo de auth | — Pending |
-| Lançamento como validação, escala pequena inicial | Poucos revendedores (dezenas) nos primeiros meses, sem pressão de escala | — Pending |
+| Decision                                                                  | Rationale                                                                                                                                 | Outcome    |
+| ------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| Sem cobrança/gateway de pagamento no MVP                                  | Validar o produto (revendedores recebendo pedidos) antes de construir monetização                                                         | — Pending  |
+| Stack sugerida: Next.js 14 + Supabase + Vercel                            | Custo ~$0/mês em tier gratuito até ~500 usuários, velocidade de desenvolvimento                                                           | — Pending  |
+| Mobile-first em toda a interface                                          | Cliente final acessa majoritariamente via link no WhatsApp/Instagram, no celular                                                          | — Pending  |
+| Sem OAuth no MVP, só email/senha                                          | Simplicidade para revendedor não-técnico, reduz escopo de auth                                                                            | — Pending  |
+| Lançamento como validação, escala pequena inicial                         | Poucos revendedores (dezenas) nos primeiros meses, sem pressão de escala                                                                  | — Pending  |
 | Vercel Hobby (grátis) no MVP apesar da restrição de uso comercial nos ToS | Usuário optou por aceitar o risco em troca de custo zero na validação; migração para Hostinger (pago) planejada quando o produto expandir | ⚠️ Revisit |
 
 ## Evolution
@@ -120,6 +125,7 @@ Poderia confirmar a disponibilidade?
 This document evolves at phase transitions and milestone boundaries.
 
 **After each phase transition** (via `/gsd-transition`):
+
 1. Requirements invalidated? → Move to Out of Scope with reason
 2. Requirements validated? → Move to Validated with phase reference
 3. New requirements emerged? → Add to Active
@@ -127,10 +133,12 @@ This document evolves at phase transitions and milestone boundaries.
 5. "What This Is" still accurate? → Update if drifted
 
 **After each milestone** (via `/gsd:complete-milestone`):
+
 1. Full review of all sections
 2. Core Value check — still the right priority?
 3. Audit Out of Scope — reasons still valid?
 4. Update Context with current state
 
 ---
-*Last updated: 2026-07-10 after initialization*
+
+_Last updated: 2026-07-13 — Fase 3 (CRUD de Produtos e Pipeline de Mídia) completa_
