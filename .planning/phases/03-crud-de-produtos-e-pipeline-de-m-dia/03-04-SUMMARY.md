@@ -37,12 +37,15 @@ key-files:
     - src/app/(admin)/produtos/product-form.tsx
     - package.json
     - package-lock.json
+    - next.config.ts
 
 key-decisions:
   - "Fotos entram via action dedicada addProductPhotos(productId, formData), reusada tanto no submit de criação (chamada internamente por saveProduct, que aceita formData.getAll('photos')) quanto no modo edição (Plan 03-05)"
   - "updatePhotoOrder usa estratégia de duas fases (offset negativo -> posição final) para respeitar UNIQUE(product_id, position) sem quebrar no meio da operação"
   - "PhotoUploader recarrega fotos salvas via client de browser (createClient + getPublicUrl) após addProductPhotos, em vez de estender o retorno da Server Action só para isso"
   - "[pós-checkpoint, aplicado pelo orquestrador] handleFilesSelected copia o FileList para array ANTES de limpar input.value (Edge/Chromium perdia a seleção); crypto.randomUUID() trocado por localSlotId() com fallback, pois exige contexto seguro (HTTPS/localhost) e falhava testando via IP local em HTTP — commit f8be197"
+  - "[pós-checkpoint, aplicado pelo orquestrador] next.config.ts ganhou allowedDevOrigins para permitir acessar o dev server via IP de rede local — sem isso o JS não hidratava no celular e o <form> caía no submit nativo GET, vazando dados na URL — commit d5bbe75"
+  - "[pós-checkpoint, aplicado pelo orquestrador] photo-uploader.tsx: notificação de fotos pendentes movida para useEffect (evita 'Cannot update a component while rendering a different component'); handleDragEnd computa o reorder fora do updater de setSlots (evita duplicar a persistência sob Strict Mode); botões de drag/remover encolhidos visualmente mantendo a área de toque 44x44px — commit cddd237"
 
 requirements-completed: [PROD-03, PROD-07]
 
@@ -130,9 +133,9 @@ Each task was committed atomically:
 3. **Task 3: photo-uploader.tsx — compressão client, 5 slots, drag-and-drop, remover, capa** - `b4b9c48` (feat)
 4. **Task 4: [CHECKPOINT] Verificação humana do pipeline de fotos no mobile** - aprovado pelo usuário (sem commit próprio — verificação, não código)
 
-**Correção pós-checkpoint (aplicada pelo orquestrador, fora do fluxo padrão do executor):** `f8be197` (fix) — ver Deviations
+**Correções pós-checkpoint (aplicadas pelo orquestrador, fora do fluxo padrão do executor):** `f8be197`, `d5bbe75`, `cddd237` (fix) — ver Deviations
 
-**Plan metadata:** (pendente — commit final de docs, ao final deste SUMMARY)
+**Plan metadata:** `1328fce` (docs: complete plan)
 
 _Note: Task 1/2 seguiram o ciclo TDD RED→GREEN (teste criado vermelho, ficou verde após a Task 2 implementar `addProductPhotos`/`updatePhotoOrder`/`removePhoto`)._
 
@@ -171,10 +174,24 @@ Nenhuma durante a execução das Tasks 1-3 (plano seguido conforme especificado,
 - **Files modified:** `src/app/(admin)/produtos/photo-uploader.tsx`
 - **Committed in:** `f8be197` (fix, aplicado pelo orquestrador durante a pausa do checkpoint)
 
+**3. [Rule 3 - Blocking] Dev server bloqueava acesso via IP de rede local (origem cruzada)**
+- **Found during:** verificação humana da Task 4 (tentativa de abrir `/produtos/novo` a partir do celular na mesma Wi-Fi)
+- **Issue:** o Next.js 16 bloqueia por padrão recursos de dev (HMR) quando acessado por uma origem diferente de `localhost` — sem isso o JS não hidrata no celular e o `<form>` cai no submit nativo GET, vazando dados na URL.
+- **Fix:** `allowedDevOrigins: ["172.20.10.12"]` adicionado a `next.config.ts`.
+- **Files modified:** `next.config.ts` — **fora do `files_modified` original deste plano** (arquivo não listado no frontmatter do 03-04-PLAN.md); necessário para o próprio checkpoint humano (Task 4) ser executável em dispositivo móvel real, então tratado como bloqueio de verificação (Rule 3), não como expansão de escopo de produto.
+- **Committed in:** `d5bbe75` (fix, aplicado pelo orquestrador durante a pausa do checkpoint)
+
+**4. [Rule 1 - Bug] `setState` do componente pai durante o render do filho + reorder duplicado sob Strict Mode**
+- **Found during:** verificação humana da Task 4 (console do navegador acusando "Cannot update a component while rendering a different component"; suspeita de chamada duplicada de `updatePhotoOrder` em dev)
+- **Issue:** `onPendingFilesChange` (callback do form pai) era chamado de dentro do updater funcional de `setSlots`, o que o React sinaliza como atualização de um componente durante a renderização de outro; `handleDragEnd` calculava o array reordenado dentro do updater de `setSlots`, arriscando disparar a Server Action de persistência em duplicidade se o updater rodasse 2x (React Strict Mode em dev).
+- **Fix:** notificação de fotos pendentes movida para um `useEffect` reagindo a `slots` (só em modo criação); `handleDragEnd` agora computa o array reordenado fora do updater, antes de chamar `setSlots`. Aproveitado para encolher visualmente os botões de arrastar/remover (mantendo a área de toque em 44x44px) sem tampar a miniatura da foto.
+- **Files modified:** `src/app/(admin)/produtos/photo-uploader.tsx`
+- **Committed in:** `cddd237` (fix, aplicado pelo orquestrador durante a pausa do checkpoint)
+
 ---
 
-**Total deviations:** 2 correções pós-checkpoint (ambas Rule 1 — bugs de compatibilidade de navegador/contexto descobertos apenas em teste real de dispositivo móvel, não reproduzíveis em teste headless)
-**Impact on plan:** Nenhum impacto nos critérios de aceitação do plano — ambas as correções são estritamente dentro do escopo de `photo-uploader.tsx` (já em `files_modified`), sem mudança de arquitetura ou comportamento visível além de corrigir os dois bugs. Confirmado: `npx tsc --noEmit` e `npm run lint` seguem limpos após as correções (mesma contagem pré-existente de problemas fora de escopo).
+**Total deviations:** 4 correções pós-checkpoint (3× Rule 1 — bugs de compatibilidade de navegador/runtime descobertos apenas em teste real de dispositivo móvel, não reproduzíveis em teste headless; 1× Rule 3 — bloqueio de configuração de rede necessário para o próprio checkpoint ser executável)
+**Impact on plan:** Nenhum impacto nos critérios de aceitação do plano. Três correções ficam dentro do escopo de `photo-uploader.tsx` (já em `files_modified`); a mudança em `next.config.ts` está fora do `files_modified` original, mas é um ajuste de configuração de dev/rede (não de produto) estritamente necessário para tornar o checkpoint humano executável em dispositivo móvel — sem ela, nenhuma verificação da Task 4 seria possível. Nenhuma mudança de arquitetura ou de comportamento de produto além de corrigir os bugs encontrados. Confirmado: `npx tsc --noEmit` e `npm run lint` seguem limpos após as correções (mesma contagem pré-existente de problemas fora de escopo).
 
 ## Issues Encountered
 
@@ -205,3 +222,6 @@ None - nenhuma configuração externa manual necessária (o bucket `product-imag
 - FOUND: commit 6524255 (Task 2)
 - FOUND: commit b4b9c48 (Task 3)
 - FOUND: commit f8be197 (correção pós-checkpoint, aplicada pelo orquestrador)
+- FOUND: commit d5bbe75 (correção pós-checkpoint, aplicada pelo orquestrador)
+- FOUND: commit cddd237 (correção pós-checkpoint, aplicada pelo orquestrador)
+- FOUND: commit 1328fce (docs: complete plan)

@@ -137,6 +137,8 @@ Arquivo de retomada: Nenhum
 - [Phase 03 P04]: updatePhotoOrder em duas fases (offset negativo temporário → posição final) para nunca violar UNIQUE(product_id, position) ao reordenar
 - [Phase 03 P04]: PhotoUploader com dois modos no mesmo componente (criação: File[] pendente via onPendingFilesChange; edição: Server Actions chamadas imediatamente) — preparação para o Plan 03-05
 - [Phase 03 P04, pós-checkpoint]: handleFilesSelected copia FileList para array antes de limpar input.value (bug em Edge/Chromium); crypto.randomUUID() trocado por localSlotId() com fallback não-criptográfico (exige contexto seguro, falhava via IP local em HTTP) — commit f8be197, aplicado pelo orquestrador durante a pausa do checkpoint humano
+- [Phase 03 P04, pós-checkpoint]: next.config.ts ganhou allowedDevOrigins para permitir acesso ao dev server via IP de rede local (necessário para o próprio checkpoint mobile) — commit d5bbe75
+- [Phase 03 P04, pós-checkpoint]: photo-uploader.tsx — notificação de fotos pendentes movida para useEffect (evita setState do pai durante render do filho) e handleDragEnd computa reorder fora do updater de setSlots (evita duplicar persistência sob Strict Mode); botões de drag/remover encolhidos mantendo 44x44px de área de toque — commit cddd237
 
 ### Blockers
 
