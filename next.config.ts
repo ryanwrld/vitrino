@@ -11,7 +11,16 @@ const nextConfig: NextConfig = {
   // celular real na mesma Wi-Fi) sem o Next bloquear os recursos de dev
   // (HMR) por origem cruzada — sem isso o JS não hidrata no celular e o
   // <form> cai no submit nativo GET, vazando credenciais na URL.
-  allowedDevOrigins: ["172.20.10.12"],
+  allowedDevOrigins: ["172.20.10.12", "192.168.100.116"],
+  // Server Actions limitam o corpo a 1MB por padrão — separado do limite de
+  // 5MB por foto já validado em `validatePhotoFile`. Até 5 fotos comprimidas
+  // a ~1MB cada (browser-image-compression, meta não-garantida) + overhead
+  // de multipart facilmente passam de 1MB somadas num único saveProduct.
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "10mb",
+    },
+  },
   images: {
     remotePatterns: supabaseHostname
       ? [
