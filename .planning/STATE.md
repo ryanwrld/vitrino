@@ -5,13 +5,13 @@ milestone_name: milestone
 current_phase: 3
 current_phase_name: CRUD de Produtos e Pipeline de Mídia
 status: executing
-stopped_at: Completed 03-02-PLAN.md
-last_updated: "2026-07-13T15:03:30.805Z"
+stopped_at: Completed 03-03-PLAN.md
+last_updated: "2026-07-13T15:18:53.011Z"
 progress:
   total_phases: 6
   completed_phases: 2
   total_plans: 20
-  completed_plans: 16
+  completed_plans: 17
   percent: 33
 ---
 
@@ -27,11 +27,11 @@ Ver: .planning/PROJECT.md (atualizado 2026-07-10)
 ## Posição Atual
 
 Phase: 3 de 6 (CRUD de Produtos e Pipeline de Mídia)
-Plan: 2 de 6 na fase atual (03-02 concluído — cadastro e listagem mínima de produtos)
+Plan: 3 de 6 na fase atual (03-03 concluído — tamanhos e disponibilidade por produto)
 Status: Executing Phase 3
-Última atividade: 2026-07-13 — Plan 03-02 concluído (parseBRLPrice/formatBRLPrice, productSchema, constants de listas fixas, Server Action saveProduct, formulário de tela única em /produtos/novo e listagem em /produtos; PROD-01/PROD-02/PROD-07 marcados como Completo)
+Última atividade: 2026-07-13 — Plan 03-03 concluído (size-grid.tsx com useFieldArray e ciclo de 3 estados, persistência de product_sizes em saveProduct, Server Action markProductEsgotado, clsx+tailwind-merge instaladas; PROD-04 marcado como Completo, PROD-02/PROD-07 reforçados)
 
-Progresso: [████------] 16/20 plans totais concluídos (Fases 4-6 ainda não planejadas em detalhe)
+Progresso: [█████████-] 17/20 plans totais concluídos (Fases 4-6 ainda não planejadas em detalhe)
 
 ## Métricas de Desempenho
 
@@ -91,8 +91,8 @@ Arquivo de retomada: Nenhum
 
 ## Session
 
-**Last session:** 2026-07-13T15:03:30.799Z
-**Stopped at:** Completed 03-02-PLAN.md
+**Last session:** 2026-07-13T15:18:53.005Z
+**Stopped at:** Completed 03-03-PLAN.md
 **Resume file:** None
 
 ## Accumulated Context
@@ -114,6 +114,7 @@ Arquivo de retomada: Nenhum
 | Phase 02 P06 | 15min | 2 tasks | 5 files |
 | Phase 03 P01 | 25min | 3 tasks | 4 files |
 | Phase 03 P02 | 47min | 3 tasks | 10 files |
+| Phase 03 P03 | 12min | 2 tasks | 6 files |
 
 ## Decisions
 
@@ -129,6 +130,8 @@ Arquivo de retomada: Nenhum
 - [Phase 03 P01]: PROD-01/PROD-02 NÃO marcados como Completo em REQUIREMENTS.md ainda — 03-01 entrega só a fundação de schema/RLS; 03-02-PLAN.md lista os mesmos IDs como requisito porque é lá que a UI de cadastro (o comportamento visível ao usuário) é entregue. Marcar como Completo será feito ao fechar 03-02.
 - [Phase 03 P02]: BRANDS removeu Under Armour e Umbro (pedido do usuário — fora do ICP)
 - [Phase 03 P02]: getOwnedStore() duplicado em products/actions.ts (mesma convenção de settings/actions.ts)
+- [Phase 03 P03]: productSchema.sizes usa `.optional()` em vez de `.default([])` — `.default()` quebra a compatibilidade de tipos entre zodResolver (zod 4.4.3 + @hookform/resolvers 5.4.0) e useForm<ProductInput>; fallback `?? []` aplicado explicitamente no client e no servidor
+- [Phase 03 P03]: atalho "Marcar tudo como esgotado" no size-grid.tsx diferencia modo criação (só form state, via `replace`) de modo edição (chama markProductEsgotado + toast) via prop opcional `productId` em ProductForm — preparação para o Plan 03-05
 
 ### Blockers
 

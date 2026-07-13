@@ -113,7 +113,7 @@ Fases decimais aparecem entre suas fases inteiras vizinhas, em ordem numérica.
   4. Revendedor edita, exclui, lista, busca por nome, filtra (status/marca/solado) e ordena (mais recente/nome/preço) produtos no painel
   5. Cada ação (salvar, editar, excluir, marcar esgotado) dispara toast de sucesso ou erro imediato
 
-**Plans**: 2/6 plans executed
+**Plans**: 3/6 plans executed
 
 **Wave 1**
 
@@ -125,7 +125,7 @@ Fases decimais aparecem entre suas fases inteiras vizinhas, em ordem numérica.
 
 **Wave 3** *(blocked on Wave 2)*
 
-- [ ] 03-03-PLAN.md — Tamanhos e disponibilidade: size-grid (ciclo 3 estados, 37-43 esgotado default) + persistência + atalho "esgotar tudo"
+- [x] 03-03-PLAN.md — Tamanhos e disponibilidade: size-grid (ciclo 3 estados, 37-43 esgotado default) + persistência + atalho "esgotar tudo"
 
 **Wave 4** *(blocked on Wave 3)*
 
@@ -205,7 +205,7 @@ As fases executam em ordem numérica: 1 → 2 → 3 → 4 → 5 → 6
 |-------|----------------|--------|-----------|
 | 1. Fundação, Conta e Isolamento Multi-Tenant | 8/8 | Complete   | 2026-07-12 |
 | 2. Link Compartilhável da Vitrine | 6/6 | Complete   | 2026-07-12 |
-| 3. CRUD de Produtos e Pipeline de Mídia | 2/6 | In Progress|  |
+| 3. CRUD de Produtos e Pipeline de Mídia | 3/6 | In Progress|  |
 | 4. Vitrine Pública e Filtragem | 0/TBD | Not started | - |
 | 5. Fluxo de Pedido no WhatsApp (CRÍTICO) | 0/TBD | Not started | - |
 | 6. Métricas e Dashboard | 0/TBD | Not started | - |
