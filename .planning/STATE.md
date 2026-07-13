@@ -5,14 +5,14 @@ milestone_name: milestone
 current_phase: 3
 current_phase_name: CRUD de Produtos e Pipeline de Mídia
 status: executing
-stopped_at: Completed 03-05-PLAN.md
-last_updated: "2026-07-13T18:21:35.424Z"
+stopped_at: Plan 03-06 concluído — Fase 3 completa (checkpoint humano final aprovado)
+last_updated: "2026-07-13T19:44:42.459Z"
 progress:
   total_phases: 6
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 20
-  completed_plans: 19
-  percent: 33
+  completed_plans: 20
+  percent: 50
 ---
 
 # Estado do Projeto
@@ -27,11 +27,11 @@ Ver: .planning/PROJECT.md (atualizado 2026-07-10)
 ## Posição Atual
 
 Phase: 3 de 6 (CRUD de Produtos e Pipeline de Mídia)
-Plan: 5 de 6 na fase atual (03-05 concluído — editar/excluir/publicar produtos)
-Status: Executing Phase 3
-Última atividade: 2026-07-13 — Plan 03-05 concluído (updateProduct/deleteProduct/publishProduct/unpublishProduct como Server Actions owner-scoped; deleteProduct limpa storage.remove ANTES do cascade — Pitfall 1; rota /produtos/[id]/editar pré-preenchida com campos/tamanhos/fotos; diálogo nativo de exclusão e botões editar/publicar na UI; PROD-05 marcado como Completo)
+Plan: 6 de 6 na fase atual (03-06 concluído — Fase 3 completa)
+Status: Fase 3 completa — pronto para discutir/planejar Fase 4
+Última atividade: 2026-07-13 — Plan 03-06 concluído (queryProducts com busca/filtro/ordenação/disponibilidade derivada; /produtos lendo searchParams como fonte de verdade; toolbar debounced; rollup de disponibilidade + capa na listagem; checkpoint humano final da Fase 3 APROVADO pelo usuário no mobile — caso de teste Nike/Mercurial/FG; fix pós-checkpoint: bodySizeLimit das Server Actions ampliado para 10mb, commit 81cf8b5; PROD-06 marcado como Completo)
 
-Progresso: [██████████] 19/20 plans totais concluídos (Fases 4-6 ainda não planejadas em detalhe)
+Progresso: [██████████] 100% (20/20 plans já planejados concluídos; Fases 4-6 ainda não planejadas em detalhe)
 
 ## Métricas de Desempenho
 
@@ -91,8 +91,8 @@ Arquivo de retomada: Nenhum
 
 ## Session
 
-**Last session:** 2026-07-13T18:21:27.176Z
-**Stopped at:** Completed 03-05-PLAN.md
+**Last session:** 2026-07-13T19:44:42.343Z
+**Stopped at:** Plan 03-06 concluído — Fase 3 completa (checkpoint humano final aprovado)
 **Resume file:** None
 
 ## Accumulated Context
@@ -117,6 +117,7 @@ Arquivo de retomada: Nenhum
 | Phase 03 P03 | 12min | 2 tasks | 6 files |
 | Phase 03 P04 | 50min | 3 tasks | 6 files |
 | Phase 03 P05 | 15min | 3 tasks | 6 files |
+| Phase 03 P06 | 57min | 4 tasks | 6 files |
 
 ## Decisions
 
@@ -143,7 +144,11 @@ Arquivo de retomada: Nenhum
 - [Phase 03 P05]: parseProductFormData extraído de saveProduct para reuso em updateProduct — nunca duas implementações divergentes da mesma validação
 - [Phase 03 P05]: product_sizes reescrito via delete+insert em updateProduct (não diff parcial), aceitável dado o tamanho pequeno do conjunto (max 10 linhas)
 - [Phase 03 P05]: publishProduct/unpublishProduct sem gate de completude e sem diálogo de confirmação — toggle manual reversível (D-10, T-03-12)
+- [Phase 03 P06]: queryProducts com duas queries separadas (products filtrado/ordenado + product_sizes/product_photos via .in(productIds)) + join em memória, em vez de embed único do Supabase — consistente com o precedente já estabelecido em /produtos/[id]/editar/page.tsx
+- [Phase 03 P06]: ProductToolbar nunca mantém estado de filtro próprio — cada mudança reconstrói a URL via router.push a partir de currentParams (prop derivada do searchParams real), URL sempre como única fonte de verdade
+- [Phase 03 P06, pós-checkpoint]: experimental.serverActions.bodySizeLimit ampliado para 10mb em next.config.ts — limite padrão de 1MB do Next quebrava saveProduct/updateProduct ao somar poucas fotos comprimidas (~1MB cada); commit 81cf8b5, aplicado pelo orquestrador durante a pausa do checkpoint humano
+- [Phase 03]: Fase 3 (CRUD de Produtos e Pipeline de Mídia) completa — checkpoint humano final aprovado pelo usuário em dispositivo móvel real (caso de teste Nike/Mercurial/FG: cadastro+fotos+tamanhos, publicar/despublicar, buscar/filtrar/ordenar, editar, excluir, dois empty states)
 
 ### Blockers
 
-None
+- [Fase 3, herdado] Suíte completa npm test não fica verde por rate-limit de signup do Supabase Auth (sem emulador local) — recomendado priorizar antes da Fase 4 crescer a suíte ainda mais (ver deferred-items.md)
