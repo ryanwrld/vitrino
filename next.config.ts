@@ -7,6 +7,11 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseHostname = supabaseUrl ? new URL(supabaseUrl).hostname : undefined;
 
 const nextConfig: NextConfig = {
+  // Permite acessar o dev server via IP de rede local (ex.: testar em
+  // celular real na mesma Wi-Fi) sem o Next bloquear os recursos de dev
+  // (HMR) por origem cruzada — sem isso o JS não hidrata no celular e o
+  // <form> cai no submit nativo GET, vazando credenciais na URL.
+  allowedDevOrigins: ["172.20.10.12"],
   images: {
     remotePatterns: supabaseHostname
       ? [
