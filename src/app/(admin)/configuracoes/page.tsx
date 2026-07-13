@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { requireCompletedOnboarding } from "@/lib/auth/onboarding-guard";
 import { createClient } from "@/lib/supabase/server";
 import { buildStoreUrl } from "@/lib/slug/store-url";
@@ -29,13 +30,21 @@ export default async function ConfiguracoesPage() {
     .eq("owner_id", userData.user!.id)
     .single();
 
+  // Defesa contra a janela de corrida entre o guard (requireCompletedOnboarding,
+  // que só confirma a EXISTÊNCIA da linha) e esta busca dos dados completos —
+  // sem essa checagem, um `store` ausente aqui derrubaria a página com uma
+  // exceção não tratada em vez de redirecionar de forma previsível.
+  if (!store) {
+    redirect("/onboarding");
+  }
+
   const { data: settings } = await supabase
     .from("store_settings")
     .select("whatsapp_e164, message_template")
-    .eq("store_id", store!.id)
+    .eq("store_id", store.id)
     .single();
 
-  const publicUrl = buildStoreUrl(store!.slug);
+  const publicUrl = buildStoreUrl(store.slug);
 
   return (
     <main className="bg-white mx-auto flex min-h-dvh w-full max-w-md flex-col gap-6 px-4 py-10">
@@ -45,9 +54,9 @@ export default async function ConfiguracoesPage() {
 
       <SettingsForm
         store={{
-          name: store!.name,
-          accentColor: store!.accent_color,
-          tagline: store!.tagline,
+          name: store.name,
+          accentColor: store.accent_color,
+          tagline: store.tagline,
         }}
         settings={{
           whatsapp: settings?.whatsapp_e164 ?? "",
@@ -57,7 +66,7 @@ export default async function ConfiguracoesPage() {
 
       <div className="flex flex-col gap-4">
         <h2 className="text-xl font-medium text-[#111111]">Link e QR Code</h2>
-        <SlugEditor currentSlug={store!.slug} />
+        <SlugEditor currentSlug={store.slug} />
         <QrCodePanel publicUrl={publicUrl} />
       </div>
 
