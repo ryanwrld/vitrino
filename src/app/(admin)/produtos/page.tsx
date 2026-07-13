@@ -2,20 +2,49 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { requireCompletedOnboarding } from "@/lib/auth/onboarding-guard";
 import { createClient } from "@/lib/supabase/server";
+import { queryProducts, type QueryProductsParams } from "@/lib/products/list";
 import { ProductList } from "./product-list";
 
+type ProdutosSearchParams = {
+  q?: string;
+  status?: string;
+  brand?: string;
+  sole?: string;
+  sort?: string;
+};
+
 /**
- * Rota `/produtos` — listagem base (Server Component). Totalmente dinâmica
- * (NUNCA `"use cache"` — 03-RESEARCH.md, mesma disciplina de
- * `/configuracoes`) para que produtos recém-salvos apareçam imediatamente
- * após o redirect de `/produtos/novo`.
+ * Rota `/produtos` — listagem com busca/filtro/ordenação (PROD-06, Plan
+ * 03-06, 03-RESEARCH.md Pattern 3). Totalmente dinâmica (NUNCA
+ * `"use cache"` — mesma disciplina de `/configuracoes`/Plan 03-02) para que
+ * produtos recém-salvos/editados/publicados apareçam imediatamente.
  *
- * Esta fatia (Plan 03-02) não implementa busca/filtro/ordenação (PROD-06,
- * Plan 03-06) — lista simples, ordenada por mais recente.
+ * `searchParams` (q/status/brand/sole/sort) são a única fonte de verdade dos
+ * filtros — abrir a URL filtrada reproduz exatamente a mesma visualização
+ * (must_have do plano). `queryProducts` (src/lib/products/list.ts) já
+ * escopa por `store_id` do dono (T-03-13); esta rota só resolve a loja e
+ * repassa os params já parseados.
+ *
+ * Dois empty states distintos (03-UI-SPEC.md §Copywriting): "nenhum produto
+ * cadastrado ainda" quando a loja não tem NENHUM produto (independente de
+ * filtro); "nenhum produto encontrado" quando existem produtos na loja mas
+ * o filtro/busca atual não bateu com nenhum. A distinção exige uma segunda
+ * contagem (`totalCount`, sem filtro nenhum) além do resultado filtrado.
+ *
+ * Esta fatia (Plan 03-06 Task 2) já lê/aplica os filtros via `searchParams`
+ * (a URL é a fonte de verdade — reabrir a mesma URL reproduz a mesma
+ * visualização mesmo sem nenhuma UI de filtro ainda). A toolbar de busca/
+ * filtro/ordenação (`<ProductToolbar>`) é adicionada na Task 3, que também
+ * estende esta rota para renderizá-la.
  */
-export default async function ProdutosPage() {
+export default async function ProdutosPage({
+  searchParams,
+}: {
+  searchParams: Promise<ProdutosSearchParams>;
+}) {
   await requireCompletedOnboarding();
 
+  const params = await searchParams;
   const supabase = await createClient();
   const { data: userData } = await supabase.auth.getUser();
 
@@ -29,13 +58,30 @@ export default async function ProdutosPage() {
     redirect("/onboarding");
   }
 
-  const { data: products } = await supabase
-    .from("products")
-    .select("id, name, brand, brand_other, line, price, status")
-    .eq("store_id", store.id)
-    .order("created_at", { ascending: false });
+  const queryParams: QueryProductsParams = {
+    q: params.q,
+    status: params.status,
+    brand: params.brand,
+    sole: params.sole,
+    sort: params.sort,
+  };
 
-  const hasProducts = Boolean(products && products.length > 0);
+  const products = await queryProducts(supabase, store.id, queryParams);
+
+  const { count: totalCount } = await supabase
+    .from("products")
+    .select("id", { count: "exact", head: true })
+    .eq("store_id", store.id);
+
+  const hasAnyProduct = (totalCount ?? 0) > 0;
+  const hasFilteredResults = products.length > 0;
+
+  const productsWithCoverUrl = products.map((product) => ({
+    ...product,
+    coverUrl: product.coverPath
+      ? supabase.storage.from("product-images").getPublicUrl(product.coverPath).data.publicUrl
+      : null,
+  }));
 
   return (
     <main className="bg-white mx-auto flex min-h-dvh w-full max-w-md flex-col gap-8 px-4 py-10">
@@ -49,8 +95,19 @@ export default async function ProdutosPage() {
         </Link>
       </div>
 
-      {hasProducts ? (
-        <ProductList products={products!} />
+      {hasAnyProduct && (
+        <p className="text-xs text-[#6B6B6B]">
+          {products.length} {products.length === 1 ? "produto" : "produtos"}
+        </p>
+      )}
+
+      {hasFilteredResults ? (
+        <ProductList products={productsWithCoverUrl} />
+      ) : hasAnyProduct ? (
+        <div className="flex flex-col gap-1 rounded-lg border border-dashed border-[#F5F5F3] px-4 py-8 text-center">
+          <span className="font-medium text-[#111111]">Nenhum produto encontrado</span>
+          <span className="text-sm text-[#6B6B6B]">Tente ajustar os filtros ou buscar por outro termo.</span>
+        </div>
       ) : (
         <div className="flex flex-col gap-1 rounded-lg border border-dashed border-[#F5F5F3] px-4 py-8 text-center">
           <span className="font-medium text-[#111111]">Nenhum produto cadastrado ainda</span>
