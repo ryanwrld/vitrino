@@ -2,11 +2,11 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-current_phase: 3
-current_phase_name: CRUD de Produtos e Pipeline de Mídia
-status: executing
+current_phase: 4
+current_phase_name: Vitrine Pública e Filtragem
+status: Fase 3 completa — pronto para discutir/planejar Fase 4
 stopped_at: Plan 03-06 concluído — Fase 3 completa (checkpoint humano final aprovado)
-last_updated: "2026-07-13T19:44:42.459Z"
+last_updated: "2026-07-13T20:01:43.714Z"
 progress:
   total_phases: 6
   completed_phases: 3
@@ -26,8 +26,8 @@ Ver: .planning/PROJECT.md (atualizado 2026-07-10)
 
 ## Posição Atual
 
-Phase: 3 de 6 (CRUD de Produtos e Pipeline de Mídia)
-Plan: 6 de 6 na fase atual (03-06 concluído — Fase 3 completa)
+Phase: 4 — Vitrine Pública e Filtragem
+Plan: Not started
 Status: Fase 3 completa — pronto para discutir/planejar Fase 4
 Última atividade: 2026-07-13 — Plan 03-06 concluído (queryProducts com busca/filtro/ordenação/disponibilidade derivada; /produtos lendo searchParams como fonte de verdade; toolbar debounced; rollup de disponibilidade + capa na listagem; checkpoint humano final da Fase 3 APROVADO pelo usuário no mobile — caso de teste Nike/Mercurial/FG; fix pós-checkpoint: bodySizeLimit das Server Actions ampliado para 10mb, commit 81cf8b5; PROD-06 marcado como Completo)
 
@@ -45,7 +45,7 @@ Progresso: [██████████] 100% (20/20 plans já planejados con
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| - | - | - | - |
+| 03 | 6 | - | - |
 
 **Tendência recente:**
 
