@@ -67,7 +67,7 @@ export type PublicProduct = {
  * queries + join em memória já estabelecido no codebase (disponibilidade
  * não é uma coluna real, é derivada de product_sizes numa segunda query).
  */
-function isVisible(hideWhenSoldOut: boolean | null, disponivel: boolean, storeHideSoldOutDefault: boolean): boolean {
+export function isVisible(hideWhenSoldOut: boolean | null, disponivel: boolean, storeHideSoldOutDefault: boolean): boolean {
   const effectiveHide = hideWhenSoldOut ?? storeHideSoldOutDefault;
   return disponivel || !effectiveHide;
 }
