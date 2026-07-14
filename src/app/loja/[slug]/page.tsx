@@ -123,7 +123,7 @@ export default async function LojaPublicaPage({ params, searchParams }: PageProp
 
       {hasFilteredResults ? (
         <>
-          <ProductGrid products={productsWithCoverUrl} />
+          <ProductGrid products={productsWithCoverUrl} slug={slug} />
 
           <div className="hidden md:flex md:justify-center">
             <PaginationNumbered slug={slug} currentPage={page} hasMore={hasMore} searchParamsString={searchParamsString} />

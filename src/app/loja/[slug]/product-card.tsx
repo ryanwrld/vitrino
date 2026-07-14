@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { formatBRLPrice } from "@/lib/currency/brl";
 import { ImageWithFallback } from "./image-with-fallback";
 
@@ -19,13 +20,19 @@ export type PublicProductCardData = {
  * painel do revendedor) e usando ImageWithFallback (onError) em vez do
  * fallback inline "sem foto"
  * do admin — aqui a URL pode existir mas falhar no CDN do Storage (VITR-05).
+ *
+ * Card envolvido num `<Link>` para `/loja/[slug]/[produto]` (D-01: página de
+ * detalhe dedicada, não modal/accordion inline no grid) — `[produto]` é o
+ * `id` (UUID) do produto (decisão A3 do 05-RESEARCH.md: URL compartilhável
+ * satisfeita sem coluna slug nova). `slug` chega como prop separada, nunca
+ * poluindo `PublicProductCardData` (que descreve só o dado do produto).
  */
-export function ProductCard({ product }: { product: PublicProductCardData }) {
+export function ProductCard({ product, slug }: { product: PublicProductCardData; slug: string }) {
   const brandLabel = product.brand === "Outra" && product.brand_other ? product.brand_other : product.brand;
   const secondaryLine = [brandLabel, product.line].filter(Boolean).join(" · ");
 
   return (
-    <div className="flex flex-col gap-2">
+    <Link href={`/loja/${slug}/${product.id}`} className="flex flex-col gap-2">
       <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-[#F5F5F3]">
         <ImageWithFallback src={product.coverUrl} alt={product.name} />
       </div>
@@ -46,6 +53,6 @@ export function ProductCard({ product }: { product: PublicProductCardData }) {
           {product.disponivel ? "Disponível" : "Esgotado"}
         </span>
       </div>
-    </div>
+    </Link>
   );
 }
