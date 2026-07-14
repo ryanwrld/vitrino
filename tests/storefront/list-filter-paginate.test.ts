@@ -121,4 +121,55 @@ describe("queryPublicProducts (leitura pública paginada de produtos publicados)
 
     await loja.client.from("stores").delete().eq("id", store.id);
   }, 30000);
+
+  it("filtra por marca multi-select (D-02), solado, modalidade, busca por nome, combinados", async () => {
+    const loja = await seedAuthenticatedAccount("public-list-filters");
+
+    const { data: store, error: storeError } = await loja.client
+      .from("stores")
+      .insert({ owner_id: loja.userId, name: "Loja Filtros Públicos", slug: `loja-filtros-publicos-${Date.now()}` })
+      .select()
+      .single();
+    if (storeError || !store) throw new Error(`Falha ao seedar store: ${storeError?.message}`);
+
+    const productsToSeed = [
+      { name: "Mercurial Vapor", brand: "Nike", sole: "FG", fulfillment: "pronta_entrega", price: 899.9 },
+      { name: "Predator Elite", brand: "Adidas", sole: "AG", fulfillment: "sob_encomenda", price: 799.9 },
+      { name: "Ultra Ultimate", brand: "Puma", sole: "FG", fulfillment: "ambos", price: 1099.9 },
+    ];
+
+    for (const product of productsToSeed) {
+      const { error } = await loja.client
+        .from("products")
+        .insert({ store_id: store.id, status: "published", ...product });
+      if (error) throw new Error(`Falha ao seedar produto ${product.name}: ${error.message}`);
+    }
+
+    // Multi-select de marca (D-02): Nike E Adidas ao mesmo tempo.
+    const brandResult = await queryPublicProducts(loja.client, store.id, { brand: ["Nike", "Adidas"] });
+    expect(brandResult.products.map((p) => p.name).sort()).toEqual(["Mercurial Vapor", "Predator Elite"]);
+
+    // Filtro por solado.
+    const soleResult = await queryPublicProducts(loja.client, store.id, { sole: ["FG"] });
+    expect(soleResult.products.map((p) => p.name).sort()).toEqual(["Mercurial Vapor", "Ultra Ultimate"]);
+
+    // Filtro por modalidade.
+    const fulfillmentResult = await queryPublicProducts(loja.client, store.id, { fulfillment: ["sob_encomenda"] });
+    expect(fulfillmentResult.products.map((p) => p.name)).toEqual(["Predator Elite"]);
+
+    // Busca por nome (ilike, parcial, case-insensitive).
+    const searchResult = await queryPublicProducts(loja.client, store.id, { q: "merc" });
+    expect(searchResult.products.map((p) => p.name)).toEqual(["Mercurial Vapor"]);
+
+    // Filtro combinado (brand + sole).
+    const combinedResult = await queryPublicProducts(loja.client, store.id, { brand: ["Nike", "Puma"], sole: ["FG"] });
+    expect(combinedResult.products.map((p) => p.name).sort()).toEqual(["Mercurial Vapor", "Ultra Ultimate"]);
+
+    // Valor de marca inválido/inexistente é ignorado silenciosamente (Security Domain V5)
+    // — nunca lançado como erro, nunca interpolado cru; resultado equivale a nenhum filtro de marca.
+    const invalidBrandResult = await queryPublicProducts(loja.client, store.id, { brand: ["Reebok"] });
+    expect(invalidBrandResult.products).toHaveLength(3);
+
+    await loja.client.from("stores").delete().eq("id", store.id);
+  }, 30000);
 });
