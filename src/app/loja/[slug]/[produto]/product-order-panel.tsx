@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useTransition, type MouseEvent } from "react";
+import { startTransition, useRef, useState, useTransition, type MouseEvent } from "react";
 import Link from "next/link";
 import { ChevronLeft, Copy } from "lucide-react";
 import clsx, { type ClassValue } from "clsx";
@@ -10,6 +10,7 @@ import { copyText } from "@/lib/clipboard";
 import { formatBRLPrice, formatBRLPriceInput } from "@/lib/currency/brl";
 import { buildOrderMessage, buildWhatsAppUrl } from "@/lib/whatsapp/order-message";
 import { decideOrderAction } from "@/lib/whatsapp/order-guard";
+import { logOrderClick } from "@/lib/products/order-clicks-actions";
 import { ImageWithFallback } from "../image-with-fallback";
 
 /**
@@ -54,8 +55,9 @@ const TOOLTIP_DISMISS_MS = 2500;
  * interceptado — só o caminho inválido chama `preventDefault()`; o caminho
  * válido deixa a navegação nativa do anchor acontecer (nunca
  * `window.open`/`router.push`, T-05-11). O log fire-and-forget do clique
- * (`logOrderClick`, Task 3 deste plano) é fiado no caminho válido, sem
- * nunca gatear a UI por `isPending` (D-10).
+ * (`logOrderClick`) é disparado via `startTransition` (a função "solta" do
+ * React, não o hook) no caminho válido — resultado sempre ignorado, nunca
+ * gateando/atrasando a navegação (D-10).
  *
  * Pílulas de tamanho: `available === false` faz o handler early-return
  * (revalidação no clique) — cobre mouse E teclado, já que `pointer-events-
@@ -136,9 +138,16 @@ export function ProductOrderPanel({
     }
 
     // Caminho válido: NUNCA chamar preventDefault aqui — é o que garante a
-    // navegação nativa do <a> em webviews in-app (T-05-11). O registro
-    // fire-and-forget do clique (logOrderClick) é fiado neste ponto pela
-    // Task 3, sem nunca atrasar/bloquear esta navegação (D-10).
+    // navegação nativa do <a> em webviews in-app (T-05-11). Registro
+    // fire-and-forget do clique via startTransition — resultado ignorado,
+    // NUNCA usado para gatear/atrasar esta navegação (D-10). selectedSize é
+    // garantidamente não-nulo aqui: decideOrderAction só retorna
+    // shouldNavigate=true quando há tamanho selecionado.
+    if (selectedSize !== null) {
+      startTransition(() => {
+        logOrderClick(storeId, productId, selectedSize).catch(() => {});
+      });
+    }
   }
 
   function handleCopy() {
