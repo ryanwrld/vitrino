@@ -5,8 +5,8 @@ milestone_name: milestone
 current_phase: 4
 current_phase_name: Vitrine Pública e Filtragem
 status: executing
-stopped_at: Phase 5 context gathered
-last_updated: "2026-07-14T15:50:56.880Z"
+stopped_at: Phase 5 UI-SPEC approved
+last_updated: "2026-07-14T20:39:49.754Z"
 progress:
   total_phases: 6
   completed_phases: 4
@@ -28,7 +28,7 @@ Ver: .planning/PROJECT.md (atualizado 2026-07-10)
 
 Phase: 4 — Vitrine Pública e Filtragem
 Plan: Not started
-Status: Executing Phase 04
+Status: Ready to execute
 Última atividade: 2026-07-13 — Plan 03-06 concluído (queryProducts com busca/filtro/ordenação/disponibilidade derivada; /produtos lendo searchParams como fonte de verdade; toolbar debounced; rollup de disponibilidade + capa na listagem; checkpoint humano final da Fase 3 APROVADO pelo usuário no mobile — caso de teste Nike/Mercurial/FG; fix pós-checkpoint: bodySizeLimit das Server Actions ampliado para 10mb, commit 81cf8b5; PROD-06 marcado como Completo)
 
 Progresso: [██████████] 100% (20/20 plans já planejados concluídos; Fases 4-6 ainda não planejadas em detalhe)
@@ -91,9 +91,9 @@ Arquivo de retomada: Nenhum
 
 ## Session
 
-**Last session:** 2026-07-14T15:50:56.870Z
-**Stopped at:** Phase 5 context gathered
-**Resume file:** .planning/phases/05-fluxo-de-pedido-no-whatsapp-cr-tico/05-CONTEXT.md
+**Last session:** 2026-07-14T16:29:28.205Z
+**Stopped at:** Phase 5 UI-SPEC approved
+**Resume file:** .planning/phases/05-fluxo-de-pedido-no-whatsapp-cr-tico/05-UI-SPEC.md
 
 ## Accumulated Context
 
