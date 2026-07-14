@@ -102,7 +102,7 @@ Quais fases cobrem quais requisitos. Atualizado durante a criação do roadmap.
 | AUTH-04 | Phase 1 | Pendente |
 | AUTH-05 | Phase 1 | Pendente |
 | LOJA-01 | Phase 1 | Pendente |
-| LOJA-02 | Phase 2 | Pendente |
+| LOJA-02 | Phase 2 | Completo |
 | LOJA-03 | Phase 2 | Completo |
 | LOJA-04 | Phase 2 | Completo |
 | WPP-01 | Phase 1 | Pendente |
