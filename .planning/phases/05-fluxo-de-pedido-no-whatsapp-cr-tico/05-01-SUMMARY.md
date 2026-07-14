@@ -162,3 +162,7 @@ None - nenhuma configuração externa manual necessária. A migration já foi ap
 ---
 *Phase: 05-fluxo-de-pedido-no-whatsapp-cr-tico*
 *Completed: 2026-07-14*
+
+## Self-Check: PASSED
+
+All created files verified present on disk; all 4 task/docs commit hashes (`b71c459`, `38e914c`, `a00458f`, `d7fc7af`) verified present in git log.
