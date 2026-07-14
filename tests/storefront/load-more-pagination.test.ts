@@ -46,7 +46,7 @@ describe("fetchNextPage (Server Action pública — 'carregar mais')", () => {
       if (error) throw new Error(`Falha ao seedar produto ${i}: ${error.message}`);
     }
 
-    const directPage2 = await queryPublicProducts(loja.client, store.id, { page: 2 });
+    const directPage2 = await queryPublicProducts(loja.client, store.id, { page: 2 }, false);
     const actionResult = await fetchNextPage(store.slug, {}, 2);
 
     expect("error" in actionResult).toBe(false);

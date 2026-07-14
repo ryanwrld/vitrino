@@ -64,7 +64,7 @@ describe("queryPublicProducts (leitura pública paginada de produtos publicados)
       .insert({ store_id: storeB.id, name: "Produto da Loja B", brand: "Nike", price: 100, status: "published" });
     if (productBError) throw new Error(`Falha ao seedar produto da Loja B: ${productBError.message}`);
 
-    const result = await queryPublicProducts(lojaA.client, storeA.id, { page: 1 });
+    const result = await queryPublicProducts(lojaA.client, storeA.id, { page: 1 }, false);
     expect(result.products).toHaveLength(1);
     expect(result.products[0].name).toBe("Mercurial Publicado");
     expect(result.products[0].disponivel).toBe(true);
@@ -105,11 +105,11 @@ describe("queryPublicProducts (leitura pública paginada de produtos publicados)
       if (error) throw new Error(`Falha ao seedar produto paginado ${i}: ${error.message}`);
     }
 
-    const page1 = await queryPublicProducts(loja.client, store.id, { page: 1 });
+    const page1 = await queryPublicProducts(loja.client, store.id, { page: 1 }, false);
     expect(page1.products).toHaveLength(PUBLIC_PAGE_SIZE);
     expect(page1.hasMore).toBe(true);
 
-    const page2 = await queryPublicProducts(loja.client, store.id, { page: 2 });
+    const page2 = await queryPublicProducts(loja.client, store.id, { page: 2 }, false);
     expect(page2.products).toHaveLength(1);
     expect(page2.hasMore).toBe(false);
 
@@ -146,28 +146,28 @@ describe("queryPublicProducts (leitura pública paginada de produtos publicados)
     }
 
     // Multi-select de marca (D-02): Nike E Adidas ao mesmo tempo.
-    const brandResult = await queryPublicProducts(loja.client, store.id, { brand: ["Nike", "Adidas"] });
+    const brandResult = await queryPublicProducts(loja.client, store.id, { brand: ["Nike", "Adidas"] }, false);
     expect(brandResult.products.map((p) => p.name).sort()).toEqual(["Mercurial Vapor", "Predator Elite"]);
 
     // Filtro por solado.
-    const soleResult = await queryPublicProducts(loja.client, store.id, { sole: ["FG"] });
+    const soleResult = await queryPublicProducts(loja.client, store.id, { sole: ["FG"] }, false);
     expect(soleResult.products.map((p) => p.name).sort()).toEqual(["Mercurial Vapor", "Ultra Ultimate"]);
 
     // Filtro por modalidade.
-    const fulfillmentResult = await queryPublicProducts(loja.client, store.id, { fulfillment: ["sob_encomenda"] });
+    const fulfillmentResult = await queryPublicProducts(loja.client, store.id, { fulfillment: ["sob_encomenda"] }, false);
     expect(fulfillmentResult.products.map((p) => p.name)).toEqual(["Predator Elite"]);
 
     // Busca por nome (ilike, parcial, case-insensitive).
-    const searchResult = await queryPublicProducts(loja.client, store.id, { q: "merc" });
+    const searchResult = await queryPublicProducts(loja.client, store.id, { q: "merc" }, false);
     expect(searchResult.products.map((p) => p.name)).toEqual(["Mercurial Vapor"]);
 
     // Filtro combinado (brand + sole).
-    const combinedResult = await queryPublicProducts(loja.client, store.id, { brand: ["Nike", "Puma"], sole: ["FG"] });
+    const combinedResult = await queryPublicProducts(loja.client, store.id, { brand: ["Nike", "Puma"], sole: ["FG"] }, false);
     expect(combinedResult.products.map((p) => p.name).sort()).toEqual(["Mercurial Vapor", "Ultra Ultimate"]);
 
     // Valor de marca inválido/inexistente é ignorado silenciosamente (Security Domain V5)
     // — nunca lançado como erro, nunca interpolado cru; resultado equivale a nenhum filtro de marca.
-    const invalidBrandResult = await queryPublicProducts(loja.client, store.id, { brand: ["Reebok"] });
+    const invalidBrandResult = await queryPublicProducts(loja.client, store.id, { brand: ["Reebok"] }, false);
     expect(invalidBrandResult.products).toHaveLength(3);
 
     await loja.client.from("stores").delete().eq("id", store.id);

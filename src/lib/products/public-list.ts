@@ -51,6 +51,27 @@ export type PublicProduct = {
   coverPath: string | null;
 };
 
+/**
+ * Regra de visibilidade de esgotado (D-09/D-10/D-11, Plan 04-06) resolvida
+ * EXCLUSIVAMENTE aqui — nunca replicada em product-card.tsx/product-grid.tsx.
+ * `effectiveHide = product.hide_when_sold_out ?? storeHideSoldOutDefault`;
+ * produto aparece se `disponivel === true` OU `effectiveHide === false`.
+ *
+ * Trade-off assumido conscientemente (não uma redução de escopo): como este
+ * filtro roda DEPOIS da paginação `.range()`, uma página pode retornar menos
+ * que PUBLIC_PAGE_SIZE itens visíveis quando parte do lote buscado é
+ * ocultada — `hasMore` continua correto em relação ao conjunto subjacente de
+ * publicados, e chamadas subsequentes de "carregar mais"/página seguinte
+ * eventualmente mostram todo o catálogo visível, nunca duplicando nem
+ * travando. Fazer esse filtro no SQL exigiria abandonar o padrão de duas
+ * queries + join em memória já estabelecido no codebase (disponibilidade
+ * não é uma coluna real, é derivada de product_sizes numa segunda query).
+ */
+function isVisible(hideWhenSoldOut: boolean | null, disponivel: boolean, storeHideSoldOutDefault: boolean): boolean {
+  const effectiveHide = hideWhenSoldOut ?? storeHideSoldOutDefault;
+  return disponivel || !effectiveHide;
+}
+
 export type QueryPublicProductsResult = {
   products: PublicProduct[];
   hasMore: boolean;
@@ -61,7 +82,8 @@ export const PUBLIC_PAGE_SIZE = 20;
 export async function queryPublicProducts(
   supabase: SupabaseClient<Database>,
   storeId: string,
-  params: QueryPublicProductsParams
+  params: QueryPublicProductsParams,
+  storeHideSoldOutDefault: boolean
 ): Promise<QueryPublicProductsResult> {
   const page = params.page && params.page > 0 ? params.page : 1;
   const from = (page - 1) * PUBLIC_PAGE_SIZE;
@@ -69,7 +91,7 @@ export async function queryPublicProducts(
 
   let query = supabase
     .from("products")
-    .select("id, name, brand, brand_other, line, price")
+    .select("id, name, brand, brand_other, line, price, hide_when_sold_out")
     .eq("store_id", storeId)
     .eq("status", "published"); // fixo — nunca vindo de params/searchParams
 
@@ -128,12 +150,26 @@ export async function queryPublicProducts(
     }
   }
 
+  // Filtra sobre os produtos CRUS (com hide_when_sold_out) antes de montar o
+  // shape público — nunca expõe hide_when_sold_out na UI (product-card.tsx
+  // nunca recebe esse campo), e a regra fica resolvida em um único lugar.
+  const visibleProducts = products.filter((product) =>
+    isVisible(product.hide_when_sold_out, availableProductIds.has(product.id), storeHideSoldOutDefault)
+  );
+
+  const mappedProducts: PublicProduct[] = visibleProducts.map((product) => ({
+    id: product.id,
+    name: product.name,
+    brand: product.brand,
+    brand_other: product.brand_other,
+    line: product.line,
+    price: product.price,
+    disponivel: availableProductIds.has(product.id),
+    coverPath: coverPathByProductId.get(product.id) ?? null,
+  }));
+
   return {
-    products: products.map((product) => ({
-      ...product,
-      disponivel: availableProductIds.has(product.id),
-      coverPath: coverPathByProductId.get(product.id) ?? null,
-    })),
+    products: mappedProducts,
     hasMore,
   };
 }
