@@ -4,6 +4,8 @@ import { queryPublicProducts } from "@/lib/products/public-list";
 import { StoreHero } from "./store-hero";
 import { ProductGrid } from "./product-grid";
 import { ProductFilters } from "./product-filters";
+import { LoadMoreButton } from "./load-more-button";
+import { PaginationNumbered } from "./pagination-numbered";
 
 /**
  * Vitrine pública — Server Component sem NENHUMA checagem de auth. Esta
@@ -22,16 +24,22 @@ import { ProductFilters } from "./product-filters";
  * como `anon` automaticamente, consumindo as policies RLS públicas do
  * Plan 04-01.
  *
- * `searchParams` (q/brand/sole/fulfillment) são a única fonte de verdade dos
- * filtros (VITR-02) — múltiplos valores do mesmo nome chegam como array no
- * App Router; `toArray` normaliza para o caso de um único valor (que chega
- * como string simples, não array).
+ * `searchParams` (q/brand/sole/fulfillment/page) são a única fonte de
+ * verdade dos filtros (VITR-02) e da paginação (VITR-04) — múltiplos
+ * valores do mesmo nome chegam como array no App Router; `toArray`
+ * normaliza para o caso de um único valor (que chega como string simples,
+ * não array). `page` é 1-based (mesma convenção de public-list.ts).
+ *
+ * Paginação adaptativa (D-05): ambos os controles são renderizados no
+ * servidor, a decisão de qual aparece é 100% CSS (`hidden md:flex` /
+ * `flex md:hidden`) — nunca detecção de device em JS.
  */
 type LojaSearchParams = {
   q?: string;
   brand?: string | string[];
   sole?: string | string[];
   fulfillment?: string | string[];
+  page?: string;
 };
 
 type PageProps = {
@@ -62,14 +70,10 @@ export default async function LojaPublicaPage({ params, searchParams }: PageProp
   const brands = toArray(sp.brand);
   const soles = toArray(sp.sole);
   const fulfillments = toArray(sp.fulfillment);
+  const page = Number(sp.page ?? "1") || 1;
+  const filters = { q: sp.q, brand: brands, sole: soles, fulfillment: fulfillments };
 
-  const { products } = await queryPublicProducts(supabase, store.id, {
-    page: 1,
-    q: sp.q,
-    brand: brands,
-    sole: soles,
-    fulfillment: fulfillments,
-  });
+  const { products, hasMore } = await queryPublicProducts(supabase, store.id, { ...filters, page });
 
   const productsWithCoverUrl = products.map((product) => ({
     ...product,
@@ -90,6 +94,15 @@ export default async function LojaPublicaPage({ params, searchParams }: PageProp
   const hasAnyPublished = (totalPublished ?? 0) > 0;
   const hasFilteredResults = productsWithCoverUrl.length > 0;
 
+  // Query string atual (filtros) SEM "page" — reusada pela paginação numerada
+  // para montar os links anterior/próxima preservando o filtro ativo.
+  const filterSearchParams = new URLSearchParams();
+  if (sp.q) filterSearchParams.set("q", sp.q);
+  brands.forEach((value) => filterSearchParams.append("brand", value));
+  soles.forEach((value) => filterSearchParams.append("sole", value));
+  fulfillments.forEach((value) => filterSearchParams.append("fulfillment", value));
+  const searchParamsString = filterSearchParams.toString();
+
   return (
     <main className="mx-auto flex min-h-dvh w-full max-w-5xl flex-col gap-6 bg-white px-4 py-6">
       <StoreHero
@@ -101,12 +114,19 @@ export default async function LojaPublicaPage({ params, searchParams }: PageProp
         }}
       />
 
-      {hasAnyPublished && (
-        <ProductFilters slug={slug} currentParams={{ q: sp.q, brand: brands, sole: soles, fulfillment: fulfillments }} />
-      )}
+      {hasAnyPublished && <ProductFilters slug={slug} currentParams={filters} />}
 
       {hasFilteredResults ? (
-        <ProductGrid products={productsWithCoverUrl} />
+        <>
+          <ProductGrid products={productsWithCoverUrl} />
+
+          <div className="hidden md:flex md:justify-center">
+            <PaginationNumbered slug={slug} currentPage={page} hasMore={hasMore} searchParamsString={searchParamsString} />
+          </div>
+          <div className="flex md:hidden">
+            <LoadMoreButton slug={slug} initialPage={page} initialHasMore={hasMore} filters={filters} />
+          </div>
+        </>
       ) : hasAnyPublished ? (
         <div className="flex flex-col gap-1 rounded-lg border border-dashed border-[#F5F5F3] px-4 py-8 text-center">
           <span className="font-medium text-[#111111]">Nenhum produto encontrado com esse filtro.</span>
