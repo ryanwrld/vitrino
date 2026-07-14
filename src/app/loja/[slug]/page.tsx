@@ -59,7 +59,7 @@ export default async function LojaPublicaPage({ params, searchParams }: PageProp
 
   const { data: store, error: storeError } = await supabase
     .from("stores")
-    .select("id, name, logo_url, accent_color, tagline")
+    .select("id, name, logo_url, accent_color, tagline, hide_sold_out_default")
     .eq("slug", slug)
     .single();
 
@@ -73,7 +73,12 @@ export default async function LojaPublicaPage({ params, searchParams }: PageProp
   const page = Number(sp.page ?? "1") || 1;
   const filters = { q: sp.q, brand: brands, sole: soles, fulfillment: fulfillments };
 
-  const { products, hasMore } = await queryPublicProducts(supabase, store.id, { ...filters, page });
+  const { products, hasMore } = await queryPublicProducts(
+    supabase,
+    store.id,
+    { ...filters, page },
+    store.hide_sold_out_default
+  );
 
   const productsWithCoverUrl = products.map((product) => ({
     ...product,

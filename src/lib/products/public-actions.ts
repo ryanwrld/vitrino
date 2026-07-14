@@ -40,7 +40,7 @@ export async function fetchNextPage(
 
   const { data: store, error: storeError } = await supabase
     .from("stores")
-    .select("id")
+    .select("id, hide_sold_out_default")
     .eq("slug", slug)
     .single();
 
@@ -48,7 +48,12 @@ export async function fetchNextPage(
     return { error: "Loja não encontrada." };
   }
 
-  const { products, hasMore } = await queryPublicProducts(supabase, store.id, { ...params, page });
+  const { products, hasMore } = await queryPublicProducts(
+    supabase,
+    store.id,
+    { ...params, page },
+    store.hide_sold_out_default
+  );
 
   const productsWithCoverUrl: PublicProductCardData[] = products.map((product) => ({
     ...product,
