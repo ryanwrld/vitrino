@@ -1,14 +1,14 @@
 ---
-status: partial
+status: complete
 phase: 01-funda-o-conta-e-isolamento-multi-tenant
 source: [01-VERIFICATION.md]
 started: 2026-07-12T00:17:59Z
-updated: 2026-07-12T02:10:00Z
+updated: 2026-07-14T00:00:00Z
 ---
 
 ## Current Test
 
-[testing paused — 1 item outstanding: M-3 bloqueado por configuração pendente de SMTP/template de email]
+[testing complete — M-3 aceito como bloqueado permanentemente (SMTP customizado fora de escopo do MVP, ver .planning/... memória: Supabase free tier bloqueia template de email de reset de senha; requer Resend ou upgrade pago)]
 
 ## Tests
 
@@ -23,7 +23,9 @@ reason: "Token de sessão dura 1h (jwt_expiry); o navegador só tenta renovar pe
 
 ### 3. M-3 (AUTH-05) — ciclo completo de reset de senha com email real
 expected: Link do email leva a /auth/confirm?token_hash=...&type=recovery, verifyOtp estabelece sessão, redireciona a /redefinir-senha, updateUser troca a senha
-result: [blocked]
+result: blocked
+blocked_by: third-party
+reason: "Supabase free tier bloqueia customização do template de email de reset de senha ({{ .TokenHash }}) — requer SMTP customizado (Resend) ou upgrade pago. Código (requestPasswordReset, /auth/confirm, updatePassword) implementado e coberto por testes de integração; apenas o ciclo ponta-a-ponta com email real depende dessa configuração externa. Aceito como risco conhecido para o MVP em 2026-07-14."
 
 ### 4. M-4 (LOJA-01/WPP-01) — confirmação visual do wizard de onboarding
 expected: Prévia do número formatado aparece corretamente; template vem pré-preenchido; Dashboard é liberado só após concluir
@@ -48,6 +50,8 @@ issues: 0
 pending: 0
 skipped: 1
 blocked: 1
+
+**Nota de fechamento (2026-07-14):** Fase 01 aceita como verificada com 1 item permanentemente bloqueado por dependência de terceiro (SMTP customizado do Supabase) e 1 skip documentado (janela de renovação de token impraticável de testar manualmente). Ver 01-VERIFICATION.md para status canônico atualizado.
 
 ## Gaps
 

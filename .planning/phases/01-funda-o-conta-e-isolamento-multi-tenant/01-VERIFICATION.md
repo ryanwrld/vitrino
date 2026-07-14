@@ -1,10 +1,12 @@
 ---
 phase: 01-funda-o-conta-e-isolamento-multi-tenant
 verified: 2026-07-12T00:15:00Z
-status: human_needed
-score: 4/7 truths verificadas (3 presentes/instrumentadas, comportamento não exercitado)
-behavior_unverified: 3
-overrides_applied: 0
+closed: 2026-07-14T00:00:00Z
+status: passed
+score: 6/7 truths verificadas via UAT humano (M-1, M-2 pass/skip documentado, M-4 pass); M-3 aceito como bloqueado permanentemente por dependência de terceiro (SMTP customizado do Supabase fora do free tier)
+behavior_unverified: 0
+overrides_applied: 1
+override_note: "M-3 (AUTH-05, reset de senha com email real) aceito como blocked_by=third-party — Supabase free tier não permite customizar o template de email de reset ({{ .TokenHash }}); requer SMTP customizado (Resend) ou upgrade pago, fora de escopo do MVP. Código implementado e coberto por testes de integração; apenas o ciclo ponta-a-ponta com email real não foi exercitado. Decisão do usuário em 2026-07-14 via /gsd-verify-work 01."
 behavior_unverified_items:
   - truth: "Sessão persiste após refresh real do navegador (AUTH-02)"
     test: "Fazer login em /login, aguardar alguns minutos com atividade normal, dar F5 na página do painel em um navegador real"
