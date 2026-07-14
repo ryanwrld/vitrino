@@ -40,9 +40,9 @@ Requisitos para o lançamento inicial. Cada um mapeia para fases do roadmap.
 ### Vitrine Pública
 
 - [x] **VITR-01**: Cliente final acessa a vitrine pública via link/slug sem necessidade de login ou cadastro
-- [ ] **VITR-02**: Cliente final pode filtrar produtos por marca, solado e modalidade
-- [ ] **VITR-03**: Estado de estoque (disponível/esgotado) exibido na vitrine reflete o painel do revendedor com delay máximo de segundos
-- [ ] **VITR-04**: Vitrine carrega produtos paginados (~20 por carga) em vez de renderizar tudo de uma vez
+- [x] **VITR-02**: Cliente final pode filtrar produtos por marca, solado e modalidade
+- [x] **VITR-03**: Estado de estoque (disponível/esgotado) exibido na vitrine reflete o painel do revendedor com delay máximo de segundos
+- [x] **VITR-04**: Vitrine carrega produtos paginados (~20 por carga) em vez de renderizar tudo de uma vez
 - [x] **VITR-05**: Imagem com erro de carregamento exibe um placeholder visual padrão, sem quebrar o layout do card
 
 ### Pedido (fluxo de conversão)
@@ -114,11 +114,11 @@ Quais fases cobrem quais requisitos. Atualizado durante a criação do roadmap.
 | PROD-05 | Phase 3 | Completo |
 | PROD-06 | Phase 3 | Completo |
 | PROD-07 | Phase 3 | Completo |
-| VITR-01 | Phase 4 | Pendente |
-| VITR-02 | Phase 4 | Pendente |
-| VITR-03 | Phase 4 | Pendente |
-| VITR-04 | Phase 4 | Pendente |
-| VITR-05 | Phase 4 | Pendente |
+| VITR-01 | Phase 4 | Completo |
+| VITR-02 | Phase 4 | Completo |
+| VITR-03 | Phase 4 | Completo |
+| VITR-04 | Phase 4 | Completo |
+| VITR-05 | Phase 4 | Completo |
 | PED-01 | Phase 5 | Pendente |
 | PED-02 | Phase 5 | Pendente |
 | PED-03 | Phase 5 | Pendente |

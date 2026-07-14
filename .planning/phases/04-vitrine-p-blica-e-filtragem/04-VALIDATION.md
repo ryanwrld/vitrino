@@ -40,23 +40,23 @@ Seguir o mesmo padrão de teste da Fase 3: integração real contra o Supabase r
 
 | Task ID | Plan | Wave | Requirement | Threat Ref | Secure Behavior | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|------------|-----------------|-----------|-------------------|-------------|--------|
-| 04-01 T1 | 04-01 | 1 | VITR-01 | T-04-03 | Migration escreve exatamente 4 policies `to anon` `for select` + 2 colunas nullable/default corretas | grep | `grep -c "to anon" ... \| grep -q "^4$"` | ✅ | ⬜ pending |
-| 04-01 T2 | 04-01 | 1 | VITR-01 | — | [BLOCKING] push aplicado + typegen reflete colunas novas | integration | `npx tsc --noEmit` | ✅ | ⬜ pending |
-| 04-01 T3 | 04-01 | 1 | VITR-01 | T-04-01, T-04-02 | Client anônimo lê published/stores, nunca draft/store_settings | integration | `npx vitest run tests/storefront/public-access-rls.test.ts` | ❌ Wave 0 | ⬜ pending |
-| 04-02 T1 | 04-02 | 2 | VITR-01, VITR-04 | T-04-04 | queryPublicProducts filtra published, pagina 20+1, isola por store | integration | `npx vitest run tests/storefront/list-filter-paginate.test.ts` | ❌ Wave 0 | ⬜ pending |
-| 04-02 T2 | 04-02 | 2 | VITR-01, VITR-03 | T-04-05 | page.tsx resolve loja por slug sem auth, nunca "use cache" | typecheck | `npx tsc --noEmit` | ✅ | ⬜ pending |
-| 04-02 T3 | 04-02 | 2 | VITR-05 | — | Fallback de imagem via onError, sem botões admin no card | typecheck | `npx tsc --noEmit` | ✅ | ⬜ pending |
-| 04-03 T1 | 04-03 | 3 | VITR-02 | T-04-06, T-04-07 | Filtro multi-select validado contra listas fixas, busca parametrizada | integration | `npx vitest run tests/storefront/list-filter-paginate.test.ts` | ❌ Wave 0 (estende) | ⬜ pending |
-| 04-03 T2 | 04-03 | 3 | VITR-02 | — | Chips multi-select, sticky, URL como fonte de verdade, reset de page | typecheck | `npx tsc --noEmit` | ✅ | ⬜ pending |
-| 04-03 T3 | 04-03 | 3 | VITR-02 | — | searchParams multi-valor parseados, dois empty states distintos | typecheck | `npx tsc --noEmit` | ✅ | ⬜ pending |
-| 04-04 T1 | 04-04 | 4 | VITR-04 | T-04-09 | fetchNextPage resolve loja por slug (nunca storeId direto), espelha queryPublicProducts | integration | `npx vitest run tests/storefront/load-more-pagination.test.ts` | ❌ Wave 0 | ⬜ pending |
-| 04-04 T2 | 04-04 | 4 | VITR-04 | — | LoadMoreButton acumula itens, nunca substitui | typecheck | `npx tsc --noEmit` | ✅ | ⬜ pending |
-| 04-04 T3 | 04-04 | 4 | VITR-04 | — | Paginação adaptativa via CSS, nunca JS de device; sem contador (D-08) | typecheck | `npx tsc --noEmit` | ✅ | ⬜ pending |
-| 04-05 T1 | 04-05 | 2 | VITR-03 | T-04-10 | hide_when_sold_out validado (enum) e persistido nos 3 estados | integration | `npx vitest run tests/products/hide-when-sold-out.test.ts` | ❌ Wave 0 | ⬜ pending |
-| 04-05 T2 | 04-05 | 2 | VITR-03 | — | Select de 3 opções no product-form + hidratação correta na edição | typecheck | `npx tsc --noEmit` | ✅ | ⬜ pending |
-| 04-05 T3 | 04-05 | 2 | VITR-03 | T-04-11 | Reset condicional D-11 escopado por owner_id (RLS) | integration | `npx vitest run tests/settings/hide-sold-out-default.test.ts` | ❌ Wave 0 | ⬜ pending |
-| 04-06 T1 | 04-06 | 5 | VITR-03 | T-04-12 | Regra hide_when_sold_out/hide_sold_out_default centralizada, matriz de 5 casos | integration | `npx vitest run tests/storefront/sold-out-visibility.test.ts` | ❌ Wave 0 | ⬜ pending |
-| 04-06 T2 | 04-06 | 5 | VITR-03 | T-04-13 | page.tsx/fetchNextPage repassam hide_sold_out_default sem cache | typecheck | `npx tsc --noEmit` | ✅ | ⬜ pending |
+| 04-01 T1 | 04-01 | 1 | VITR-01 | T-04-03 | Migration escreve exatamente 4 policies `to anon` `for select` + 2 colunas nullable/default corretas | grep | `grep -c "to anon" ... \| grep -q "^4$"` | ✅ | ✅ green |
+| 04-01 T2 | 04-01 | 1 | VITR-01 | — | [BLOCKING] push aplicado + typegen reflete colunas novas | integration | `npx tsc --noEmit` | ✅ | ✅ green |
+| 04-01 T3 | 04-01 | 1 | VITR-01 | T-04-01, T-04-02 | Client anônimo lê published/stores, nunca draft/store_settings | integration | `npx vitest run tests/storefront/public-access-rls.test.ts` | ✅ | ✅ green (6/6) |
+| 04-02 T1 | 04-02 | 2 | VITR-01, VITR-04 | T-04-04 | queryPublicProducts filtra published, pagina 20+1, isola por store | integration | `npx vitest run tests/storefront/list-filter-paginate.test.ts` | ✅ | ✅ green (3/3) |
+| 04-02 T2 | 04-02 | 2 | VITR-01, VITR-03 | T-04-05 | page.tsx resolve loja por slug sem auth, nunca "use cache" | typecheck | `npx tsc --noEmit` | ✅ | ✅ green |
+| 04-02 T3 | 04-02 | 2 | VITR-05 | — | Fallback de imagem via onError, sem botões admin no card | typecheck | `npx tsc --noEmit` | ✅ | ✅ green |
+| 04-03 T1 | 04-03 | 3 | VITR-02 | T-04-06, T-04-07 | Filtro multi-select validado contra listas fixas, busca parametrizada | integration | `npx vitest run tests/storefront/list-filter-paginate.test.ts` | ✅ | ✅ green (3/3) |
+| 04-03 T2 | 04-03 | 3 | VITR-02 | — | Chips multi-select, sticky, URL como fonte de verdade, reset de page | typecheck | `npx tsc --noEmit` | ✅ | ✅ green |
+| 04-03 T3 | 04-03 | 3 | VITR-02 | — | searchParams multi-valor parseados, dois empty states distintos | typecheck | `npx tsc --noEmit` | ✅ | ✅ green |
+| 04-04 T1 | 04-04 | 4 | VITR-04 | T-04-09 | fetchNextPage resolve loja por slug (nunca storeId direto), espelha queryPublicProducts | integration | `npx vitest run tests/storefront/load-more-pagination.test.ts` | ✅ | ✅ green (2/2) |
+| 04-04 T2 | 04-04 | 4 | VITR-04 | — | LoadMoreButton acumula itens, nunca substitui | typecheck | `npx tsc --noEmit` | ✅ | ✅ green |
+| 04-04 T3 | 04-04 | 4 | VITR-04 | — | Paginação adaptativa via CSS, nunca JS de device; sem contador (D-08) | typecheck | `npx tsc --noEmit` | ✅ | ✅ green |
+| 04-05 T1 | 04-05 | 2 | VITR-03 | T-04-10 | hide_when_sold_out validado (enum) e persistido nos 3 estados | integration | `npx vitest run tests/products/hide-when-sold-out.test.ts` | ✅ | ✅ green (4/4) |
+| 04-05 T2 | 04-05 | 2 | VITR-03 | — | Select de 3 opções no product-form + hidratação correta na edição | typecheck | `npx tsc --noEmit` | ✅ | ✅ green |
+| 04-05 T3 | 04-05 | 2 | VITR-03 | T-04-11 | Reset condicional D-11 escopado por owner_id (RLS) | integration | `npx vitest run tests/settings/hide-sold-out-default.test.ts` | ✅ | ✅ green (2/2) |
+| 04-06 T1 | 04-06 | 5 | VITR-03 | T-04-12 | Regra hide_when_sold_out/hide_sold_out_default centralizada, matriz de 5 casos | integration | `npx vitest run tests/storefront/sold-out-visibility.test.ts` | ✅ | ✅ green (5/5) |
+| 04-06 T2 | 04-06 | 5 | VITR-03 | T-04-13 | page.tsx/fetchNextPage repassam hide_sold_out_default sem cache | typecheck | `npx tsc --noEmit` | ✅ | ✅ green |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
@@ -94,3 +94,5 @@ Seguir o mesmo padrão de teste da Fase 3: integração real contra o Supabase r
 - [x] `nyquist_compliant: true` set in frontmatter
 
 **Approval:** approved (planner, at plan-creation time — 2026-07-13)
+
+**Execution-time confirmation (2026-07-14):** All 6 plans executed and all Per-Task Verification Map rows confirmed green (see Status column above). Final coherence sweep (`npx vitest run tests/storefront/ tests/products/hide-when-sold-out.test.ts tests/settings/hide-sold-out-default.test.ts`) passed 22/22 across all 6 test files together. `npx tsc --noEmit` clean except the pre-existing unrelated `tests/supabase/server-cookies.test.ts` error (documented in `deferred-items.md`, confirmed pre-existing via `git stash` before this phase began). Full `npm test` suite not run to completion — hits the pre-existing Supabase Auth signUp rate limit when combined with unrelated Phase 2/3 test files (documented in `deferred-items.md`); this is a known, out-of-scope infrastructure limitation, not a phase-4 regression.

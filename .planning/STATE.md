@@ -5,14 +5,14 @@ milestone_name: milestone
 current_phase: 4
 current_phase_name: Vitrine Pública e Filtragem
 status: executing
-stopped_at: Completed 04-04-PLAN.md
-last_updated: "2026-07-14T03:27:12.367Z"
+stopped_at: Completed 04-06-PLAN.md — Fase 4 concluída
+last_updated: "2026-07-14T03:35:00.000Z"
 progress:
   total_phases: 6
   completed_phases: 3
   total_plans: 26
-  completed_plans: 25
-  percent: 50
+  completed_plans: 26
+  percent: 100
 ---
 
 # Estado do Projeto
@@ -91,8 +91,8 @@ Arquivo de retomada: Nenhum
 
 ## Session
 
-**Last session:** 2026-07-14T03:27:12.360Z
-**Stopped at:** Completed 04-04-PLAN.md
+**Last session:** 2026-07-14T03:35:00.000Z
+**Stopped at:** Completed 04-06-PLAN.md — Fase 4 concluída
 **Resume file:** None
 
 ## Accumulated Context
@@ -123,6 +123,7 @@ Arquivo de retomada: Nenhum
 | Phase 04 P05 | 5min | 3 tasks | 10 files |
 | Phase 04 P03 | 8min | 3 tasks | 4 files |
 | Phase 04 P04 | 5min | 3 tasks | 5 files |
+| Phase 04 P06 | 3min | 2 tasks | 3 files |
 
 ## Decisions
 
@@ -153,7 +154,14 @@ Arquivo de retomada: Nenhum
 - [Phase 03 P06]: ProductToolbar nunca mantém estado de filtro próprio — cada mudança reconstrói a URL via router.push a partir de currentParams (prop derivada do searchParams real), URL sempre como única fonte de verdade
 - [Phase 03 P06, pós-checkpoint]: experimental.serverActions.bodySizeLimit ampliado para 10mb em next.config.ts — limite padrão de 1MB do Next quebrava saveProduct/updateProduct ao somar poucas fotos comprimidas (~1MB cada); commit 81cf8b5, aplicado pelo orquestrador durante a pausa do checkpoint humano
 - [Phase 03]: Fase 3 (CRUD de Produtos e Pipeline de Mídia) completa — checkpoint humano final aprovado pelo usuário em dispositivo móvel real (caso de teste Nike/Mercurial/FG: cadastro+fotos+tamanhos, publicar/despublicar, buscar/filtrar/ordenar, editar, excluir, dois empty states)
+- [Phase 04 P01]: RLS pública (to anon, for select, restrita a status='published') aditiva às policies owner_full_access_* existentes — nunca substitui; store_settings deliberadamente excluída (WhatsApp fica privado até a Fase 5 decidir como expô-lo)
+- [Phase 04 P01/P05/P06]: hide_when_sold_out (products) nullable sem default — null distingue "sem exceção configurada" de "configurado como false", necessário para D-11 (reset em lote ao mudar o padrão global da loja)
+- [Phase 04 P02]: queryPublicProducts espelha queryProducts do admin (duas queries + join em memória) mas status é sempre fixo 'published' no código, nunca aceito via params
+- [Phase 04 P03]: Filtros de marca/solado/modalidade da vitrine pública são multi-select via .in() (nunca .eq()) — diferença deliberada do admin (single-select), decisão D-02
+- [Phase 04 P04]: fetchNextPage vive em src/lib/products/public-actions.ts, arquivo novo e separado de src/lib/products/actions.ts (owner-scoped) — decisão do executor por separação de responsabilidades de segurança, divergindo da sugestão original do pattern map
+- [Phase 04 P06]: Regra de visibilidade de esgotado (D-09/D-10/D-11) resolvida inteiramente dentro de queryPublicProducts, nunca replicada em componentes de UI — filtro roda pós-paginação (trade-off assumido: uma página pode ter menos que 20 itens visíveis quando parte do lote é oculta, mas hasMore permanece correto)
+- [Phase 04]: Fase 4 (Vitrine Pública e Filtragem) completa — 6 plans executados sequencialmente (worktrees degradadas para modo sequencial por fork-ref desconhecido, #683), todos os testes automatizados verdes (22/22 na sweep final de coerência), typecheck limpo exceto o erro pré-existente já documentado em server-cookies.test.ts
 
 ### Blockers
 
-- [Fase 3, herdado] Suíte completa npm test não fica verde por rate-limit de signup do Supabase Auth (sem emulador local) — recomendado priorizar antes da Fase 4 crescer a suíte ainda mais (ver deferred-items.md)
+- [Fase 3, herdado] Suíte completa npm test não fica verde por rate-limit de signup do Supabase Auth (sem emulador local) — recomendado priorizar antes da Fase 4 crescer a suíte ainda mais (ver deferred-items.md); reconfirmado na Fase 4 (ver .planning/phases/04-vitrine-p-blica-e-filtragem/deferred-items.md)
