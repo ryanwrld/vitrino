@@ -155,6 +155,10 @@ None - nenhuma configuração externa manual necessária. A migration já foi ap
 
 **Nota para o merge/orquestrador:** quando este worktree for integrado a `main`, `main` já terá avançado com o commit `38cbe82` (isolamento do projeto de teste dedicado). Nesse ponto, `tests/setup/supabase-test.ts` passará a ler `TEST_SUPABASE_URL`/`TEST_SUPABASE_ANON_KEY` em vez de `NEXT_PUBLIC_SUPABASE_URL`/`NEXT_PUBLIC_SUPABASE_ANON_KEY`. Os três arquivos de teste RLS deste plano (`order-clicks-rls.test.ts`, `store-settings-public-read.test.ts`, `public-access-rls.test.ts`) não importam variáveis de ambiente diretamente (usam os helpers de `tests/setup/supabase-test.ts`), então continuarão funcionando sem alteração — mas a migration 0005 precisa também estar aplicada no projeto de TESTE dedicado (`jnlptpdzpajyqmtprfgn`) para que a suíte completa passe pós-merge. Este plano já aplicou 0005 nesse projeto de teste também (push acidental da primeira tentativa, mantido deliberadamente — inofensivo e útil), então nenhuma ação adicional deveria ser necessária, mas vale confirmar com `npx supabase db push` (linkado ao projeto de teste) logo após o merge, como sanity check.
 
+## Requirement Tracking Note
+
+`REQUIREMENTS.md` NÃO foi atualizado para marcar PED-03 como Completo. `PED-03` é um requisito multi-plano (aparece também em `05-02-PLAN.md` e `05-04-PLAN.md`) — este plano entrega apenas a fundação de dados/RLS (o par `order_clicks`/`store_settings` que o botão "Pedir agora" vai consumir), não o comportamento visível ao usuário (o botão em si, a mensagem pré-formatada, o `encodeURIComponent`). Segue o mesmo precedente já estabelecido na Fase 3 (`PROD-01`/`PROD-02` não marcados como Completo em `03-01`, só ao fechar `03-02`, quando a UI de fato existia). Marcar como Completo cabe ao plano que efetivamente entrega o botão (`05-04`).
+
 ## Next Phase Readiness
 - `order_clicks` e a exposição pública de `store_settings` estão prontas para os planos 05-02/05-03/05-04 consumirem (CTA "Pedir agora", `logOrderClick`, botão de WhatsApp na página de detalhe do produto)
 - Nenhum bloqueador conhecido para os próximos planos da Fase 5
