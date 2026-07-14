@@ -155,7 +155,7 @@ Fases decimais aparecem entre suas fases inteiras vizinhas, em ordem numérica.
   4. Vitrine carrega produtos paginados (~20 por carga) em vez de renderizar tudo de uma vez, sem reload completo
   5. Imagem com erro de carregamento exibe um placeholder visual padrão sem quebrar o layout do card
 
-**Plans**: 2/6 plans executed
+**Plans**: 3/6 plans executed
 
 **Wave 1**
 
@@ -164,7 +164,7 @@ Fases decimais aparecem entre suas fases inteiras vizinhas, em ordem numérica.
 **Wave 2** *(blocked on Wave 1; 04-02 e 04-05 rodam em paralelo — arquivos disjuntos)*
 
 - [x] 04-02-PLAN.md — Vitrine mínima: hero da loja + grid de produtos publicados (queryPublicProducts) + fallback de imagem
-- [ ] 04-05-PLAN.md — Configuração de visibilidade de esgotado (D-09/D-10/D-11): campo por produto + preferência global da loja + reset condicional
+- [x] 04-05-PLAN.md — Configuração de visibilidade de esgotado (D-09/D-10/D-11): campo por produto + preferência global da loja + reset condicional
 
 **Wave 3** *(blocked on Wave 2 — 04-02)*
 
@@ -228,6 +228,6 @@ As fases executam em ordem numérica: 1 → 2 → 3 → 4 → 5 → 6
 | 1. Fundação, Conta e Isolamento Multi-Tenant | 8/8 | Complete   | 2026-07-12 |
 | 2. Link Compartilhável da Vitrine | 6/6 | Complete   | 2026-07-12 |
 | 3. CRUD de Produtos e Pipeline de Mídia | 6/6 | Complete    | 2026-07-13 |
-| 4. Vitrine Pública e Filtragem | 2/6 | In Progress|  |
+| 4. Vitrine Pública e Filtragem | 3/6 | In Progress|  |
 | 5. Fluxo de Pedido no WhatsApp (CRÍTICO) | 0/TBD | Not started | - |
 | 6. Métricas e Dashboard | 0/TBD | Not started | - |
