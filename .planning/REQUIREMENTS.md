@@ -43,7 +43,7 @@ Requisitos para o lançamento inicial. Cada um mapeia para fases do roadmap.
 - [ ] **VITR-02**: Cliente final pode filtrar produtos por marca, solado e modalidade
 - [ ] **VITR-03**: Estado de estoque (disponível/esgotado) exibido na vitrine reflete o painel do revendedor com delay máximo de segundos
 - [ ] **VITR-04**: Vitrine carrega produtos paginados (~20 por carga) em vez de renderizar tudo de uma vez
-- [ ] **VITR-05**: Imagem com erro de carregamento exibe um placeholder visual padrão, sem quebrar o layout do card
+- [x] **VITR-05**: Imagem com erro de carregamento exibe um placeholder visual padrão, sem quebrar o layout do card
 
 ### Pedido (fluxo de conversão)
 
