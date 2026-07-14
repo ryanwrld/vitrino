@@ -18,3 +18,33 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/*
+ * Feedback visual do "Pedir agora" sem tamanho selecionado (PED-04, D-04).
+ * Keyed pelo shakeKey em product-order-panel.tsx: incrementar a key força o
+ * remount do <a>, reiniciando esta animação mesmo em cliques rápidos
+ * repetidos (05-RESEARCH.md Pitfall 4).
+ */
+@keyframes shake {
+  10%,
+  90% {
+    transform: translateX(-1px);
+  }
+  20%,
+  80% {
+    transform: translateX(2px);
+  }
+  30%,
+  50%,
+  70% {
+    transform: translateX(-4px);
+  }
+  40%,
+  60% {
+    transform: translateX(4px);
+  }
+}
+
+.animate-shake {
+  animation: shake 400ms ease-in-out;
+}
