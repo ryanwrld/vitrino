@@ -105,6 +105,7 @@ export type Database = {
           created_at: string
           description: string | null
           fulfillment: string | null
+          hide_when_sold_out: boolean | null
           id: string
           line: string | null
           name: string
@@ -120,6 +121,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           fulfillment?: string | null
+          hide_when_sold_out?: boolean | null
           id?: string
           line?: string | null
           name: string
@@ -135,6 +137,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           fulfillment?: string | null
+          hide_when_sold_out?: boolean | null
           id?: string
           line?: string | null
           name?: string
@@ -186,6 +189,7 @@ export type Database = {
         Row: {
           accent_color: string | null
           created_at: string
+          hide_sold_out_default: boolean
           id: string
           logo_url: string | null
           name: string
@@ -196,6 +200,7 @@ export type Database = {
         Insert: {
           accent_color?: string | null
           created_at?: string
+          hide_sold_out_default?: boolean
           id?: string
           logo_url?: string | null
           name: string
@@ -206,6 +211,7 @@ export type Database = {
         Update: {
           accent_color?: string | null
           created_at?: string
+          hide_sold_out_default?: boolean
           id?: string
           logo_url?: string | null
           name?: string
