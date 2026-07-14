@@ -28,6 +28,14 @@ export const productSchema = z.object({
    * recebido em `saveProduct` antes de inserir em `product_sizes`.
    */
   sizes: z.array(z.object({ size: z.number().int().min(36).max(45), available: z.boolean() })).optional(),
+  /**
+   * Visibilidade de esgotado por produto (D-09/D-10, Plan 04-05). Três
+   * estados via select: "" (herdar o padrão global da loja — D-10, mapeia
+   * para `null` no parse), "false" (sempre mostrar esmaecido), "true"
+   * (ocultar da vitrine pública quando esgotado). NUNCA `z.boolean()` — o
+   * terceiro estado ("sem exceção configurada") não existe em boolean puro.
+   */
+  hideWhenSoldOut: z.enum(["", "true", "false"]).optional(),
 });
 
 export type ProductInput = z.infer<typeof productSchema>;

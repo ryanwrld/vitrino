@@ -166,6 +166,8 @@ type ParsedProductFields = {
   price: number;
   description: string | null;
   sizes: { size: number; available: boolean }[];
+  /** D-09/D-10 (Plan 04-05): null = herda hide_sold_out_default da loja. */
+  hideWhenSoldOut: boolean | null;
 };
 
 /**
@@ -187,6 +189,7 @@ function parseProductFormData(formData: FormData): { error: string } | { data: P
     fulfillment: formData.get("fulfillment") || undefined,
     price: formData.get("price"),
     description: formData.get("description") ?? "",
+    hideWhenSoldOut: formData.get("hideWhenSoldOut") ?? "",
   });
 
   if (!parsed.success) {
@@ -223,6 +226,14 @@ function parseProductFormData(formData: FormData): { error: string } | { data: P
     return { error: "Dados de tamanhos inválidos." };
   }
 
+  // "" (ou ausente) -> null (herda hide_sold_out_default da loja, D-10);
+  // "true"/"false" -> boolean explícito (exceção configurada, D-09).
+  const hideWhenSoldOut = parsed.data.hideWhenSoldOut === "true"
+    ? true
+    : parsed.data.hideWhenSoldOut === "false"
+      ? false
+      : null;
+
   return {
     data: {
       name: parsed.data.name,
@@ -235,6 +246,7 @@ function parseProductFormData(formData: FormData): { error: string } | { data: P
       price,
       description: parsed.data.description || null,
       sizes: sizesParsed.data ?? [],
+      hideWhenSoldOut,
     },
   };
 }
@@ -274,6 +286,7 @@ export async function saveProduct(formData: FormData): Promise<ProductActionResu
       fulfillment: fields.fulfillment,
       price: fields.price,
       description: fields.description,
+      hide_when_sold_out: fields.hideWhenSoldOut,
     })
     .select("id")
     .single();
@@ -356,6 +369,7 @@ export async function updateProduct(productId: string, formData: FormData): Prom
       fulfillment: fields.fulfillment,
       price: fields.price,
       description: fields.description,
+      hide_when_sold_out: fields.hideWhenSoldOut,
     })
     .eq("id", productId);
 
