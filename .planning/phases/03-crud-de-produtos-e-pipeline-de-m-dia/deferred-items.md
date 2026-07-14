@@ -2,6 +2,8 @@
 
 Itens descobertos durante a execução que estão fora do escopo da task/plan atual (não causados pelas mudanças desta execução), portanto não corrigidos automaticamente.
 
+**Atualização 2026-07-14 — rate limit de signup resolvido (Plans 03-04/03-06):** `tests/setup/supabase-test.ts` agora cria a conta de teste via `admin.createUser` (service_role) quando `SUPABASE_SERVICE_ROLE_KEY` está definida em `.env.local` — isso bypassa o endpoint público de signup do GoTrue (fonte do rate limit), mantendo a autenticação real via `signInWithPassword` no client anon para que RLS continue sendo exercitada de verdade em todo teste. Sem a chave configurada, o comportamento anterior (signUp público) é mantido sem mudança. Falta o usuário adicionar `SUPABASE_SERVICE_ROLE_KEY` (Dashboard Supabase → Project Settings → API → service_role) em `.env.local` — nunca commitar essa chave, nunca prefixar com `NEXT_PUBLIC_` — para o benefício entrar em vigor na suíte completa.
+
 ## Plan 03-01
 
 - **`tests/supabase/server-cookies.test.ts` — erro pré-existente de `tsc --noEmit`** (linhas 23 e 42): `Conversion of type 'SupabaseClient<...>' to type '{ cookies: {...} }' may be a mistake`. Confirmado via `git stash` que o erro já existia antes desta execução (não relacionado à migration 0003 nem ao regenerate de `database.types.ts`). Fora do escopo da Task 2 (arquivo não listado em `files_modified` do plan). Requer investigação separada de tipagem do mock de `SupabaseClient` nesse teste.

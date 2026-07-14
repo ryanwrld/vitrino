@@ -164,4 +164,4 @@ Arquivo de retomada: Nenhum
 
 ### Blockers
 
-- [Fase 3, herdado] Suíte completa npm test não fica verde por rate-limit de signup do Supabase Auth (sem emulador local) — recomendado priorizar antes da Fase 4 crescer a suíte ainda mais (ver deferred-items.md); reconfirmado na Fase 4 (ver .planning/phases/04-vitrine-p-blica-e-filtragem/deferred-items.md)
+- [Fase 3, herdado, mitigação disponível 2026-07-14] Suíte completa npm test não fica verde por rate-limit de signup do Supabase Auth — código já suporta seed via admin.createUser (service_role) para contornar o rate limit (ver tests/setup/supabase-test.ts e deferred-items.md do Plan 03-04/03-06), mas requer o usuário configurar `SUPABASE_SERVICE_ROLE_KEY` em `.env.local` (não commitável) para o benefício surtir efeito.

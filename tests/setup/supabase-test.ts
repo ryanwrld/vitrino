@@ -32,12 +32,28 @@ loadEnvLocal();
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
   throw new Error(
     "NEXT_PUBLIC_SUPABASE_URL/NEXT_PUBLIC_SUPABASE_ANON_KEY ausentes. " +
       "Configure .env.local com as credenciais do projeto Supabase antes de rodar os testes de RLS."
   );
+}
+
+/**
+ * Client service_role — bypassa RLS e o rate limit de signup do GoTrue.
+ * Usado EXCLUSIVAMENTE dentro deste arquivo para criar a conta de teste
+ * (admin.createUser); nunca usado para ler/escrever dados de teste — isso
+ * continua só através do client autenticado por signInWithPassword, para
+ * que a policy RLS real seja de fato exercitada (Padrão 4 do
+ * 01-RESEARCH.md). Nunca importar/reexportar este client fora de
+ * tests/setup/ nem usá-lo em código de produção.
+ */
+function createAdminClient(): TestClient {
+  return createSupabaseClient<Database>(SUPABASE_URL as string, SUPABASE_SERVICE_ROLE_KEY as string, {
+    auth: { autoRefreshToken: false, persistSession: false },
+  });
 }
 
 export type TestClient = SupabaseClient<Database>;
@@ -58,18 +74,41 @@ export interface SeededAccount {
 }
 
 /**
- * Cadastra (`signUp`) e autentica (`signInWithPassword`) uma conta real de
- * teste — NUNCA via service_role ou SQL Editor (Padrão 4 do 01-RESEARCH.md:
- * "confirmar via chamadas diretas de API, cliente Supabase autenticado como
- * cada usuário, não apenas via UI"). O client retornado deve ser usado para
- * toda escrita subsequente em `stores`/`store_settings`, para que os dados
- * sejam gravados através das policies RLS reais (nunca via bypass admin).
+ * Cadastra e autentica (`signInWithPassword`) uma conta real de teste. A
+ * ESCRITA de dados de teste (`stores`/`store_settings` etc.) deve sempre
+ * usar o client autenticado retornado aqui, nunca um client service_role,
+ * para que as policies RLS reais sejam de fato exercitadas (Padrão 4 do
+ * 01-RESEARCH.md). A CRIAÇÃO da conta em si usa admin.createUser via
+ * service_role quando `SUPABASE_SERVICE_ROLE_KEY` está configurada — isso só
+ * evita o rate limit de signup público do GoTrue (ver
+ * .planning/phases/03-crud-de-produtos-e-pipeline-de-m-dia/deferred-items.md),
+ * não bypassa RLS, já que a sessão usada no resto do teste vem de um
+ * signInWithPassword real no client anon. Sem a chave configurada, cai de
+ * volta no fluxo antigo (signUp público), sem mudança de comportamento.
  */
 export async function seedAuthenticatedAccount(labelForEmail: string): Promise<SeededAccount> {
   const client = createSupabaseClient<Database>(SUPABASE_URL as string, SUPABASE_ANON_KEY as string);
   const uniqueSuffix = `${Date.now()}.${Math.random().toString(36).slice(2)}`;
   const email = `vitrino.rls.${labelForEmail}.${uniqueSuffix}@gmail.com`;
   const password = "TesteIsolamentoRLS123!";
+
+  if (SUPABASE_SERVICE_ROLE_KEY) {
+    const admin = createAdminClient();
+    const { data: createData, error: createError } = await admin.auth.admin.createUser({
+      email,
+      password,
+      email_confirm: true,
+    });
+    if (createError || !createData.user) {
+      throw new Error(`Falha ao criar conta de teste via admin (${labelForEmail}): ${createError?.message}`);
+    }
+
+    const { data: signInData, error: signInError } = await client.auth.signInWithPassword({ email, password });
+    if (signInError || !signInData.session) {
+      throw new Error(`Falha ao autenticar conta de teste criada via admin (${labelForEmail}): ${signInError?.message}`);
+    }
+    return { client, userId: createData.user.id, email };
+  }
 
   const { data: signUpData, error: signUpError } = await client.auth.signUp({ email, password });
   if (signUpError) {

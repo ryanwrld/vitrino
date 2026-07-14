@@ -47,6 +47,9 @@ export async function signUpAction(formData: FormData): Promise<AuthActionResult
   });
 
   if (signUpError || !signUpData.user) {
+    if (signUpError && isAuthRetryableFetchError(signUpError)) {
+      return { error: "Não foi possível conectar. Verifique sua internet e tente novamente." };
+    }
     return { error: signUpError?.message ?? "Não foi possível criar a conta. Tente novamente." };
   }
 
