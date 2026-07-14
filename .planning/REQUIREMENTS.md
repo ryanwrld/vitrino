@@ -39,7 +39,7 @@ Requisitos para o lançamento inicial. Cada um mapeia para fases do roadmap.
 
 ### Vitrine Pública
 
-- [ ] **VITR-01**: Cliente final acessa a vitrine pública via link/slug sem necessidade de login ou cadastro
+- [x] **VITR-01**: Cliente final acessa a vitrine pública via link/slug sem necessidade de login ou cadastro
 - [ ] **VITR-02**: Cliente final pode filtrar produtos por marca, solado e modalidade
 - [ ] **VITR-03**: Estado de estoque (disponível/esgotado) exibido na vitrine reflete o painel do revendedor com delay máximo de segundos
 - [ ] **VITR-04**: Vitrine carrega produtos paginados (~20 por carga) em vez de renderizar tudo de uma vez
