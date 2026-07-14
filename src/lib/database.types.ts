@@ -39,6 +39,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      order_clicks: {
+        Row: {
+          created_at: string
+          id: string
+          product_id: string
+          size: number
+          store_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          product_id: string
+          size: number
+          store_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          product_id?: string
+          size?: number
+          store_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_clicks_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_clicks_store_id_fkey"
+            columns: ["store_id"]
+            isOneToOne: false
+            referencedRelation: "stores"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       product_photos: {
         Row: {
           created_at: string
