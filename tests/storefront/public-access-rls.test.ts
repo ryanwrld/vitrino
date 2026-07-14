@@ -8,8 +8,17 @@ import { createAnonClient, seedAuthenticatedAccount, type SeededAccount } from "
  * Este teste usa um client ANÔNIMO real (createAnonClient, sem signIn/signUp)
  * para provar o escopo exato das 4 novas policies `to anon` (Plan 04-01
  * Task 1): stores sim, products published sim, products draft não,
- * product_sizes/product_photos do produto published sim / do draft não, e
- * store_settings NUNCA (Pitfall 2 — nenhuma policy pública nessa tabela).
+ * product_sizes/product_photos do produto published sim / do draft não.
+ *
+ * store_settings: a asserção negativa original ("client anônimo NUNCA lê
+ * store_settings", Pitfall 2 do 04-RESEARCH.md) ficou FALSA a partir da
+ * migration 0005 (Fase 5) para uma loja com produto publicado — a policy
+ * `public_read_store_settings_for_published_stores` passou a expor
+ * whatsapp_e164/message_template nesse caso. O caso POSITIVO (loja com
+ * produto publicado) é coberto abaixo; o caso NEGATIVO escopado (loja SEM
+ * produto publicado) é coberto em
+ * tests/storefront/store-settings-public-read.test.ts, para não deixar uma
+ * asserção contraditória nesta suíte.
  *
  * Seed via o client autenticado do dono (seedAuthenticatedAccount), nunca
  * service_role — mesma disciplina de tests/rls/product-isolation.test.ts.
@@ -145,10 +154,11 @@ describe("Acesso público anônimo (migration 0004 — RLS to anon restrita a pu
     expect(photos).toEqual([]);
   });
 
-  it("client anônimo NUNCA lê store_settings (Pitfall 2 — nenhuma policy pública nessa tabela)", async () => {
+  it("client anônimo lê store_settings de loja com produto publicado (migration 0005 — policy public_read_store_settings_for_published_stores)", async () => {
     const anon = createAnonClient();
     const { data, error } = await anon.from("store_settings").select("*").eq("store_id", storeId);
     expect(error).toBeNull();
-    expect(data).toEqual([]);
+    expect(data).toHaveLength(1);
+    expect(data![0].store_id).toBe(storeId);
   });
 });
