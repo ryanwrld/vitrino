@@ -7,8 +7,8 @@ import type { Database } from "@/lib/database.types";
  * Carrega variáveis de `.env.local` (raiz do projeto) para `process.env` caso
  * ainda não estejam definidas. O Next.js faz isso automaticamente para
  * `next dev`/`next build`, mas o Vitest roda fora desse pipeline — sem isso,
- * `NEXT_PUBLIC_SUPABASE_URL`/`NEXT_PUBLIC_SUPABASE_ANON_KEY` ficariam vazias
- * ao rodar `npx vitest run` diretamente.
+ * `TEST_SUPABASE_URL`/`TEST_SUPABASE_ANON_KEY` ficariam vazias ao rodar
+ * `npx vitest run` diretamente.
  */
 function loadEnvLocal(): void {
   const envPath = path.resolve(process.cwd(), ".env.local");
@@ -30,15 +30,42 @@ function loadEnvLocal(): void {
 
 loadEnvLocal();
 
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+// Deliberadamente um projeto Supabase DEDICADO a testes, isolado do projeto
+// de produção (NEXT_PUBLIC_SUPABASE_URL/NEXT_PUBLIC_SUPABASE_ANON_KEY, usados
+// pelo app real) — nunca cair de volta silenciosamente nas vars NEXT_PUBLIC_
+// aqui, isso reintroduziria o risco de sujar/expor dados de produção.
+const SUPABASE_URL = process.env.TEST_SUPABASE_URL;
+const SUPABASE_ANON_KEY = process.env.TEST_SUPABASE_ANON_KEY;
+const SUPABASE_SERVICE_ROLE_KEY = process.env.TEST_SUPABASE_SERVICE_ROLE_KEY;
 
 if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
   throw new Error(
-    "NEXT_PUBLIC_SUPABASE_URL/NEXT_PUBLIC_SUPABASE_ANON_KEY ausentes. " +
-      "Configure .env.local com as credenciais do projeto Supabase antes de rodar os testes de RLS."
+    "TEST_SUPABASE_URL/TEST_SUPABASE_ANON_KEY ausentes. " +
+      "Configure .env.local com as credenciais de um projeto Supabase DEDICADO a testes " +
+      "(nunca o mesmo projeto de produção) antes de rodar os testes de RLS."
   );
+}
+
+/**
+ * Retry com backoff pra "Request rate limit reached" do GoTrue — o teto de
+ * auth do tier Free do Supabase não é totalmente controlável pelo valor
+ * configurado em Authentication > Rate Limits (ver deferred-items do Plan
+ * 03-04/03-06); mesmo num projeto de teste isolado com o limite subido pra
+ * 500/5min, rajadas de signUp/signIn ainda esbarram num teto de plataforma
+ * mais baixo. Isso só reduz flakiness da suíte local — nunca usado em
+ * produção.
+ */
+async function retryOnRateLimit<T extends { error: { message: string } | null }>(
+  fn: () => Promise<T>,
+  attempts = 5,
+  baseDelayMs = 1500
+): Promise<T> {
+  let result = await fn();
+  for (let attempt = 1; attempt < attempts && result.error?.message.includes("Request rate limit reached"); attempt++) {
+    await new Promise((resolve) => setTimeout(resolve, baseDelayMs * attempt));
+    result = await fn();
+  }
+  return result;
 }
 
 /**
@@ -79,12 +106,13 @@ export interface SeededAccount {
  * usar o client autenticado retornado aqui, nunca um client service_role,
  * para que as policies RLS reais sejam de fato exercitadas (Padrão 4 do
  * 01-RESEARCH.md). A CRIAÇÃO da conta em si usa admin.createUser via
- * service_role quando `SUPABASE_SERVICE_ROLE_KEY` está configurada — isso só
- * evita o rate limit de signup público do GoTrue (ver
+ * service_role quando `TEST_SUPABASE_SERVICE_ROLE_KEY` está configurada —
+ * isso só evita o rate limit de signup público do GoTrue (ver
  * .planning/phases/03-crud-de-produtos-e-pipeline-de-m-dia/deferred-items.md),
  * não bypassa RLS, já que a sessão usada no resto do teste vem de um
  * signInWithPassword real no client anon. Sem a chave configurada, cai de
- * volta no fluxo antigo (signUp público), sem mudança de comportamento.
+ * volta no fluxo antigo (signUp público, ainda contra o projeto de teste
+ * isolado), sem mudança de comportamento.
  */
 export async function seedAuthenticatedAccount(labelForEmail: string): Promise<SeededAccount> {
   const client = createSupabaseClient<Database>(SUPABASE_URL as string, SUPABASE_ANON_KEY as string);
@@ -94,23 +122,23 @@ export async function seedAuthenticatedAccount(labelForEmail: string): Promise<S
 
   if (SUPABASE_SERVICE_ROLE_KEY) {
     const admin = createAdminClient();
-    const { data: createData, error: createError } = await admin.auth.admin.createUser({
-      email,
-      password,
-      email_confirm: true,
-    });
+    const { data: createData, error: createError } = await retryOnRateLimit(() =>
+      admin.auth.admin.createUser({ email, password, email_confirm: true })
+    );
     if (createError || !createData.user) {
       throw new Error(`Falha ao criar conta de teste via admin (${labelForEmail}): ${createError?.message}`);
     }
 
-    const { data: signInData, error: signInError } = await client.auth.signInWithPassword({ email, password });
+    const { data: signInData, error: signInError } = await retryOnRateLimit(() =>
+      client.auth.signInWithPassword({ email, password })
+    );
     if (signInError || !signInData.session) {
       throw new Error(`Falha ao autenticar conta de teste criada via admin (${labelForEmail}): ${signInError?.message}`);
     }
     return { client, userId: createData.user.id, email };
   }
 
-  const { data: signUpData, error: signUpError } = await client.auth.signUp({ email, password });
+  const { data: signUpData, error: signUpError } = await retryOnRateLimit(() => client.auth.signUp({ email, password }));
   if (signUpError) {
     throw new Error(`Falha ao cadastrar conta de teste (${labelForEmail}): ${signUpError.message}`);
   }
