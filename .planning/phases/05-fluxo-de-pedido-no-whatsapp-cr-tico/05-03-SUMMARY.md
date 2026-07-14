@@ -140,3 +140,7 @@ None - nenhuma configuração de serviço externo necessária.
 ---
 *Phase: 05-fluxo-de-pedido-no-whatsapp-cr-tico*
 *Completed: 2026-07-14*
+
+## Self-Check: PASSED
+
+All created files verified on disk (`src/lib/products/public-detail.ts`, `tests/storefront/product-detail.test.ts`, this SUMMARY.md) and all task/summary commit hashes (`ae89bf8`, `e7fb00d`, `e6aff1c`) verified present in `git log`.
