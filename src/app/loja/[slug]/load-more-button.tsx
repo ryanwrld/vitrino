@@ -50,7 +50,7 @@ export function LoadMoreButton({ slug, initialPage, initialHasMore, filters }: L
       {items.length > 0 && (
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 md:gap-4">
           {items.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard key={product.id} product={product} slug={slug} />
           ))}
         </div>
       )}
