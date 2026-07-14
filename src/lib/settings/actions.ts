@@ -160,6 +160,7 @@ export async function saveStoreSettings(formData: FormData): Promise<SettingsAct
     tagline: formData.get("tagline") ?? "",
     whatsapp: formData.get("whatsapp"),
     messageTemplate: formData.get("messageTemplate"),
+    hideSoldOutDefault: formData.get("hideSoldOutDefault") ?? undefined,
   });
 
   if (!parsed.success) {
@@ -175,6 +176,20 @@ export async function saveStoreSettings(formData: FormData): Promise<SettingsAct
   if ("error" in owned) {
     return { error: owned.error };
   }
+
+  // D-11: precisa do valor ATUAL antes do update, para só resetar as
+  // exceções por produto quando a preferência global REALMENTE muda (nunca
+  // num resubmit do formulário sem alteração deste campo específico).
+  const { data: currentStore } = await owned.supabase
+    .from("stores")
+    .select("hide_sold_out_default")
+    .eq("id", owned.storeId)
+    .single();
+  const previousHideSoldOutDefault = currentStore?.hide_sold_out_default ?? false;
+  const nextHideSoldOutDefault =
+    parsed.data.hideSoldOutDefault === undefined
+      ? previousHideSoldOutDefault
+      : parsed.data.hideSoldOutDefault === "true";
 
   let logoUrl: string | undefined;
   const logoFile = formData.get("logo");
@@ -203,12 +218,28 @@ export async function saveStoreSettings(formData: FormData): Promise<SettingsAct
       name: parsed.data.name,
       accent_color: parsed.data.accentColor || null,
       tagline: parsed.data.tagline || null,
+      hide_sold_out_default: nextHideSoldOutDefault,
       ...(logoUrl ? { logo_url: logoUrl } : {}),
     })
     .eq("id", owned.storeId);
 
   if (storeUpdateError) {
     return { error: "Não foi possível salvar os dados da loja. Tente novamente." };
+  }
+
+  // D-11: a preferência global REALMENTE mudou -> reseta (para null) todas
+  // as exceções por produto já configuradas nesta loja, para que passem a
+  // herdar o novo padrão. Nunca dispara num resubmit sem mudança real deste
+  // campo (comparação feita ANTES do update, acima).
+  if (nextHideSoldOutDefault !== previousHideSoldOutDefault) {
+    const { error: resetError } = await owned.supabase
+      .from("products")
+      .update({ hide_when_sold_out: null })
+      .eq("store_id", owned.storeId);
+
+    if (resetError) {
+      return { error: "Configuração salva, mas não foi possível atualizar as exceções por produto. Tente novamente." };
+    }
   }
 
   const { error: settingsUpdateError } = await owned.supabase

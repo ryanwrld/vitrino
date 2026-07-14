@@ -26,7 +26,7 @@ export default async function ConfiguracoesPage() {
 
   const { data: store } = await supabase
     .from("stores")
-    .select("id, name, slug, logo_url, accent_color, tagline")
+    .select("id, name, slug, logo_url, accent_color, tagline, hide_sold_out_default")
     .eq("owner_id", userData.user!.id)
     .single();
 
@@ -57,6 +57,7 @@ export default async function ConfiguracoesPage() {
           name: store.name,
           accentColor: store.accent_color,
           tagline: store.tagline,
+          hideSoldOutDefault: store.hide_sold_out_default,
         }}
         settings={{
           whatsapp: settings?.whatsapp_e164 ?? "",

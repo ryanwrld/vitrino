@@ -24,6 +24,7 @@ export type SettingsFormProps = {
     name: string;
     accentColor: string | null;
     tagline: string | null;
+    hideSoldOutDefault: boolean;
   };
   settings: {
     whatsapp: string;
@@ -47,6 +48,7 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
       tagline: store.tagline ?? "",
       whatsapp: settings.whatsapp,
       messageTemplate: settings.messageTemplate,
+      hideSoldOutDefault: store.hideSoldOutDefault ? "true" : "false",
     },
   });
 
@@ -60,6 +62,7 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
     formData.set("tagline", values.tagline ?? "");
     formData.set("whatsapp", values.whatsapp);
     formData.set("messageTemplate", values.messageTemplate);
+    formData.set("hideSoldOutDefault", values.hideSoldOutDefault ?? "false");
     if (logoFile) {
       formData.set("logo", logoFile);
     }
@@ -133,6 +136,20 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
             className="rounded-lg border border-[#F5F5F3] bg-white px-3 py-2 text-base outline-none focus:border-[#00C46A]"
           />
           {errors.tagline && <span className="text-sm text-[#FF4D4D]">{errors.tagline.message}</span>}
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <label htmlFor="hideSoldOutDefault" className="text-sm font-medium text-[#111111]">
+            Ocultar produtos esgotados por padrão
+          </label>
+          <select
+            id="hideSoldOutDefault"
+            {...register("hideSoldOutDefault")}
+            className="rounded-lg border border-[#F5F5F3] bg-white px-3 py-2 text-base outline-none focus:border-[#00C46A]"
+          >
+            <option value="false">Não — mostrar esmaecido (padrão)</option>
+            <option value="true">Sim — ocultar da vitrine</option>
+          </select>
         </div>
       </div>
 

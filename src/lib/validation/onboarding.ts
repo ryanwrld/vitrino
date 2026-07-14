@@ -65,6 +65,14 @@ export const onboardingSchema = z.object({
       (value) => REQUIRED_TEMPLATE_PLACEHOLDERS.every((placeholder) => value.includes(placeholder)),
       `O template precisa conter os placeholders ${REQUIRED_TEMPLATE_PLACEHOLDERS.join(", ")}`
     ),
+  /**
+   * Preferência global de visibilidade de esgotado (D-09, Plan 04-05).
+   * Optional: o wizard de onboarding (Fase 1) não define este campo — a
+   * coluna `stores.hide_sold_out_default` já nasce com `false` via default
+   * do banco (migration 0004). Só `settings-form.tsx` (/configuracoes)
+   * define este valor explicitamente.
+   */
+  hideSoldOutDefault: z.enum(["true", "false"]).optional(),
 });
 
 export type OnboardingInput = z.infer<typeof onboardingSchema>;
