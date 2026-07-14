@@ -80,6 +80,10 @@ export default async function EditarProdutoPage({ params }: PageProps) {
     price: formatBRLPriceInput(product.price),
     description: product.description ?? "",
     sizes: (sizeRows ?? []).map((row) => ({ size: row.size, available: row.available })),
+    // Fecha o ciclo boolean|null <-> string do select (D-09/D-10, mesma
+    // disciplina de formatBRLPriceInput para o campo price): null -> "" (sem
+    // exceção, herda o padrão da loja), true/false -> a string correspondente.
+    hideWhenSoldOut: product.hide_when_sold_out === null ? "" : product.hide_when_sold_out ? "true" : "false",
   };
 
   return (

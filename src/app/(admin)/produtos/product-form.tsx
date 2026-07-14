@@ -74,6 +74,7 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
       fulfillment: undefined,
       price: "",
       description: "",
+      hideWhenSoldOut: "",
       ...defaultValues,
       // Pré-seleção 37-43 esgotada por padrão ao criar (D-02/D-03); 36/44/45
       // ficam fora até o revendedor adicioná-las manualmente (D-01). Fica
@@ -98,6 +99,7 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
     formData.set("price", values.price);
     formData.set("description", values.description ?? "");
     formData.set("sizes", JSON.stringify(values.sizes ?? []));
+    formData.set("hideWhenSoldOut", values.hideWhenSoldOut ?? "");
     for (const photoFile of pendingPhotoFiles) {
       formData.append("photos", photoFile);
     }
@@ -281,6 +283,25 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
             />
           </div>
           {errors.price && <span className="text-sm text-[#FF4D4D]">{errors.price.message}</span>}
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-4">
+        <h2 className="text-xl font-medium text-[#111111]">Visibilidade</h2>
+
+        <div className="flex flex-col gap-1">
+          <label htmlFor="hideWhenSoldOut" className="text-sm font-medium text-[#111111]">
+            Exibir quando esgotado
+          </label>
+          <select
+            id="hideWhenSoldOut"
+            {...register("hideWhenSoldOut")}
+            className="rounded-lg border border-[#F5F5F3] bg-white px-3 py-2 text-base outline-none focus:border-[#00C46A]"
+          >
+            <option value="">Usar padrão da loja</option>
+            <option value="false">Sempre mostrar (esmaecido)</option>
+            <option value="true">Ocultar da vitrine</option>
+          </select>
         </div>
       </div>
 
