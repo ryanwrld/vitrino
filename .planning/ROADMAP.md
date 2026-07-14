@@ -155,7 +155,29 @@ Fases decimais aparecem entre suas fases inteiras vizinhas, em ordem numérica.
   4. Vitrine carrega produtos paginados (~20 por carga) em vez de renderizar tudo de uma vez, sem reload completo
   5. Imagem com erro de carregamento exibe um placeholder visual padrão sem quebrar o layout do card
 
-**Plans**: TBD
+**Plans**: 0/6 plans complete
+
+**Wave 1**
+
+- [ ] 04-01-PLAN.md — Fundação: RLS pública `to anon` (stores/products/product_sizes/product_photos restrito a published) + colunas hide_when_sold_out/hide_sold_out_default + [BLOCKING] push + teste de acesso anônimo
+
+**Wave 2** *(blocked on Wave 1; 04-02 e 04-05 rodam em paralelo — arquivos disjuntos)*
+
+- [ ] 04-02-PLAN.md — Vitrine mínima: hero da loja + grid de produtos publicados (queryPublicProducts) + fallback de imagem
+- [ ] 04-05-PLAN.md — Configuração de visibilidade de esgotado (D-09/D-10/D-11): campo por produto + preferência global da loja + reset condicional
+
+**Wave 3** *(blocked on Wave 2 — 04-02)*
+
+- [ ] 04-03-PLAN.md — Filtros multi-select (marca/solado/modalidade) + busca por texto, chips sticky, URL como fonte de verdade
+
+**Wave 4** *(blocked on Wave 3)*
+
+- [ ] 04-04-PLAN.md — Paginação adaptativa: "Carregar mais" (mobile) + numerada (desktop), Server Action fetchNextPage
+
+**Wave 5** *(blocked on Wave 4 e Wave 2 — 04-05)*
+
+- [ ] 04-06-PLAN.md — Aplicar a regra de visibilidade de esgotado na consulta pública (fecha D-09/D-10/D-11 ponta a ponta)
+
 **UI hint**: yes
 
 ### Phase 5: Fluxo de Pedido no WhatsApp (CRÍTICO)
@@ -206,6 +228,6 @@ As fases executam em ordem numérica: 1 → 2 → 3 → 4 → 5 → 6
 | 1. Fundação, Conta e Isolamento Multi-Tenant | 8/8 | Complete   | 2026-07-12 |
 | 2. Link Compartilhável da Vitrine | 6/6 | Complete   | 2026-07-12 |
 | 3. CRUD de Produtos e Pipeline de Mídia | 6/6 | Complete    | 2026-07-13 |
-| 4. Vitrine Pública e Filtragem | 0/TBD | Not started | - |
+| 4. Vitrine Pública e Filtragem | 0/6 | Planned | - |
 | 5. Fluxo de Pedido no WhatsApp (CRÍTICO) | 0/TBD | Not started | - |
 | 6. Métricas e Dashboard | 0/TBD | Not started | - |
