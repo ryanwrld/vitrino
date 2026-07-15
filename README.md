@@ -9,11 +9,11 @@
 
 Revendedor de chuteiras importadas geralmente vende o catálogo espalhado em pastas do Google Drive, fotos soltas no WhatsApp ou num álbum do Yupoo em mandarim — nada disso passa confiança pro cliente final, e cada pedido vira uma troca manual de mensagens perguntando tamanho, preço e disponibilidade.
 
-**Vitrino** transforma esse catálogo informal numa vitrine profissional em português: produtos com fotos, tamanhos disponíveis, preços em BRL, e um botão que já abre o WhatsApp do revendedor com o pedido pronto — modelo, tamanho e preço inclusos. O cliente escolhe e manda a mensagem. Sem cadastro, sem app, sem o revendedor precisar estar online pra fechar a venda.
+**Vitrino** transforma esse catálogo informal num catálogo inteligente em português: produtos com fotos, tamanhos disponíveis, preços em BRL, e um botão que já abre o WhatsApp do revendedor com o pedido pronto — modelo, tamanho e preço inclusos. O cliente escolhe e manda a mensagem. Sem cadastro, sem app, sem o revendedor precisar estar online pra fechar a venda.
 
 ## Como funciona
 
-**Revendedor** cria conta, cadastra os produtos (fotos comprimidas automaticamente, tamanhos, preço, marca) e recebe um link único da sua vitrine — com QR Code pra divulgar no Instagram, WhatsApp Status ou onde for. Também acompanha métricas básicas: acessos, produtos mais vistos e cliques em "Pedir agora".
+**Revendedor** cria conta, cadastra os produtos (fotos comprimidas automaticamente, tamanhos, preço, marca) e recebe um link único do seu catálogo — com QR Code pra divulgar no Instagram, WhatsApp Status ou onde for. Também acompanha métricas básicas: acessos, produtos mais vistos e cliques em "Pedir agora".
 
 **Cliente final** abre o link, filtra por marca/solado/modalidade, escolhe o tamanho de um produto disponível e clica em pedir — o WhatsApp abre com a mensagem já formatada, pronta pra enviar.
 
@@ -23,13 +23,13 @@ Revendedor de chuteiras importadas geralmente vende o catálogo espalhado em pas
 - Onboarding: identidade da loja (nome, logo, cor) e configuração do WhatsApp
 - Link personalizável (slug) + QR Code pra download
 - CRUD completo de produtos: até 5 fotos por produto com compressão automática, controle de tamanho/estoque
-- Vitrine pública sem login, com filtros por marca/solado/modalidade e paginação
+- Catálogo público sem login, com filtros por marca/solado/modalidade e paginação
 - Fluxo de pedido no WhatsApp — testado numa matriz de dispositivos e navegadores, incluindo os webviews do Instagram e do próprio WhatsApp
 - Dashboard com métricas de acessos, produtos mais vistos e cliques em "Pedir agora"
 
 ## Stack
 
-- [Next.js 16](https://nextjs.org/) (App Router, Cache Components) — painel do revendedor e vitrine pública no mesmo codebase
+- [Next.js 16](https://nextjs.org/) (App Router, Cache Components) — painel do revendedor e catálogo público no mesmo codebase
 - [Supabase](https://supabase.com/) — Postgres com RLS, autenticação e storage de imagens
 - [Tailwind CSS v4](https://tailwindcss.com/) — estilização mobile-first
 - [Vercel](https://vercel.com/) — hospedagem e deploy
