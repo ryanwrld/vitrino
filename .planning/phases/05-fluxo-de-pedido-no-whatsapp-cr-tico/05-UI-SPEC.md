@@ -65,8 +65,8 @@ Weight discipline: only **2 weights used in this phase's new components** — Re
 | Role | Value | Usage |
 |------|-------|-------|
 | Dominant (60%) | `#FFFFFF` | Page background of the product detail route |
-| Secondary (30%) | `#F5F5F3` | Image-gallery placeholder background, unselected/unavailable size-pill border+background, "Copiar mensagem" button border |
-| Accent (10%) | `#00C46A` | **Reserved for:** selected size pill (border + background), "Pedir agora" CTA (background), availability indicator dot/text when `disponível`, `focus-within` border state (none needed this phase — no text inputs on this route) |
+| Secondary (30%) | `#E7F2FD` | Image-gallery placeholder background, unselected/unavailable size-pill border+background, "Copiar mensagem" button border |
+| Accent (10%) | `#0D21A1` | **Reserved for:** selected size pill (border + background), "Pedir agora" CTA (background), availability indicator dot/text when `disponível`, `focus-within` border state (none needed this phase — no text inputs on this route) |
 | Destructive | N/A — no destructive actions exist in this phase (see Copywriting Contract) | — |
 
 Additional tokens already established project-wide, reused (not redefined) in this phase:
@@ -105,23 +105,23 @@ Visually and structurally identical to the existing admin `size-grid.tsx` pill (
 
 | State | Classes (Tailwind) |
 |-------|---------------------|
-| Available, unselected | `border-[#F5F5F3] bg-white text-[#111111]` |
-| Available, selected | `border-[#00C46A] bg-[#00C46A] text-white` |
-| Sold out | `pointer-events-none text-[#6B6B6B] line-through opacity-60 border-[#F5F5F3] bg-[#F5F5F3]`, `tabIndex={-1}` |
+| Available, unselected | `border-[#E7F2FD] bg-white text-[#111111]` |
+| Available, selected | `border-[#0D21A1] bg-[#0D21A1] text-white` |
+| Sold out | `pointer-events-none text-[#6B6B6B] line-through opacity-60 border-[#E7F2FD] bg-[#E7F2FD]`, `tabIndex={-1}` |
 
 ### "Pedir agora" CTA
 - Always a real `<a href>` (never `disabled`), per D-02. `href="#"` when no size selected, real `wa.me` URL once selected — see RESEARCH.md Pattern 3.
-- Default: `min-h-11 w-full rounded-lg bg-[#00C46A] px-4 py-2 text-center text-sm font-medium text-white transition` (mirrors `load-more-button.tsx`'s existing CTA button styling, adapted to an anchor).
+- Default: `min-h-11 w-full rounded-lg bg-[#0D21A1] px-4 py-2 text-center text-sm font-medium text-white transition` (mirrors `load-more-button.tsx`'s existing CTA button styling, adapted to an anchor).
 - Invalid-click state: apply a `shake` CSS class keyed by an incrementing `shakeKey` (forces remount so rapid repeated clicks re-trigger the animation — RESEARCH.md Pitfall 4). Shake motion: small horizontal translate oscillation, ~400ms, no color change.
 - Never shows a toast/confirmation on successful click (D-03) — the WhatsApp app opening is the only confirmation.
 
 ### "Copiar mensagem" CTA
-- `min-h-11 w-full rounded-lg border border-[#6B6B6B] px-4 py-2 text-center text-sm font-medium text-[#6B6B6B] transition` — deliberately neutral/secondary styling (never `#00C46A`) to keep visual hierarchy subordinate to "Pedir agora".
+- `min-h-11 w-full rounded-lg border border-[#6B6B6B] px-4 py-2 text-center text-sm font-medium text-[#6B6B6B] transition` — deliberately neutral/secondary styling (never `#0D21A1`) to keep visual hierarchy subordinate to "Pedir agora".
 - Icon: `lucide-react`'s `Copy` (or `ClipboardCopy`) at `h-4 w-4`, left of the label, `gap-1`.
 - Always visible (D-08) — never conditionally rendered based on wa.me link failure detection.
 
 ### Product photo gallery
-- Reuses `ImageWithFallback` verbatim (same `#F5F5F3` background + `ImageOff` icon fallback already proven in Phase 4).
+- Reuses `ImageWithFallback` verbatim (same `#E7F2FD` background + `ImageOff` icon fallback already proven in Phase 4).
 - Swipeable/scrollable horizontal strip on mobile, `aspect-square`, `rounded-xl`, matching the card's existing image treatment.
 - Position indicator ("Foto 1 de 3") at `text-xs text-[#6B6B6B]`, centered below the gallery — only rendered when the product has more than 1 photo.
 

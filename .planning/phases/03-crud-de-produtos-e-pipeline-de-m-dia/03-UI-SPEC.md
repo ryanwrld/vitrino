@@ -70,15 +70,15 @@ Notes:
 | Role | Value | Usage |
 |------|-------|-------|
 | Dominant (60%) | `#FFFFFF` | Page background, form container background, product list background (matches `bg-white` on every existing admin page) |
-| Secondary (30%) | `#F5F5F3` | Input/select borders, section dividers, empty photo-slot dashed background, "esgotado" pill fill, "rascunho" status badge fill, disabled input backgrounds |
-| Accent (10%) | `#00C46A` | Reserved for: primary CTA buttons ("Novo produto", "Salvar produto"), input/select focus border (`focus:border-[#00C46A]`), "disponível" size-pill fill, "publicado" status badge fill, save-success toast accent |
+| Secondary (30%) | `#E7F2FD` | Input/select borders, section dividers, empty photo-slot dashed background, "esgotado" pill fill, "rascunho" status badge fill, disabled input backgrounds |
+| Accent (10%) | `#0D21A1` | Reserved for: primary CTA buttons ("Novo produto", "Salvar produto"), input/select focus border (`focus:border-[#0D21A1]`), "disponível" size-pill fill, "publicado" status badge fill, save-success toast accent |
 | Destructive | `#FF4D4D` | Reserved for: delete-product confirm button, field validation error text, photo-upload error text (>5MB, >5 photos, wrong format), "esgotado produto inteiro" is **not** this color (see note below) |
 
-Accent reserved for: "Novo produto" button, "Salvar produto" button, active input/select focus ring, "disponível" size pills, "Publicado" status badge, publish-toast success state. Never apply accent green to purely decorative or non-interactive elements, and never to the "esgotar produto inteiro" shortcut (that is a neutral/negative-state action, not a success action — see below).
+Accent reserved for: "Novo produto" button, "Salvar produto" button, active input/select focus ring, "disponível" size pills, "Publicado" status badge, publish-toast success state. Never apply accent blue to purely decorative or non-interactive elements, and never to the "esgotar produto inteiro" shortcut (that is a neutral/negative-state action, not a success action — see below).
 
-**Important distinction — "esgotado" is a neutral state, not an error state:** per `PROJECT.md`'s bug catalog ("pills de tamanho esgotado precisam de visual riscado"), esgotado sizes use the *secondary* gray (`#F5F5F3` fill / `#6B6B6B` text + `line-through`), never the destructive red. Red is reserved strictly for actual errors and the one truly destructive action (deleting a product). This keeps the accent/destructive reservation lists honest — most of this phase's negative-looking states (esgotado, rascunho) are muted grays, not red or green.
+**Important distinction — "esgotado" is a neutral state, not an error state:** per `PROJECT.md`'s bug catalog ("pills de tamanho esgotado precisam de visual riscado"), esgotado sizes use the *secondary* gray (`#E7F2FD` fill / `#6B6B6B` text + `line-through`), never the destructive red. Red is reserved strictly for actual errors and the one truly destructive action (deleting a product). This keeps the accent/destructive reservation lists honest — most of this phase's negative-looking states (esgotado, rascunho) are muted grays, not red or blue.
 
-Additional ink token (not a surface, carried from Phase 1/2 — required for parity with existing pages): `#0D3D2B` (dark green) for page `<h1>` text color and secondary/outline button borders+text (e.g. "Cancelar" in dialogs, "Voltar" links). Body copy/labels use `#111111` (near-black); `#6B6B6B` (medium gray) for secondary/hint/caption text and the "rascunho"/"esgotado" states described above.
+Additional ink token (not a surface, carried from Phase 1/2 — required for parity with existing pages): `#000000` (black) for page `<h1>` text color and secondary/outline button borders+text (e.g. "Cancelar" in dialogs, "Voltar" links). Body copy/labels use `#111111` (near-black); `#6B6B6B` (medium gray) for secondary/hint/caption text and the "rascunho"/"esgotado" states described above.
 
 ---
 
@@ -118,7 +118,7 @@ Additional interaction copy specific to this phase (required for the size-grid, 
 | Size-grid section legend | "Toque em um tamanho para adicioná-lo. Toque de novo para marcar disponível." |
 | Size pill — not included (tap to add) | Size number only, muted outline, e.g. "36" |
 | Size pill — included, esgotado (default) | Size number, struck through, e.g. "~~38~~" |
-| Size pill — included, disponível | Size number, solid green, e.g. "38" |
+| Size pill — included, disponível | Size number, solid blue, e.g. "38" |
 | Bulk shortcut button | "Marcar tudo como esgotado" |
 | Photo section legend | "Até 5 fotos. A primeira é a capa da sua vitrine." |
 | Photo slot — empty | "+" icon, caption "Adicionar foto" |
@@ -156,9 +156,9 @@ Additional interaction copy specific to this phase (required for the size-grid, 
 - All three routes sit inside the `(admin)` route group behind the existing `requireCompletedOnboarding()` guard.
 
 ### Product list page (`/produtos`)
-- Header row: `<h1>` "Produtos" (Display style, `#0D3D2B`) + "Novo produto" button (accent, top-right on desktop, full-width below the title on mobile — matches the mobile-first stacking already used in `settings-form.tsx`).
+- Header row: `<h1>` "Produtos" (Display style, `#000000`) + "Novo produto" button (accent, top-right on desktop, full-width below the title on mobile — matches the mobile-first stacking already used in `settings-form.tsx`).
 - Toolbar row below the header: search input (`Search` icon prefix, debounced via existing `useDebouncedValue`) + status/marca/solado filter selects + sort dropdown. On mobile, stack these into a wrapped flex row (`flex-wrap gap-2`), never a horizontal-scroll strip that hides controls.
-- Each product row/card shows: cover thumbnail (position-1 photo, 64×64px rounded, `#F5F5F3` background) or a placeholder icon (`ImageOff`, `#6B6B6B`) when no photo exists yet; name (Body, 500 weight) + brand/line as a secondary line (Caption, `#6B6B6B`); price (Label size/weight); status badge (Rascunho/Publicado); availability indicator derived from `EXISTS` over `product_sizes` (per RESEARCH Pattern 1) — "Disponível" (green dot + text) or "Esgotado" (gray dot + text, no strikethrough at this rollup level, strikethrough is reserved for individual size pills); edit (`Pencil`) and delete (`Trash2`) icon buttons, both meeting the 44×44px touch target minimum.
+- Each product row/card shows: cover thumbnail (position-1 photo, 64×64px rounded, `#E7F2FD` background) or a placeholder icon (`ImageOff`, `#6B6B6B`) when no photo exists yet; name (Body, 500 weight) + brand/line as a secondary line (Caption, `#6B6B6B`); price (Label size/weight); status badge (Rascunho/Publicado); availability indicator derived from `EXISTS` over `product_sizes` (per RESEARCH Pattern 1) — "Disponível" (blue dot + text) or "Esgotado" (gray dot + text, no strikethrough at this rollup level, strikethrough is reserved for individual size pills); edit (`Pencil`) and delete (`Trash2`) icon buttons, both meeting the 44×44px touch target minimum.
 - Empty states: distinguish "no products exist at all" from "filters/search matched nothing" using the two separate copy pairs declared above — do not show the same empty state for both, since the fix differs (create vs. clear filters).
 
 ### Product form (`/produtos/novo`, `/produtos/[id]/editar`) — single screen, D-08
@@ -179,22 +179,22 @@ Submit button "Salvar produto" (accent, full-width on mobile) pinned at the bott
 - Grid of 10 pills, sizes 36–45, `grid-cols-5 gap-2` on mobile (two rows of five) or a single `flex flex-wrap gap-2` row on wider viewports.
 - Each pill is a `<button type="button">`, minimum 44×44px, rounded-lg, showing only the size number.
 - **Three-state single-tap cycle** (mobile-first — no long-press, no separate delete affordance, no ambiguity):
-  1. **Not included** → outline only (`border-[#F5F5F3] text-[#6B6B6B]`, no fill). Tap → becomes "included, esgotado" (D-03: newly-included sizes always start esgotado, never disponível-by-default).
-  2. **Included, esgotado** → filled `#F5F5F3` background, `#6B6B6B` text, `line-through` (mirrors the project's existing "riscado" convention for esgotado sizes on the public storefront, applied here in the admin panel too for visual consistency). Tap → becomes "included, disponível".
-  3. **Included, disponível** → filled `#00C46A` background, white text, no strikethrough. Tap → cycles back to "not included" (removes the size from the product).
+  1. **Not included** → outline only (`border-[#E7F2FD] text-[#6B6B6B]`, no fill). Tap → becomes "included, esgotado" (D-03: newly-included sizes always start esgotado, never disponível-by-default).
+  2. **Included, esgotado** → filled `#E7F2FD` background, `#6B6B6B` text, `line-through` (mirrors the project's existing "riscado" convention for esgotado sizes on the public storefront, applied here in the admin panel too for visual consistency). Tap → becomes "included, disponível".
+  3. **Included, disponível** → filled `#0D21A1` background, white text, no strikethrough. Tap → cycles back to "not included" (removes the size from the product).
 - On product creation, sizes 37–43 initialize at state 2 (included, esgotado — D-02/D-03); sizes 36, 44, 45 initialize at state 1 (not included — D-02).
 - The bulk shortcut "Marcar tudo como esgotado" moves every currently-included pill to state 2 in one action; it never adds sizes that are in state 1 (it only affects sizes the revendedor already chose to include) — this matches RESEARCH's schema resolution (`UPDATE product_sizes SET available = false WHERE product_id = X`, which only touches existing rows).
 
 ### Photo uploader (D-11–D-13, PROD-03)
 - Grid of exactly 5 square slots, `grid-cols-5 gap-2` on mobile wrapping if needed, aspect-square, rounded-lg.
-- **Empty slot:** dashed `#F5F5F3` border, centered `Plus` icon + "Adicionar foto" caption (`text-xs text-[#6B6B6B]`), tapping opens the native file picker (`accept="image/png,image/jpeg,image/webp"`).
-- **Filled slot:** thumbnail image fills the slot; a small "Capa" badge (pill, `#00C46A` background, white text, `text-xs`) appears only on position 1 (D-11 — no separate "set as cover" action exists, this badge is purely informational); a drag handle (`GripVertical`, top-left, `p-2` hit area) enables reordering via `@dnd-kit/sortable`; a remove "×" button (top-right, `p-2` hit area, `#FF4D4D` icon on white circular background) removes that single photo and reverts the slot to empty, accepting a new upload immediately (D-13 — never disturbs the other slots).
+- **Empty slot:** dashed `#E7F2FD` border, centered `Plus` icon + "Adicionar foto" caption (`text-xs text-[#6B6B6B]`), tapping opens the native file picker (`accept="image/png,image/jpeg,image/webp"`).
+- **Filled slot:** thumbnail image fills the slot; a small "Capa" badge (pill, `#0D21A1` background, white text, `text-xs`) appears only on position 1 (D-11 — no separate "set as cover" action exists, this badge is purely informational); a drag handle (`GripVertical`, top-left, `p-2` hit area) enables reordering via `@dnd-kit/sortable`; a remove "×" button (top-right, `p-2` hit area, `#FF4D4D` icon on white circular background) removes that single photo and reverts the slot to empty, accepting a new upload immediately (D-13 — never disturbs the other slots).
 - **Uploading state:** semi-transparent dark overlay on the thumbnail-in-progress with a centered `Loader2` spinner + "Enviando…" caption — this is the "feedback de progresso" PROD-03 requires; do not let the slot look inert during compression/upload.
 - **Compression happens before the slot shows "Enviando…" completes** — the client compresses via `browser-image-compression` first (silent, sub-second for most phone photos), then the network upload shows the spinner; do not show two separate progress states (compress vs. upload) — one unified "Enviando…" covers both, keeping the UI simple for a non-technical user.
 - Drag-and-drop only reorders among filled slots; empty slots are not drop targets and do not participate in the sortable context.
 
 ### Confirmation dialog (delete product)
-- Reuses the exact native `<dialog>` pattern from `slug-editor.tsx`: `rounded-lg p-6 backdrop:bg-black/40`, title (Heading style, `#111111`), body (`text-sm text-[#6B6B6B]`), two-button footer — "Cancelar" (outline, `#0D3D2B` border/text) + "Sim, excluir" (filled `#FF4D4D`, white text, disabled+"Excluindo…" while pending).
+- Reuses the exact native `<dialog>` pattern from `slug-editor.tsx`: `rounded-lg p-6 backdrop:bg-black/40`, title (Heading style, `#111111`), body (`text-sm text-[#6B6B6B]`), two-button footer — "Cancelar" (outline, `#000000` border/text) + "Sim, excluir" (filled `#FF4D4D`, white text, disabled+"Excluindo…" while pending).
 - Triggered only by the `Trash2` icon button on the list row (or an equivalent button on the edit form) — never by any other action. Confirm handler calls the delete Server Action directly (`onClick`, not `method="dialog"` submit) so the dialog can show a pending state before closing, matching the slug-editor's `handleConfirm` pattern exactly.
 - Publish/unpublish and the bulk "esgotar tudo" shortcut do **not** get a confirmation dialog — both are reversible, low-stakes toggles (unlike the slug change or product delete, which are genuinely destructive/breaking). Do not over-apply the confirmation pattern to actions that don't warrant it.
 
@@ -205,7 +205,7 @@ Submit button "Salvar produto" (accent, full-width on mobile) pinned at the bott
 - **Modalidade**: Sob encomenda, Pronta entrega, Ambos.
 
 ### Primary visual anchor
-The "Novo produto" button on the list page and "Salvar produto" on the form are the highest-contrast CTAs (accent green `#00C46A`) on their respective screens — largest interactive elements after page titles. Everything else (filters, sort, secondary publish toggle, bulk esgotado shortcut, photo remove/drag controls) is visually subordinate (outline or icon-only, neutral colors), so the accent green never competes with itself across more than one element per screen.
+The "Novo produto" button on the list page and "Salvar produto" on the form are the highest-contrast CTAs (accent blue `#0D21A1`) on their respective screens — largest interactive elements after page titles. Everything else (filters, sort, secondary publish toggle, bulk esgotado shortcut, photo remove/drag controls) is visually subordinate (outline or icon-only, neutral colors), so the accent blue never competes with itself across more than one element per screen.
 
 ---
 

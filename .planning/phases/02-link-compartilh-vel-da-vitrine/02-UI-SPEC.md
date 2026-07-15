@@ -23,7 +23,7 @@ created: 2026-07-12
 | Icon library | `lucide-react` (per `.planning/research/STACK.md`) — **not yet installed** (`grep` of `package.json` confirms absence); this phase must add it for the slug-status icons (checking/available/taken), copy icon, and download icon |
 | Font | Geist Sans (`--font-geist-sans`, loaded via `next/font/google` in root `layout.tsx`) — inherited from Phase 1, no new font loading in this phase |
 
-**Design system decision (no shadcn):** `components.json` does not exist and Phase 1 already shipped 8 plans of hand-rolled Tailwind UI (login, cadastro, onboarding, dashboard) using arbitrary-value hex classes (e.g. `bg-[#00C46A]`, `text-[#0D3D2B]`) instead of a component library. Introducing shadcn now would fork the visual system mid-project for a single settings screen. This phase continues the established hand-rolled pattern for consistency. Revisit shadcn adoption as a deliberate, dedicated decision in a future phase if the team wants it — do not introduce it silently here.
+**Design system decision (no shadcn):** `components.json` does not exist and Phase 1 already shipped 8 plans of hand-rolled Tailwind UI (login, cadastro, onboarding, dashboard) using arbitrary-value hex classes (e.g. `bg-[#0D21A1]`, `text-[#000000]`) instead of a component library. Introducing shadcn now would fork the visual system mid-project for a single settings screen. This phase continues the established hand-rolled pattern for consistency. Revisit shadcn adoption as a deliberate, dedicated decision in a future phase if the team wants it — do not introduce it silently here.
 
 **Known drift (not this phase's job to fix):** `PROJECT.md` specifies Syne 700 (display/headings) + Inter 400/500 (body) as the target brand typography, and Supabase-Storage-hosted `next/image` domains, but Phase 1 shipped with the Next.js scaffold default (Geist Sans) and never loaded Syne/Inter. This UI-SPEC follows the *implemented* reality (Geist Sans) rather than the aspirational brand spec, to keep this one settings page visually consistent with `/dashboard`, `/login`, `/onboarding`. Flag this drift to the user for a future dedicated typography pass — do not fix it unilaterally inside a Phase 2 settings-screen plan.
 
@@ -67,13 +67,13 @@ Notes:
 | Role | Value | Usage |
 |------|-------|-------|
 | Dominant (60%) | `#FFFFFF` | Page background, form/section container backgrounds (matches `bg-white` on every Phase 1 admin page) |
-| Secondary (30%) | `#F5F5F3` | Input borders, section dividers, QR code preview panel background, disabled input backgrounds |
-| Accent (10%) | `#00C46A` | Reserved for: primary CTA button ("Salvar alterações"), the slug section's own save button ("Salvar novo link"), focus border on active inputs (`focus:border-[#00C46A]`, already established in `onboarding-wizard.tsx`), slug-available success icon/text, "Copiar" button's icon accent |
+| Secondary (30%) | `#E7F2FD` | Input borders, section dividers, QR code preview panel background, disabled input backgrounds |
+| Accent (10%) | `#0D21A1` | Reserved for: primary CTA button ("Salvar alterações"), the slug section's own save button ("Salvar novo link"), focus border on active inputs (`focus:border-[#0D21A1]`, already established in `onboarding-wizard.tsx`), slug-available success icon/text, "Copiar" button's icon accent |
 | Destructive | `#FF4D4D` | Reserved for: slug-taken / invalid-format inline error text, field validation error text (`errors.*.message`, matches existing Phase 1 pattern), the confirmation dialog's destructive confirm action ("Sim, trocar o link") |
 
-Accent reserved for: primary Salvar buttons, the standalone slug Salvar button, input focus border, slug-available indicator, copy-button icon accent. Never apply accent green to purely decorative or non-interactive elements.
+Accent reserved for: primary Salvar buttons, the standalone slug Salvar button, input focus border, slug-available indicator, copy-button icon accent. Never apply accent blue to purely decorative or non-interactive elements.
 
-Additional ink token (not a surface, carried from Phase 1 — not part of the 60/30/10 split but required for parity with existing pages): `#0D3D2B` (dark green) for the page `<h1>` text color and for secondary/outline button borders+text (e.g. a "Voltar ao painel" link back to `/dashboard`, mirroring the existing `Sair da conta` outline-button style in `dashboard/page.tsx`). Body copy/labels use `#111111` (near-black) and `#6B6B6B` (medium gray) for secondary/hint text, both already established in Phase 1.
+Additional ink token (not a surface, carried from Phase 1 — not part of the 60/30/10 split but required for parity with existing pages): `#000000` (black) for the page `<h1>` text color and for secondary/outline button borders+text (e.g. a "Voltar ao painel" link back to `/dashboard`, mirroring the existing `Sair da conta` outline-button style in `dashboard/page.tsx`). Body copy/labels use `#111111` (near-black) and `#6B6B6B` (medium gray) for secondary/hint text, both already established in Phase 1.
 
 ---
 
@@ -95,7 +95,7 @@ Additional interaction copy specific to this phase (not in the template's fixed 
 | State | Copy |
 |-------|------|
 | Slug checking (debounced, ~400ms) | "Verificando disponibilidade…" (with spinner icon, neutral `#6B6B6B`) |
-| Slug available | "Disponível" (check icon + text in `#00C46A`) |
+| Slug available | "Disponível" (check icon + text in `#0D21A1`) |
 | Slug taken | "Este link já está em uso." (x icon + text in `#FF4D4D`) |
 | Copy-link button label | "Copiar" |
 | Copy-link success feedback | Toast: "Link copiado!" (via `sonner`, matches existing Phase 1 toast pattern) |
@@ -128,7 +128,7 @@ Additional interaction copy specific to this phase (not in the template's fixed 
   3. A QR code preview (rendered on page load) with a "Baixar PNG" button beside it (D-09–D-11).
 - **Slug input behavior:** auto-slugify on every keystroke (lowercase, strip accents, spaces→hyphens); debounce ~400ms before firing the uniqueness check; show inline status (checking/available/taken) directly under the input, per the copy table above (D-01–D-03).
 - **Confirmation dialog:** triggered only by "Salvar novo link", never by the Loja/WhatsApp save action. Must state in plain, non-technical language that the old link stops working (no "404" jargon) — see Destructive confirmation copy above (D-04, D-08, and the `<specifics>` note in `02-CONTEXT.md`).
-- **Primary visual anchor:** the "Salvar alterações" button at the bottom of the Loja/WhatsApp form — highest-contrast CTA (accent green `#00C46A`), largest interactive element on the page after section headings. The "Salvar novo link" and "Baixar PNG" buttons are secondary actions scoped to their own section.
+- **Primary visual anchor:** the "Salvar alterações" button at the bottom of the Loja/WhatsApp form — highest-contrast CTA (accent blue `#0D21A1`), largest interactive element on the page after section headings. The "Salvar novo link" and "Baixar PNG" buttons are secondary actions scoped to their own section.
 
 ---
 
