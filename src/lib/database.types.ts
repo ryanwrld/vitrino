@@ -78,6 +78,42 @@ export type Database = {
           },
         ]
       }
+      pageviews: {
+        Row: {
+          created_at: string
+          id: string
+          product_id: string | null
+          store_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          product_id?: string | null
+          store_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          product_id?: string | null
+          store_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pageviews_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pageviews_store_id_fkey"
+            columns: ["store_id"]
+            isOneToOne: false
+            referencedRelation: "stores"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       product_photos: {
         Row: {
           created_at: string
@@ -262,7 +298,52 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      product_order_click_counts: {
+        Row: {
+          clicks: number | null
+          product_id: string | null
+          store_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_clicks_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_clicks_store_id_fkey"
+            columns: ["store_id"]
+            isOneToOne: false
+            referencedRelation: "stores"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_pageview_counts: {
+        Row: {
+          product_id: string | null
+          store_id: string | null
+          views: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pageviews_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pageviews_store_id_fkey"
+            columns: ["store_id"]
+            isOneToOne: false
+            referencedRelation: "stores"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       is_slug_available: { Args: { candidate_slug: string }; Returns: boolean }
