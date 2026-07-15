@@ -17,7 +17,7 @@ Fases decimais aparecem entre suas fases inteiras vizinhas, em ordem numérica.
 - [x] **Phase 2: Link Compartilhável da Vitrine** - Revendedor define slug personalizado, gera QR Code e copia o link; pode revisitar/editar configurações do onboarding (completed 2026-07-12)
 - [x] **Phase 3: CRUD de Produtos e Pipeline de Mídia** - Revendedor cadastra, edita e gerencia produtos com fotos comprimidas e controle de estoque (completed 2026-07-13)
 - [ ] **Phase 4: Vitrine Pública e Filtragem** - Cliente final acessa a vitrine sem login, filtra e navega produtos paginados com estoque atualizado
-- [ ] **Phase 5: Fluxo de Pedido no WhatsApp (CRÍTICO)** - Cliente seleciona tamanho e dispara mensagem de pedido pronta no WhatsApp, validada em matriz de dispositivos
+- [x] **Phase 5: Fluxo de Pedido no WhatsApp (CRÍTICO)** - Cliente seleciona tamanho e dispara mensagem de pedido pronta no WhatsApp, validada em matriz de dispositivos (completed 2026-07-15)
 - [ ] **Phase 6: Métricas e Dashboard** - Revendedor visualiza acessos, produtos mais vistos, cliques no WhatsApp e resumo da loja
 
 ## Phase Details
@@ -201,12 +201,12 @@ Fases decimais aparecem entre suas fases inteiras vizinhas, em ordem numérica.
 - In-app: navegador do Instagram, navegador do WhatsApp
 - Dados de teste: números reais de WhatsApp BR, nomes de produto acentuados, template multi-linha
 
-**Plans**: 3/4 plans executed
+**Plans**: 4/4 plans complete
 
 - [x] 05-01-PLAN.md
 - [x] 05-02-PLAN.md
 - [x] 05-03-PLAN.md
-- [ ] 05-04-PLAN.md
+- [x] 05-04-PLAN.md
 
 **UI hint**: yes
 
@@ -235,5 +235,5 @@ As fases executam em ordem numérica: 1 → 2 → 3 → 4 → 5 → 6
 | 2. Link Compartilhável da Vitrine | 6/6 | Complete   | 2026-07-12 |
 | 3. CRUD de Produtos e Pipeline de Mídia | 6/6 | Complete    | 2026-07-13 |
 | 4. Vitrine Pública e Filtragem | 6/6 | In Progress|  |
-| 5. Fluxo de Pedido no WhatsApp (CRÍTICO) | 3/4 | In Progress|  |
+| 5. Fluxo de Pedido no WhatsApp (CRÍTICO) | 4/4 | Complete   | 2026-07-15 |
 | 6. Métricas e Dashboard | 0/TBD | Not started | - |
