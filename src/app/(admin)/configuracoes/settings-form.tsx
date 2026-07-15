@@ -44,7 +44,7 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
     resolver: zodResolver(onboardingSchema),
     defaultValues: {
       name: store.name,
-      accentColor: store.accentColor ?? "#00C46A",
+      accentColor: store.accentColor ?? "#0D21A1",
       tagline: store.tagline ?? "",
       whatsapp: settings.whatsapp,
       messageTemplate: settings.messageTemplate,
@@ -91,7 +91,7 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
             type="text"
             autoComplete="organization"
             {...register("name")}
-            className="rounded-lg border border-[#F5F5F3] bg-white px-3 py-2 text-base outline-none focus:border-[#00C46A]"
+            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
           />
           {errors.name && <span className="text-sm text-[#FF4D4D]">{errors.name.message}</span>}
         </div>
@@ -105,7 +105,7 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
             type="file"
             accept="image/png,image/jpeg,image/webp"
             onChange={(event) => setLogoFile(event.target.files?.[0] ?? null)}
-            className="rounded-lg border border-[#F5F5F3] bg-white px-3 py-2 text-sm outline-none focus:border-[#00C46A]"
+            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-sm outline-none focus:border-[#0D21A1]"
           />
         </div>
 
@@ -117,7 +117,7 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
             id="accentColor"
             type="color"
             {...register("accentColor")}
-            className="h-10 w-20 rounded-lg border border-[#F5F5F3] bg-white p-1"
+            className="h-10 w-20 rounded-lg border border-[#E7F2FD] bg-white p-1"
           />
           {errors.accentColor && (
             <span className="text-sm text-[#FF4D4D]">{errors.accentColor.message}</span>
@@ -133,7 +133,7 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
             type="text"
             maxLength={100}
             {...register("tagline")}
-            className="rounded-lg border border-[#F5F5F3] bg-white px-3 py-2 text-base outline-none focus:border-[#00C46A]"
+            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
           />
           {errors.tagline && <span className="text-sm text-[#FF4D4D]">{errors.tagline.message}</span>}
         </div>
@@ -145,7 +145,7 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
           <select
             id="hideSoldOutDefault"
             {...register("hideSoldOutDefault")}
-            className="rounded-lg border border-[#F5F5F3] bg-white px-3 py-2 text-base outline-none focus:border-[#00C46A]"
+            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
           >
             <option value="false">Não — mostrar esmaecido (padrão)</option>
             <option value="true">Sim — ocultar da vitrine</option>
@@ -165,7 +165,7 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
             type="tel"
             placeholder="(11) 99999-9999"
             {...register("whatsapp")}
-            className="rounded-lg border border-[#F5F5F3] bg-white px-3 py-2 text-base outline-none focus:border-[#00C46A]"
+            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
           />
           {formattedPreview && (
             <span className="text-xs text-[#6B6B6B]">Prévia: {formattedPreview}</span>
@@ -181,7 +181,7 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
             id="messageTemplate"
             rows={6}
             {...register("messageTemplate")}
-            className="rounded-lg border border-[#F5F5F3] bg-white px-3 py-2 text-sm outline-none focus:border-[#00C46A]"
+            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-sm outline-none focus:border-[#0D21A1]"
           />
           {errors.messageTemplate && (
             <span className="text-sm text-[#FF4D4D]">{errors.messageTemplate.message}</span>
@@ -192,7 +192,7 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
       <button
         type="submit"
         disabled={isPending}
-        className="rounded-lg bg-[#00C46A] px-4 py-2 font-medium text-white transition disabled:opacity-60"
+        className="rounded-lg bg-[#0D21A1] px-4 py-2 font-medium text-white transition disabled:opacity-60"
       >
         {isPending ? "Salvando…" : "Salvar alterações"}
       </button>

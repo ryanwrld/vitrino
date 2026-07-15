@@ -150,7 +150,7 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
             id="name"
             type="text"
             {...register("name")}
-            className="rounded-lg border border-[#F5F5F3] bg-white px-3 py-2 text-base outline-none focus:border-[#00C46A]"
+            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
           />
           {errors.name && <span className="text-sm text-[#FF4D4D]">{errors.name.message}</span>}
         </div>
@@ -162,7 +162,7 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
           <select
             id="brand"
             {...register("brand")}
-            className="rounded-lg border border-[#F5F5F3] bg-white px-3 py-2 text-base outline-none focus:border-[#00C46A]"
+            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
           >
             <option value="">Selecione a marca</option>
             {BRANDS.map((brand) => (
@@ -183,7 +183,7 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
               id="brandOther"
               type="text"
               {...register("brandOther")}
-              className="rounded-lg border border-[#F5F5F3] bg-white px-3 py-2 text-base outline-none focus:border-[#00C46A]"
+              className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
             />
             {errors.brandOther && (
               <span className="text-sm text-[#FF4D4D]">{errors.brandOther.message}</span>
@@ -200,7 +200,7 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
             type="text"
             placeholder="Ex.: Mercurial"
             {...register("line")}
-            className="rounded-lg border border-[#F5F5F3] bg-white px-3 py-2 text-base outline-none focus:border-[#00C46A]"
+            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
           />
           {errors.line && <span className="text-sm text-[#FF4D4D]">{errors.line.message}</span>}
         </div>
@@ -216,7 +216,7 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
           <select
             id="sole"
             {...register("sole")}
-            className="rounded-lg border border-[#F5F5F3] bg-white px-3 py-2 text-base outline-none focus:border-[#00C46A]"
+            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
           >
             <option value="">—</option>
             {SOLES.map((sole) => (
@@ -234,7 +234,7 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
           <select
             id="category"
             {...register("category")}
-            className="rounded-lg border border-[#F5F5F3] bg-white px-3 py-2 text-base outline-none focus:border-[#00C46A]"
+            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
           >
             <option value="">—</option>
             {CATEGORIES.map((category) => (
@@ -252,7 +252,7 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
           <select
             id="fulfillment"
             {...register("fulfillment")}
-            className="rounded-lg border border-[#F5F5F3] bg-white px-3 py-2 text-base outline-none focus:border-[#00C46A]"
+            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
           >
             <option value="">—</option>
             {FULFILLMENTS.map((fulfillment) => (
@@ -271,7 +271,7 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
           <label htmlFor="price" className="text-sm font-medium text-[#111111]">
             Preço
           </label>
-          <div className="flex items-center gap-2 rounded-lg border border-[#F5F5F3] bg-white px-3 py-2 focus-within:border-[#00C46A]">
+          <div className="flex items-center gap-2 rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 focus-within:border-[#0D21A1]">
             <span className="text-base text-[#6B6B6B]">R$</span>
             <input
               id="price"
@@ -296,7 +296,7 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
           <select
             id="hideWhenSoldOut"
             {...register("hideWhenSoldOut")}
-            className="rounded-lg border border-[#F5F5F3] bg-white px-3 py-2 text-base outline-none focus:border-[#00C46A]"
+            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
           >
             <option value="">Usar padrão da loja</option>
             <option value="false">Sempre mostrar (esmaecido)</option>
@@ -320,7 +320,7 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
             id="description"
             rows={4}
             {...register("description")}
-            className="rounded-lg border border-[#F5F5F3] bg-white px-3 py-2 text-sm outline-none focus:border-[#00C46A]"
+            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-sm outline-none focus:border-[#0D21A1]"
           />
           {errors.description && (
             <span className="text-sm text-[#FF4D4D]">{errors.description.message}</span>
@@ -332,7 +332,7 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
         <button
           type="submit"
           disabled={isPending}
-          className="flex-1 rounded-lg bg-[#00C46A] px-4 py-2 font-medium text-white transition disabled:opacity-60"
+          className="flex-1 rounded-lg bg-[#0D21A1] px-4 py-2 font-medium text-white transition disabled:opacity-60"
         >
           {isPending ? "Salvando…" : "Salvar produto"}
         </button>
@@ -344,7 +344,7 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
             type="button"
             onClick={handleTogglePublish}
             disabled={isPublishPending}
-            className="rounded-lg border border-[#0D3D2B] px-4 py-2 font-medium text-[#0D3D2B] transition disabled:opacity-60"
+            className="rounded-lg border border-[#000000] px-4 py-2 font-medium text-[#000000] transition disabled:opacity-60"
           >
             {isPublishPending
               ? "Salvando…"

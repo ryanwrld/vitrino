@@ -114,9 +114,9 @@ export function SizeGrid({ control, productId }: SizeGridProps) {
               aria-pressed={included}
               className={cn(
                 "flex min-h-11 min-w-11 items-center justify-center rounded-lg border text-base transition",
-                !included && "border-[#F5F5F3] text-[#6B6B6B]",
-                included && !available && "border-[#F5F5F3] bg-[#F5F5F3] text-[#6B6B6B] line-through",
-                included && available && "border-[#00C46A] bg-[#00C46A] text-white"
+                !included && "border-[#E7F2FD] text-[#6B6B6B]",
+                included && !available && "border-[#E7F2FD] bg-[#E7F2FD] text-[#6B6B6B] line-through",
+                included && available && "border-[#0D21A1] bg-[#0D21A1] text-white"
               )}
             >
               {size}

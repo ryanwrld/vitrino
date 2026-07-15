@@ -71,7 +71,7 @@ export function QrCodePanel({ publicUrl }: QrCodePanelProps) {
       <h2 className="text-xl font-medium text-[#111111]">Seu QR Code</h2>
 
       <div className="flex flex-col items-start gap-3">
-        <div className="rounded-lg bg-[#F5F5F3] p-4">
+        <div className="rounded-lg bg-[#E7F2FD] p-4">
           <canvas ref={canvasRef} width={240} height={240} />
         </div>
 
@@ -79,7 +79,7 @@ export function QrCodePanel({ publicUrl }: QrCodePanelProps) {
           type="button"
           onClick={handleDownload}
           disabled={!qrReady}
-          className="flex items-center gap-2 rounded-lg border border-[#0D3D2B] p-3 font-medium text-[#0D3D2B] transition hover:bg-[#0D3D2B] hover:text-white disabled:opacity-60"
+          className="flex items-center gap-2 rounded-lg border border-[#000000] p-3 font-medium text-[#000000] transition hover:bg-[#000000] hover:text-white disabled:opacity-60"
         >
           <Download className="h-4 w-4" aria-hidden="true" />
           Baixar PNG
@@ -96,14 +96,14 @@ export function QrCodePanel({ publicUrl }: QrCodePanelProps) {
             type="text"
             value={publicUrl}
             readOnly
-            className="flex-1 rounded-lg border border-[#F5F5F3] bg-[#F5F5F3] px-3 py-2 text-base text-[#111111] outline-none"
+            className="flex-1 rounded-lg border border-[#E7F2FD] bg-[#E7F2FD] px-3 py-2 text-base text-[#111111] outline-none"
           />
           <button
             type="button"
             onClick={handleCopy}
             disabled={isCopying}
             aria-label="Copiar"
-            className="flex items-center gap-2 rounded-lg bg-[#00C46A] p-3 font-medium text-white transition disabled:opacity-60"
+            className="flex items-center gap-2 rounded-lg bg-[#0D21A1] p-3 font-medium text-white transition disabled:opacity-60"
           >
             <Copy className="h-4 w-4" aria-hidden="true" />
             Copiar

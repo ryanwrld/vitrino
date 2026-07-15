@@ -112,7 +112,7 @@ export function SlugEditor({ currentSlug }: SlugEditorProps) {
           type="text"
           value={rawSlug}
           onChange={(event) => setRawSlug(event.target.value)}
-          className="rounded-lg border border-[#F5F5F3] bg-white px-3 py-2 text-base outline-none focus:border-[#00C46A]"
+          className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
         />
         <p className="text-xs text-[#6B6B6B]">/loja/{slug}</p>
         {formatError ? (
@@ -126,7 +126,7 @@ export function SlugEditor({ currentSlug }: SlugEditorProps) {
         type="button"
         disabled={!canSave}
         onClick={openConfirmDialog}
-        className="self-start rounded-lg bg-[#00C46A] px-4 py-2 font-medium text-white transition disabled:opacity-60"
+        className="self-start rounded-lg bg-[#0D21A1] px-4 py-2 font-medium text-white transition disabled:opacity-60"
       >
         Salvar novo link
       </button>
@@ -143,7 +143,7 @@ export function SlugEditor({ currentSlug }: SlugEditorProps) {
         <form method="dialog" className="mt-4 flex gap-3">
           <button
             type="submit"
-            className="rounded-lg border border-[#0D3D2B] px-4 py-2 font-medium text-[#0D3D2B]"
+            className="rounded-lg border border-[#000000] px-4 py-2 font-medium text-[#000000]"
           >
             Cancelar
           </button>
@@ -173,7 +173,7 @@ function StatusPill({ status }: { status: AvailabilityStatus }) {
 
   if (status === "available") {
     return (
-      <span className="flex items-center gap-1 text-xs text-[#00C46A]">
+      <span className="flex items-center gap-1 text-xs text-[#0D21A1]">
         <Check className="h-3.5 w-3.5" aria-hidden="true" />
         Disponível
       </span>

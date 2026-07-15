@@ -253,7 +253,7 @@ export function PhotoUploader({ productId, initialPhotos, onPendingFilesChange }
             {Array.from({ length: processingCount }).map((_, index) => (
               <div
                 key={`processing-${index}`}
-                className="flex aspect-square items-center justify-center rounded-lg border border-[#F5F5F3] bg-[#F5F5F3]"
+                className="flex aspect-square items-center justify-center rounded-lg border border-[#E7F2FD] bg-[#E7F2FD]"
               >
                 <div className="flex flex-col items-center gap-1 text-[#6B6B6B]">
                   <Loader2 className="h-5 w-5 animate-spin" aria-hidden="true" />
@@ -265,7 +265,7 @@ export function PhotoUploader({ productId, initialPhotos, onPendingFilesChange }
             {Array.from({ length: emptySlotCount }).map((_, index) => (
               <label
                 key={`empty-${index}`}
-                className="flex aspect-square cursor-pointer flex-col items-center justify-center gap-1 rounded-lg border border-dashed border-[#F5F5F3] text-[#6B6B6B]"
+                className="flex aspect-square cursor-pointer flex-col items-center justify-center gap-1 rounded-lg border border-dashed border-[#E7F2FD] text-[#6B6B6B]"
               >
                 <Plus className="h-5 w-5" aria-hidden="true" />
                 <span className="text-xs">Adicionar foto</span>
@@ -302,7 +302,7 @@ function PhotoSlotItem({ slot, isCover, onRemove }: PhotoSlotItemProps) {
     <div
       ref={setNodeRef}
       style={style}
-      className={`relative aspect-square overflow-hidden rounded-lg border border-[#F5F5F3] ${isDragging ? "opacity-50" : ""}`}
+      className={`relative aspect-square overflow-hidden rounded-lg border border-[#E7F2FD] ${isDragging ? "opacity-50" : ""}`}
     >
       {slot.kind === "saved" ? (
         <Image src={slot.url} alt="" fill sizes="20vw" className="object-cover" />
@@ -312,7 +312,7 @@ function PhotoSlotItem({ slot, isCover, onRemove }: PhotoSlotItemProps) {
       )}
 
       {isCover && (
-        <span className="absolute left-1 top-1 rounded-full bg-[#00C46A] px-2 py-0.5 text-xs text-white">Capa</span>
+        <span className="absolute left-1 top-1 rounded-full bg-[#0D21A1] px-2 py-0.5 text-xs text-white">Capa</span>
       )}
 
       {/*
