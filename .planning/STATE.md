@@ -5,8 +5,8 @@ milestone_name: milestone
 current_phase: 6
 current_phase_name: Métricas e Dashboard
 status: executing
-stopped_at: Phase 5 UI-SPEC approved
-last_updated: "2026-07-15T02:29:47.442Z"
+stopped_at: Phase 6 context gathered
+last_updated: "2026-07-15T04:04:22.530Z"
 progress:
   total_phases: 6
   completed_phases: 5
@@ -92,9 +92,9 @@ Arquivo de retomada: Nenhum
 
 ## Session
 
-**Last session:** 2026-07-14T16:29:28.205Z
-**Stopped at:** Phase 5 UI-SPEC approved
-**Resume file:** .planning/phases/05-fluxo-de-pedido-no-whatsapp-cr-tico/05-UI-SPEC.md
+**Last session:** 2026-07-15T04:04:22.518Z
+**Stopped at:** Phase 6 context gathered
+**Resume file:** .planning/phases/06-m-tricas-e-dashboard/06-CONTEXT.md
 
 ## Accumulated Context
 
