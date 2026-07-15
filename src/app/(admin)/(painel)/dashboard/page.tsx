@@ -24,9 +24,9 @@ import { formatBRLPrice } from "@/lib/currency/brl";
  * "Mais visualizados" e "Cliques no WhatsApp" são SEMPRE duas listas
  * paralelas e independentes (D-08/D-09) — nunca fundidas num único número.
  *
- * IMPORTANTE: raiz continua `<main className="bg-white ...">` — o layout de
- * sidebar (troca de `<main>` por `<div>`) só chega no Plan 06-04. Isso
- * mantém `tests/ui/dark-mode-contrast.test.ts` verde neste wave.
+ * Raiz é um `<div>` (não elemento `main`) — o único landmark `main` do
+ * painel vive em `(painel)/layout.tsx` desde o Plan 06-04, que também
+ * repontou `tests/ui/dark-mode-contrast.test.ts` para essa entrada.
  */
 export default async function DashboardPage() {
   await requireCompletedOnboarding();
@@ -72,7 +72,7 @@ export default async function DashboardPage() {
   ];
 
   return (
-    <main className="bg-white mx-auto flex min-h-dvh w-full max-w-2xl flex-col gap-8 px-4 py-10">
+    <div className="bg-white mx-auto flex min-h-dvh w-full max-w-2xl flex-col gap-8 px-4 py-10">
       <h1 className="text-2xl font-bold text-[#000000]">Dashboard</h1>
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
@@ -216,6 +216,6 @@ export default async function DashboardPage() {
           </div>
         )}
       </section>
-    </main>
+    </div>
   );
 }

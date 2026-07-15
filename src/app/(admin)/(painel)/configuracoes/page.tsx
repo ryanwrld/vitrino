@@ -47,7 +47,7 @@ export default async function ConfiguracoesPage() {
   const publicUrl = buildStoreUrl(store.slug);
 
   return (
-    <main className="bg-white mx-auto flex min-h-dvh w-full max-w-md flex-col gap-6 px-4 py-10">
+    <div className="bg-white mx-auto flex min-h-dvh w-full max-w-md flex-col gap-6 px-4 py-10">
       <div>
         <h1 className="text-2xl font-bold text-[#000000]">Configurações</h1>
       </div>
@@ -77,6 +77,6 @@ export default async function ConfiguracoesPage() {
       >
         Voltar ao painel
       </Link>
-    </main>
+    </div>
   );
 }
