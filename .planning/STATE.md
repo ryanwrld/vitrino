@@ -76,6 +76,12 @@ Nenhum ainda.
 - [Fase 2] Normalização de telefone é focada no BR (55DDXXXXXXXXX) — deve estar travada e testada antes da Fase 5 consumi-la. (Já implementada e testada na Fase 1 — `normalizeWhatsAppBR`.)
 - [Fase 1 — deferido] M-3 (AUTH-05, reset de senha por email real) ficou bloqueado no UAT: depende de configurar o template de email "Reset Password" no Supabase Dashboard (usar `{{ .TokenHash }}`) e de SMTP customizado no tier free (ver memória `project_supabase_free_tier_email_template`). Código está implementado e testado via integração — só falta a configuração manual + validação end-to-end com email real.
 
+### Quick Tasks Completed
+
+| # | Description | Date | Commit | Directory |
+|---|-------------|------|--------|-----------|
+| 260715-du7 | Rebrand de cores: paleta verde → azul (Vivid Royal #0D21A1, Alice Blue #E7F2FD, preto #000000) em src/ e UI-SPECs | 2026-07-15 | 03e664e | [260715-du7-rebrand-de-cores-substituir-a-paleta-ver](./quick/260715-du7-rebrand-de-cores-substituir-a-paleta-ver/) |
+
 ## Itens Adiados
 
 Itens reconhecidos e carregados do fechamento do milestone anterior:
