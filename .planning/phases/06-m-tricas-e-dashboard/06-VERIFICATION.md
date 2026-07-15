@@ -1,11 +1,12 @@
 ---
 phase: 06-m-tricas-e-dashboard
 verified: 2026-07-15T17:05:00Z
-status: human_needed
+status: passed
 score: 8/8 truths verified
 behavior_unverified: 1
 overrides_applied: 0
 human_verification:
+
   - test: "Abrir /loja/{slug} (grid) e depois trocar um filtro/termo de busca (mesma URL base, query string diferente — ex.: clicar num chip de marca ou digitar na busca). Em seguida, no painel do dono, conferir na tabela `pageviews` (via SQL editor do Supabase ou olhando o contador 'Acessos' do dashboard antes/depois) que só 1 linha de acesso ao grid foi gravada, não 2+."
     expected: "Trocar filtro/busca não incrementa 'Acessos' nem grava uma nova linha em pageviews — só a navegação inicial ao pathname `/loja/{slug}` (ou a um pathname de produto diferente) grava."
     why_human: "É uma garantia de invariante de runtime (o useEffect do PageviewTracker só re-executa quando `pathname` muda, nunca quando só `searchParams` muda) que depende do comportamento real do navegador/Next.js App Router durante navegação client-side. O projeto não tem jsdom/@testing-library para simular isso automaticamente, e nenhum teste de integração ou checkpoint humano registrado (nem em 06-02 nem no checkpoint de 06-04, que cobriu só sidebar/drawer) executou esse cenário fim-a-fim contra o banco real. A arquitetura do código (tracker em layout.tsx, dependência `[pathname]`, layout.tsx nunca recebe searchParams) torna a garantia estruturalmente forte, mas não foi observada em runtime — daí PRESENT_BEHAVIOR_UNVERIFIED, não FAILED nem VERIFIED."
