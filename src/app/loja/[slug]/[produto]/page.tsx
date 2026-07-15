@@ -1,7 +1,10 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { queryPublicProductDetail } from "@/lib/products/public-detail";
 import { getProductImagePublicUrl } from "@/lib/storage/product-image-url";
+import { buildProductUrl } from "@/lib/slug/store-url";
+import { formatBRLPrice } from "@/lib/currency/brl";
 import { DEFAULT_MESSAGE_TEMPLATE } from "@/lib/validation/onboarding";
 import { ProductOrderPanel } from "./product-order-panel";
 
@@ -27,6 +30,47 @@ import { ProductOrderPanel } from "./product-order-panel";
 type PageProps = {
   params: Promise<{ slug: string; produto: string }>;
 };
+
+/**
+ * Open Graph mínimo (título/descrição/imagem) — existe só pra dar ao link
+ * "Foto: <url>" da mensagem de pedido (buildProductUrl, ver store-url.ts)
+ * uma página HTML real com preview visual, em vez da URL crua da imagem no
+ * Storage (o desvio de "compartilhar como foto" no iOS, ver product-order-
+ * panel.tsx). Falha silenciosa (sem metadata) se store/produto não existem
+ * — a página em si já chama notFound() nesse caso; generateMetadata só
+ * precisa não quebrar o build.
+ */
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug, produto } = await params;
+  const supabase = await createClient();
+
+  const { data: store } = await supabase
+    .from("stores")
+    .select("id, hide_sold_out_default")
+    .eq("slug", slug)
+    .single();
+
+  if (!store) return {};
+
+  const detail = await queryPublicProductDetail(supabase, store.id, produto, store.hide_sold_out_default);
+  if (!detail) return {};
+
+  const coverPhoto = detail.photos[0];
+  const coverUrl = coverPhoto ? getProductImagePublicUrl(supabase, coverPhoto.storage_path) : null;
+  const title = detail.line ? `${detail.name} - ${detail.line}` : detail.name;
+  const description = `${formatBRLPrice(detail.price)} — disponível no Vitrino`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: coverUrl ? [{ url: coverUrl }] : [],
+      url: buildProductUrl(slug, detail.id),
+    },
+  };
+}
 
 export default async function ProductDetailPage({ params }: PageProps) {
   const { slug, produto } = await params;
@@ -79,6 +123,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
         storeId={store.id}
         productId={detail.id}
         slug={slug}
+        productUrl={buildProductUrl(slug, detail.id)}
       />
     </main>
   );

@@ -38,6 +38,7 @@ export type ProductOrderPanelProps = {
   storeId: string;
   productId: string;
   slug: string;
+  productUrl: string;
 };
 
 const TOOLTIP_DISMISS_MS = 2500;
@@ -64,7 +65,9 @@ const TOOLTIP_DISMISS_MS = 2500;
  * none` sozinho NÃO bloqueia Enter/Space (05-RESEARCH.md Pitfall 1);
  * `tabIndex={-1}` remove a pílula esgotada do fluxo de Tab.
  *
- * "Copiar mensagem" (D-07/D-08) é SEMPRE visível — nunca um fallback
+ * "Copiar pedido" (D-07/D-08, label ajustado no checkpoint manual da 05-04
+ * — "Copiar mensagem" não fazia sentido pro cliente final) é SEMPRE visível
+ * — nunca um fallback
  * condicional — e usa a MESMA string composta do wa.me (incluindo a linha
  * de foto), via `copyText` como primeiro `await` dentro da transition
  * (05-RESEARCH.md Pitfall 6, mesmo padrão de `qr-code-panel.tsx`).
@@ -79,10 +82,17 @@ export function ProductOrderPanel({
   storeId,
   productId,
   slug,
+  productUrl,
 }: ProductOrderPanelProps) {
   const [selectedSize, setSelectedSize] = useState<number | null>(null);
-  const [shakeKey, setShakeKey] = useState(0);
-  const [showTooltip, setShowTooltip] = useState(false);
+  // Shake key e tooltip são rastreados POR BOTÃO ("order" = Pedir agora,
+  // "copy" = Copiar pedido) — cada CTA só sacode/mostra o tooltip acima de
+  // si mesmo quando é o alvo real do clique, nunca os dois ao mesmo tempo
+  // (ajuste pedido no checkpoint manual da 05-04, alinhamento básico de
+  // UX a revisitar quando o design do front-end for trabalhado a fundo).
+  const [orderShakeKey, setOrderShakeKey] = useState(0);
+  const [copyShakeKey, setCopyShakeKey] = useState(0);
+  const [tooltipTarget, setTooltipTarget] = useState<"order" | "copy" | null>(null);
   const [isPending, startCopyTransition] = useTransition();
 
   const galleryRef = useRef<HTMLDivElement>(null);
@@ -111,15 +121,38 @@ export function ProductOrderPanel({
   const solado = product.sole ?? "";
   const precoFormatado = formatBRLPriceInput(product.price);
 
+  // fotoUrl aqui é a URL da PÁGINA do produto (não o arquivo de imagem cru
+  // do Storage) — no iOS, um link wa.me cujo texto termina numa URL que
+  // resolve como image/* dispara o fluxo nativo de "compartilhar como
+  // foto" do sistema, pulando a composição da mensagem inteira (achado do
+  // checkpoint de verificação manual, 05-04 Task 4). A página do produto é
+  // HTML com Open Graph (generateMetadata em page.tsx), então o WhatsApp
+  // ainda gera o preview visual da foto sem esse desvio.
   const message = buildOrderMessage(messageTemplate, {
     modelo,
     solado,
     tamanho: selectedSize !== null ? String(selectedSize) : "",
     preco: precoFormatado,
-    fotoUrl: coverUrl,
+    fotoUrl: productUrl,
   });
 
   const href = selectedSize !== null ? buildWhatsAppUrl(whatsappE164, message) : "#";
+
+  // Sacode/mostra o tooltip só do botão-alvo. O timeout confere se o alvo
+  // ainda é o mesmo antes de limpar — um clique rápido no OUTRO botão não
+  // pode ter seu tooltip apagado pelo timer mais antigo (mesma lógica do
+  // Pitfall 4 do 05-RESEARCH.md, agora por botão em vez de global).
+  function triggerSizeRequiredFeedback(target: "order" | "copy") {
+    if (target === "order") {
+      setOrderShakeKey((key) => key + 1);
+    } else {
+      setCopyShakeKey((key) => key + 1);
+    }
+    setTooltipTarget(target);
+    setTimeout(() => {
+      setTooltipTarget((current) => (current === target ? null : current));
+    }, TOOLTIP_DISMISS_MS);
+  }
 
   function handleOrderClick(event: MouseEvent<HTMLAnchorElement>) {
     const { shouldNavigate, shouldShake } = decideOrderAction(selectedSize);
@@ -127,12 +160,7 @@ export function ProductOrderPanel({
     if (!shouldNavigate) {
       event.preventDefault();
       if (shouldShake) {
-        // Incrementar shakeKey força o remount do anchor (key={shakeKey}) —
-        // reinicia a animação CSS mesmo em cliques rápidos repetidos
-        // (05-RESEARCH.md Pitfall 4).
-        setShakeKey((key) => key + 1);
-        setShowTooltip(true);
-        setTimeout(() => setShowTooltip(false), TOOLTIP_DISMISS_MS);
+        triggerSizeRequiredFeedback("order");
       }
       return;
     }
@@ -151,10 +179,23 @@ export function ProductOrderPanel({
   }
 
   function handleCopy() {
+    // Mesmo guard do "Pedir agora" (decideOrderAction) — "Copiar pedido" só
+    // copia com tamanho selecionado; sem tamanho, sacode + mostra o mesmo
+    // tooltip "Selecione um tamanho" em vez de copiar uma mensagem
+    // incompleta (ajuste pedido no checkpoint manual da 05-04).
+    const { shouldNavigate: shouldCopy, shouldShake } = decideOrderAction(selectedSize);
+
+    if (!shouldCopy) {
+      if (shouldShake) {
+        triggerSizeRequiredFeedback("copy");
+      }
+      return;
+    }
+
     startCopyTransition(async () => {
       const ok = await copyText(message);
       if (ok) {
-        toast.success("Mensagem copiada!");
+        toast.success("Pedido copiado!");
       } else {
         toast.error("Não foi possível copiar. Tente novamente.");
       }
@@ -221,35 +262,48 @@ export function ProductOrderPanel({
         </div>
       </div>
 
-      <div className="relative flex flex-col gap-2">
-        {showTooltip && (
-          <div className="absolute -top-10 left-0 rounded-lg bg-[#111111] px-3 py-1.5 text-xs text-white">
-            Selecione um tamanho
-          </div>
-        )}
-        <a
-          key={shakeKey}
-          href={href}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={handleOrderClick}
-          className={cn(
-            "min-h-11 w-full rounded-lg bg-[#00C46A] px-4 py-2 text-center text-sm font-medium text-white transition",
-            shakeKey > 0 && "animate-shake"
+      <div className="flex flex-col gap-2">
+        <div className="relative">
+          {tooltipTarget === "order" && (
+            <div className="absolute -top-10 left-0 rounded-lg bg-[#111111] px-3 py-1.5 text-xs text-white">
+              Selecione um tamanho
+            </div>
           )}
-        >
-          Pedir agora
-        </a>
+          <a
+            key={`order-${orderShakeKey}`}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={handleOrderClick}
+            className={cn(
+              "block min-h-11 w-full rounded-lg bg-[#00C46A] px-4 py-2 text-center text-sm font-medium text-white transition",
+              orderShakeKey > 0 && "animate-shake"
+            )}
+          >
+            Pedir agora
+          </a>
+        </div>
 
-        <button
-          type="button"
-          onClick={handleCopy}
-          disabled={isPending}
-          className="flex min-h-11 w-full items-center justify-center gap-1 rounded-lg border border-[#6B6B6B] px-4 py-2 text-center text-sm font-medium text-[#6B6B6B] transition disabled:opacity-60"
-        >
-          <Copy className="h-4 w-4" aria-hidden="true" />
-          Copiar mensagem
-        </button>
+        <div className="relative">
+          {tooltipTarget === "copy" && (
+            <div className="absolute -top-10 left-0 rounded-lg bg-[#111111] px-3 py-1.5 text-xs text-white">
+              Selecione um tamanho
+            </div>
+          )}
+          <button
+            key={`copy-${copyShakeKey}`}
+            type="button"
+            onClick={handleCopy}
+            disabled={isPending}
+            className={cn(
+              "flex min-h-11 w-full items-center justify-center gap-1 rounded-lg border border-[#6B6B6B] px-4 py-2 text-center text-sm font-medium text-[#6B6B6B] transition disabled:opacity-60",
+              copyShakeKey > 0 && "animate-shake"
+            )}
+          >
+            <Copy className="h-4 w-4" aria-hidden="true" />
+            Copiar pedido
+          </button>
+        </div>
       </div>
     </div>
   );
