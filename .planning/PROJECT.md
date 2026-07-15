@@ -21,6 +21,8 @@ O cliente final consegue escolher um modelo e tamanho na vitrine e disparar uma 
 
 - [x] CRUD completo de produtos (nome, marca, solado, categoria, modalidade, preço, tamanhos, até 5 fotos, descrição, status) — Validado na Fase 3: CRUD de Produtos e Pipeline de Mídia (2026-07-13)
 - [x] Seleção de tamanho + botão "Pedir agora" abrindo WhatsApp com mensagem pré-formatada e corretamente encodada — Validado na Fase 5: Fluxo de Pedido no WhatsApp (CRÍTICO) (2026-07-15), incluindo matriz completa de dispositivos/navegadores (Android, iOS, Instagram in-app, WhatsApp in-app, Windows)
+- [x] Métricas básicas (acessos, produtos mais vistos, cliques no botão WhatsApp) — Validado na Fase 6: Métricas e Dashboard (2026-07-15), captura via `pageviews` (RLS anon-insert/owner-read) e agregação por views `security_invoker`
+- [x] Dashboard com métricas resumidas e lista de produtos recentes — Validado na Fase 6: Métricas e Dashboard (2026-07-15), com navegação em sidebar/drawer compartilhada entre dashboard/produtos/configurações
 
 ### Active
 
@@ -29,8 +31,6 @@ O cliente final consegue escolher um modelo e tamanho na vitrine e disparar uma 
 - [ ] Configuração de WhatsApp (número com validação/formatação, template de mensagem com variáveis)
 - [ ] Vitrine pública (sem login) com filtros por marca, solado e modalidade
 - [ ] Link personalizável (slug único) + QR Code para download
-- [ ] Métricas básicas (acessos, produtos mais vistos, cliques no botão WhatsApp)
-- [ ] Dashboard com métricas resumidas e lista de produtos recentes
 
 ### Out of Scope
 
@@ -141,4 +141,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-07-15 — Fase 5 (Fluxo de Pedido no WhatsApp — CRÍTICO) completa_
+_Last updated: 2026-07-15 — Fase 6 (Métricas e Dashboard) completa — milestone v1.0 finalizado (6/6 fases)_
