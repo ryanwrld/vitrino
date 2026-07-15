@@ -14,3 +14,20 @@ export function buildStoreUrl(slug: string): string {
   const trimmedBase = base.replace(/\/+$/, "");
   return `${trimmedBase}/loja/${slug}`;
 }
+
+/**
+ * Constrói a URL pública completa da página de detalhe de um produto
+ * (mesma base de `buildStoreUrl`). Usada como link "Foto:" da mensagem de
+ * pedido do WhatsApp (05-04) em vez da URL crua do arquivo de imagem no
+ * Storage — no iOS, um link `wa.me` cujo `text` termina numa URL que
+ * resolve como `image/*` direto dispara o fluxo nativo de "compartilhar
+ * como foto" do sistema, pulando a caixa de composição de texto inteira
+ * (mensagem pré-formatada nunca chega ao revendedor). Como esta página é
+ * HTML com Open Graph (`generateMetadata` em page.tsx), o WhatsApp ainda
+ * gera o preview visual da foto (og:image), sem acionar esse desvio —
+ * e o revendedor ganha um link de volta pro produto ao vivo, não um
+ * arquivo estático.
+ */
+export function buildProductUrl(slug: string, productId: string): string {
+  return `${buildStoreUrl(slug)}/${productId}`;
+}
