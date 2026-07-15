@@ -6,13 +6,13 @@ current_phase: 6
 current_phase_name: Métricas e Dashboard
 status: executing
 stopped_at: Phase 06 UI-SPEC approved
-last_updated: "2026-07-15T13:47:55.551Z"
+last_updated: "2026-07-15T19:13:13.420Z"
 progress:
-  total_phases: 7
+  total_phases: 6
   completed_phases: 5
-  total_plans: 30
+  total_plans: 34
   completed_plans: 30
-  percent: 71
+  percent: 83
 ---
 
 # Estado do Projeto
@@ -28,7 +28,7 @@ Ver: .planning/PROJECT.md (atualizado 2026-07-10)
 
 Phase: 6 — Métricas e Dashboard
 Plan: Not started
-Status: Fase 5 completa e verificada (9/9); aguardando planejamento da Fase 6
+Status: Executing Phase 06
 Última atividade: 2026-07-15 — Fase 5 (Fluxo de Pedido no WhatsApp) concluída e verificada: checkpoint manual aprovado em toda a matriz obrigatória de dispositivos/navegadores (Android, iOS, Instagram in-app, WhatsApp in-app, Windows); bug crítico de iOS encontrado e corrigido durante o checkpoint (link wa.me terminando em URL de imagem disparava compartilhamento nativo de foto, pulando a mensagem — corrigido linkando pra página do produto com Open Graph); PED-01..04 marcados como Completo. Gap #10 da verificação (link "Voltar para a loja" do 404 apontando pra "/" em vez de "/loja/[slug]") também corrigido e reverificado.
 
 Progresso: [██████████] 100% (30/30 plans concluídos — Fases 1-5 completas; Fase 6 ainda não planejada em detalhe)

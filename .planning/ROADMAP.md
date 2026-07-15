@@ -221,11 +221,11 @@ Fases decimais aparecem entre suas fases inteiras vizinhas, em ordem numérica.
   1. Revendedor visualiza métricas básicas: acessos à vitrine, produtos mais visualizados e cliques no botão WhatsApp por produto
   2. Dashboard exibe métricas resumidas (total de produtos, disponíveis, esgotados, acessos) e uma lista de produtos recentes
 
-**Plans**: 4 plans
+**Plans**: 1/4 plans executed
 
 **Wave 1**
 
-- [ ] 06-01-PLAN.md — Fundação de métricas: tabela `pageviews` + RLS + 2 views agregadas (`security_invoker`) + [BLOCKING] push + teste de isolamento
+- [x] 06-01-PLAN.md — Fundação de métricas: tabela `pageviews` + RLS + 2 views agregadas (`security_invoker`) + [BLOCKING] push + teste de isolamento
 
 **Wave 2** *(blocked on Wave 1; 06-02 e 06-03 rodam em paralelo — arquivos disjuntos)*
 
@@ -250,4 +250,4 @@ As fases executam em ordem numérica: 1 → 2 → 3 → 4 → 5 → 6
 | 3. CRUD de Produtos e Pipeline de Mídia | 6/6 | Complete    | 2026-07-13 |
 | 4. Vitrine Pública e Filtragem | 6/6 | Complete   | 2026-07-14 |
 | 5. Fluxo de Pedido no WhatsApp (CRÍTICO) | 4/4 | Complete    | 2026-07-15 |
-| 6. Métricas e Dashboard | 0/4 | Not started | - |
+| 6. Métricas e Dashboard | 1/4 | In Progress|  |
