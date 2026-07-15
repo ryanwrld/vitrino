@@ -9,23 +9,23 @@ Requisitos para o lançamento inicial. Cada um mapeia para fases do roadmap.
 
 ### Autenticação
 
-- [ ] **AUTH-01**: Revendedor pode criar conta com email e senha
-- [ ] **AUTH-02**: Revendedor pode fazer login e permanecer logado entre sessões (refresh do navegador)
-- [ ] **AUTH-03**: Revendedor pode fazer logout de qualquer página do painel
-- [ ] **AUTH-04**: Sessão do revendedor é renovada automaticamente durante atividade, com aviso claro antes de expirar (sem perder trabalho não salvo)
-- [ ] **AUTH-05**: Revendedor pode solicitar redefinição de senha via link enviado por email (adicionado na discussão da Fase 1, 2026-07-10)
+- [x] **AUTH-01**: Revendedor pode criar conta com email e senha
+- [x] **AUTH-02**: Revendedor pode fazer login e permanecer logado entre sessões (refresh do navegador)
+- [x] **AUTH-03**: Revendedor pode fazer logout de qualquer página do painel
+- [x] **AUTH-04**: Sessão do revendedor é renovada automaticamente durante atividade, com aviso claro antes de expirar (sem perder trabalho não salvo)
+- [ ] **AUTH-05**: Revendedor pode solicitar redefinição de senha via link enviado por email (adicionado na discussão da Fase 1, 2026-07-10) — código implementado e testado via integração; falta configurar o template de email "Reset Password" no Supabase Dashboard + SMTP customizado (tier free) e validar fim-a-fim com email real. Gap conhecido, adiado.
 
 ### Loja
 
-- [ ] **LOJA-01**: Revendedor pode configurar nome da loja, logo, cor de destaque e frase de apresentação (máx. 100 caracteres)
+- [x] **LOJA-01**: Revendedor pode configurar nome da loja, logo, cor de destaque e frase de apresentação (máx. 100 caracteres)
 - [x] **LOJA-02**: Revendedor pode definir um slug personalizado (vitrino.app/loja/[slug]) com validação de unicidade em tempo real
 - [x] **LOJA-03**: Revendedor pode gerar e baixar QR Code do link da vitrine
 - [x] **LOJA-04**: Revendedor pode copiar o link da vitrine com um clique
 
 ### WhatsApp
 
-- [ ] **WPP-01**: Revendedor pode cadastrar o número de WhatsApp, validado e formatado automaticamente para o padrão internacional (ex: 5511999999999)
-- [ ] **WPP-02**: Revendedor pode editar o template de mensagem padrão de pedido, com variáveis ({modelo}, {solado}, {tamanho}, {preço})
+- [x] **WPP-01**: Revendedor pode cadastrar o número de WhatsApp, validado e formatado automaticamente para o padrão internacional (ex: 5511999999999)
+- [x] **WPP-02**: Revendedor pode editar o template de mensagem padrão de pedido, com variáveis ({modelo}, {solado}, {tamanho}, {preço})
 
 ### Produtos
 
@@ -54,8 +54,8 @@ Requisitos para o lançamento inicial. Cada um mapeia para fases do roadmap.
 
 ### Métricas
 
-- [ ] **MTR-01**: Revendedor visualiza métricas básicas (acessos à vitrine, produtos mais visualizados, cliques no botão WhatsApp por produto)
-- [ ] **MTR-02**: Dashboard exibe métricas resumidas (total de produtos, disponíveis, esgotados, acessos) e lista de produtos recentes
+- [x] **MTR-01**: Revendedor visualiza métricas básicas (acessos à vitrine, produtos mais visualizados, cliques no botão WhatsApp por produto)
+- [x] **MTR-02**: Dashboard exibe métricas resumidas (total de produtos, disponíveis, esgotados, acessos) e lista de produtos recentes
 
 ## Requisitos v2
 
