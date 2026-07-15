@@ -20,6 +20,7 @@ O cliente final consegue escolher um modelo e tamanho na vitrine e disparar uma 
 ### Validated
 
 - [x] CRUD completo de produtos (nome, marca, solado, categoria, modalidade, preço, tamanhos, até 5 fotos, descrição, status) — Validado na Fase 3: CRUD de Produtos e Pipeline de Mídia (2026-07-13)
+- [x] Seleção de tamanho + botão "Pedir agora" abrindo WhatsApp com mensagem pré-formatada e corretamente encodada — Validado na Fase 5: Fluxo de Pedido no WhatsApp (CRÍTICO) (2026-07-15), incluindo matriz completa de dispositivos/navegadores (Android, iOS, Instagram in-app, WhatsApp in-app, Windows)
 
 ### Active
 
@@ -27,7 +28,6 @@ O cliente final consegue escolher um modelo e tamanho na vitrine e disparar uma 
 - [ ] Configuração da loja (nome, logo, cor de destaque, frase de apresentação)
 - [ ] Configuração de WhatsApp (número com validação/formatação, template de mensagem com variáveis)
 - [ ] Vitrine pública (sem login) com filtros por marca, solado e modalidade
-- [ ] Seleção de tamanho + botão "Pedir agora" abrindo WhatsApp com mensagem pré-formatada e corretamente encodada
 - [ ] Link personalizável (slug único) + QR Code para download
 - [ ] Métricas básicas (acessos, produtos mais vistos, cliques no botão WhatsApp)
 - [ ] Dashboard com métricas resumidas e lista de produtos recentes
@@ -141,4 +141,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-07-13 — Fase 3 (CRUD de Produtos e Pipeline de Mídia) completa_
+_Last updated: 2026-07-15 — Fase 5 (Fluxo de Pedido no WhatsApp — CRÍTICO) completa_
