@@ -2,36 +2,36 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-current_phase: 6
-current_phase_name: Métricas e Dashboard
+current_phase: 06
 status: executing
 stopped_at: Phase 06 UI-SPEC approved
-last_updated: "2026-07-15T19:13:13.420Z"
+last_updated: "2026-07-15T21:16:11.342Z"
 progress:
   total_phases: 6
-  completed_phases: 5
+  completed_phases: 6
   total_plans: 34
-  completed_plans: 30
-  percent: 83
+  completed_plans: 34
+  percent: 100
+current_phase_name: Métricas e Dashboard
 ---
 
 # Estado do Projeto
 
 ## Referência do Projeto
 
-Ver: .planning/PROJECT.md (atualizado 2026-07-10)
+Ver: .planning/PROJECT.md (atualizado 2026-07-15)
 
 **Valor central:** O cliente final consegue escolher um modelo e tamanho na vitrine e disparar uma mensagem de pedido pronta no WhatsApp do revendedor — sem fricção, sem cadastro, sem o revendedor precisar estar online.
-**Foco atual:** Phase 6 — Métricas e Dashboard (ainda não planejada em detalhe)
+**Foco atual:** Milestone v1.0 completo (6/6 fases) — pronto para `/gsd-complete-milestone`
 
 ## Posição Atual
 
-Phase: 6 — Métricas e Dashboard
-Plan: Not started
-Status: Executing Phase 06
-Última atividade: 2026-07-15 — Fase 5 (Fluxo de Pedido no WhatsApp) concluída e verificada: checkpoint manual aprovado em toda a matriz obrigatória de dispositivos/navegadores (Android, iOS, Instagram in-app, WhatsApp in-app, Windows); bug crítico de iOS encontrado e corrigido durante o checkpoint (link wa.me terminando em URL de imagem disparava compartilhamento nativo de foto, pulando a mensagem — corrigido linkando pra página do produto com Open Graph); PED-01..04 marcados como Completo. Gap #10 da verificação (link "Voltar para a loja" do 404 apontando pra "/" em vez de "/loja/[slug]") também corrigido e reverificado.
+Phase: 06 (última fase do milestone)
+Plan: 4/4 completos
+Status: Complete
+Última atividade: 2026-07-15 — Fase 6 (Métricas e Dashboard) concluída e verificada: migration `0006_pageviews_and_metric_views.sql` aplicada em produção e teste via checkpoint humano (push bloqueado pelo gate de segurança do ambiente, retomado manualmente pelo usuário); captura de pageview (grid+produto) e dashboard com 4 stat cards + Top-10 duplo implementados; sidebar/drawer de navegação criada com 2 bugs de responsividade encontrados e corrigidos no checkpoint humano (hambúrguer mal posicionado, drawer não fechava no resize mobile→desktop); UAT final (D-02: troca de filtro não duplica pageview) aprovado pelo usuário. MTR-01/MTR-02 completos.
 
-Progresso: [██████████] 100% (30/30 plans concluídos — Fases 1-5 completas; Fase 6 ainda não planejada em detalhe)
+Progresso: [██████████] 100% (34/34 plans concluídos — Fases 1-6 completas, milestone v1.0 finalizado)
 
 ## Métricas de Desempenho
 
@@ -47,6 +47,7 @@ Progresso: [██████████] 100% (30/30 plans concluídos — Fa
 |-------|-------|-------|----------|
 | 03 | 6 | - | - |
 | 05 | 4 | - | - |
+| 06 | 4 | - | - |
 
 **Tendência recente:**
 
@@ -92,15 +93,15 @@ Itens reconhecidos e carregados do fechamento do milestone anterior:
 
 ## Continuidade de Sessão
 
-Última sessão: 2026-07-10
-Parou em: Roadmap e STATE inicializados; rastreabilidade de requisitos atualizada
+Última sessão: 2026-07-15
+Parou em: Milestone v1.0 completo (6/6 fases) — pronto para /gsd-complete-milestone
 Arquivo de retomada: Nenhum
 
 ## Session
 
-**Last session:** 2026-07-15T13:41:13.986Z
-**Stopped at:** Phase 06 UI-SPEC approved
-**Resume file:** .planning/phases/06-m-tricas-e-dashboard/06-UI-SPEC.md
+**Last session:** 2026-07-15
+**Stopped at:** Milestone v1.0 completo (6/6 fases) — pronto para /gsd-complete-milestone
+**Resume file:** Nenhum
 
 ## Accumulated Context
 
@@ -170,6 +171,12 @@ Arquivo de retomada: Nenhum
 - [Phase 04 P04]: fetchNextPage vive em src/lib/products/public-actions.ts, arquivo novo e separado de src/lib/products/actions.ts (owner-scoped) — decisão do executor por separação de responsabilidades de segurança, divergindo da sugestão original do pattern map
 - [Phase 04 P06]: Regra de visibilidade de esgotado (D-09/D-10/D-11) resolvida inteiramente dentro de queryPublicProducts, nunca replicada em componentes de UI — filtro roda pós-paginação (trade-off assumido: uma página pode ter menos que 20 itens visíveis quando parte do lote é oculta, mas hasMore permanece correto)
 - [Phase 04]: Fase 4 (Vitrine Pública e Filtragem) completa — 6 plans executados sequencialmente (worktrees degradadas para modo sequencial por fork-ref desconhecido, #683), todos os testes automatizados verdes (22/22 na sweep final de coerência), typecheck limpo exceto o erro pré-existente já documentado em server-cookies.test.ts
+- [Phase 05.1]: Rebrand de paleta verde→azul (Vivid Royal #0D21A1, Alice Blue #E7F2FD, preto #000000) executado como quick task (não como fase própria) — find-and-replace mecânico em 27 arquivos `.tsx` + 4 UI-SPECs + PROJECT.md, sem token centralizado (Tailwind v4 CSS-first, sem `@theme` de marca definido)
+- [Phase 06 P01]: `pageviews` (product_id nullable, NULL=acesso ao grid/preenchido=produto) espelha a RLS de `order_clicks` (Fase 5): anon insert-only, dono lê só a própria loja; duas views agregadas Top-N (`product_pageview_counts`, `product_order_click_counts`) com `security_invoker = true` obrigatório — primeiras views do projeto, regra nova análoga ao RLS obrigatório em tabelas
+- [Phase 06 P01, checkpoint]: push da migration 0006 ao Supabase remoto bloqueado pelo gate de segurança do ambiente de execução (schema push é operação sensível, plano já previa `autonomous: false`); usuário aplicou manualmente nos dois projetos (teste `jnlptpdzpajyqmtprfgn` + produção `yuyprdjzeslanxbgcemj`), confirmado via `supabase migration list` (0001-0006 em paridade)
+- [Phase 06 P02]: `PageviewTracker` depende só de `usePathname()` (nunca `useSearchParams()`) e fica montado em `layout.tsx` (que nunca recebe `searchParams`, diferente de `page.tsx`) — garante que trocar filtro/busca na vitrine não duplica pageview (D-02), confirmado em UAT humano
+- [Phase 06 P04, checkpoint]: sidebar/drawer de navegação (`AdminSidebar`) teve 2 bugs de responsividade encontrados no checkpoint humano e corrigidos: hambúrguer preso numa flex row `min-h-dvh` esticava verticalmente (corrigido com barra de topo dedicada `md:hidden` + layout `flex-col`/`md:flex-row`); `<dialog>` do drawer não fechava ao redimensionar de mobile→desktop (corrigido com `useEffect` + `matchMedia('(min-width: 768px)')`)
+- [Phase 06]: Fase 6 (Métricas e Dashboard) completa — última fase do milestone v1.0. 4 plans, 2 checkpoints humanos (push de schema + verificação de UI), 1 item de UAT pós-verificação (D-02) aprovado. Gate de regressão pós-merge não encontrou quebras atribuíveis à fase (15 falhas pré-existentes de rate-limit/credencial do Supabase Auth, confirmadas já quebradas antes da fase começar)
 
 ### Blockers
 
