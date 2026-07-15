@@ -47,10 +47,10 @@ Requisitos para o lançamento inicial. Cada um mapeia para fases do roadmap.
 
 ### Pedido (fluxo de conversão)
 
-- [ ] **PED-01**: Cliente final precisa selecionar um tamanho disponível antes do botão "Pedir agora" ficar ativo/clicável
-- [ ] **PED-02**: Tamanhos esgotados não são clicáveis/selecionáveis (visual riscado, `pointer-events: none`)
-- [ ] **PED-03**: Botão "Pedir agora" abre o WhatsApp com mensagem pré-preenchida (modelo, solado, tamanho, preço), corretamente codificada via `encodeURIComponent`, testado com acentos e caracteres especiais
-- [ ] **PED-04**: Se o cliente clicar em "Pedir agora" sem selecionar tamanho, o sistema exibe feedback claro (shake animation + tooltip "Selecione um tamanho") em vez de abrir mensagem incompleta
+- [x] **PED-01**: Cliente final precisa selecionar um tamanho disponível antes do botão "Pedir agora" ficar ativo/clicável
+- [x] **PED-02**: Tamanhos esgotados não são clicáveis/selecionáveis (visual riscado, `pointer-events: none`)
+- [x] **PED-03**: Botão "Pedir agora" abre o WhatsApp com mensagem pré-preenchida (modelo, solado, tamanho, preço), corretamente codificada via `encodeURIComponent`, testado com acentos e caracteres especiais
+- [x] **PED-04**: Se o cliente clicar em "Pedir agora" sem selecionar tamanho, o sistema exibe feedback claro (shake animation + tooltip "Selecione um tamanho") em vez de abrir mensagem incompleta
 
 ### Métricas
 
@@ -119,10 +119,10 @@ Quais fases cobrem quais requisitos. Atualizado durante a criação do roadmap.
 | VITR-03 | Phase 4 | Completo |
 | VITR-04 | Phase 4 | Completo |
 | VITR-05 | Phase 4 | Completo |
-| PED-01 | Phase 5 | Pendente |
-| PED-02 | Phase 5 | Pendente |
-| PED-03 | Phase 5 | Pendente |
-| PED-04 | Phase 5 | Pendente |
+| PED-01 | Phase 5 | Completo |
+| PED-02 | Phase 5 | Completo |
+| PED-03 | Phase 5 | Completo |
+| PED-04 | Phase 5 | Completo |
 | MTR-01 | Phase 6 | Pendente |
 | MTR-02 | Phase 6 | Pendente |
 
