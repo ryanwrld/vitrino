@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
@@ -60,6 +60,22 @@ export function AdminSidebar() {
     dialogRef.current?.close();
   }
 
+  // Fecha o drawer se a viewport cruzar para desktop (>= md) enquanto ele
+  // está aberto — sem isso, o <dialog> continua aberto (e visualmente
+  // sobreposto ao layout desktop) quando o usuário redimensiona a janela
+  // ou sai da emulação mobile do DevTools sem fechar o menu primeiro.
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(min-width: 768px)");
+    function handleChange(event: MediaQueryListEvent | MediaQueryList) {
+      if (event.matches) {
+        dialogRef.current?.close();
+      }
+    }
+    handleChange(mediaQuery);
+    mediaQuery.addEventListener("change", handleChange);
+    return () => mediaQuery.removeEventListener("change", handleChange);
+  }, []);
+
   return (
     <>
       {/* Desktop: sidebar fixa, sempre no DOM, só visível >= md */}
@@ -74,15 +90,17 @@ export function AdminSidebar() {
         </form>
       </aside>
 
-      {/* Mobile: hambúrguer + <dialog> nativo, sempre no DOM, só visível < md */}
-      <button
-        type="button"
-        onClick={() => dialogRef.current?.showModal()}
-        className="flex min-h-11 min-w-11 items-center justify-center md:hidden"
-        aria-label="Abrir menu"
-      >
-        <Menu className="h-6 w-6" aria-hidden="true" />
-      </button>
+      {/* Mobile: barra de topo com o hambúrguer, acima de {children} (D-06 / UI-SPEC linha 132) — só visível < md */}
+      <div className="flex h-14 shrink-0 items-center border-b border-[#E7F2FD] bg-white px-4 md:hidden">
+        <button
+          type="button"
+          onClick={() => dialogRef.current?.showModal()}
+          className="flex min-h-11 min-w-11 items-center justify-center"
+          aria-label="Abrir menu"
+        >
+          <Menu className="h-6 w-6" aria-hidden="true" />
+        </button>
+      </div>
       <dialog
         ref={dialogRef}
         aria-label="Menu de navegação"

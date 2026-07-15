@@ -11,7 +11,7 @@ import { AdminSidebar } from "@/components/admin-sidebar";
  */
 export default function PainelLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="flex min-h-dvh">
+    <div className="flex min-h-dvh flex-col md:flex-row">
       <AdminSidebar />
       <main className="min-h-dvh flex-1 bg-white">{children}</main>
     </div>
