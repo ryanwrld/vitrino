@@ -18,7 +18,7 @@ Fases decimais aparecem entre suas fases inteiras vizinhas, em ordem numérica.
 - [x] **Phase 3: CRUD de Produtos e Pipeline de Mídia** - Revendedor cadastra, edita e gerencia produtos com fotos comprimidas e controle de estoque (completed 2026-07-13)
 - [x] **Phase 4: Vitrine Pública e Filtragem** - Cliente final acessa a vitrine sem login, filtra e navega produtos paginados com estoque atualizado (completed 2026-07-14)
 - [x] **Phase 5: Fluxo de Pedido no WhatsApp (CRÍTICO)** - Cliente seleciona tamanho e dispara mensagem de pedido pronta no WhatsApp, validada em matriz de dispositivos (completed 2026-07-15)
-- [ ] **Phase 6: Métricas e Dashboard** - Revendedor visualiza acessos, produtos mais vistos, cliques no WhatsApp e resumo da loja
+- [x] **Phase 6: Métricas e Dashboard** - Revendedor visualiza acessos, produtos mais vistos, cliques no WhatsApp e resumo da loja (completed 2026-07-15)
 
 ## Phase Details
 
@@ -221,7 +221,7 @@ Fases decimais aparecem entre suas fases inteiras vizinhas, em ordem numérica.
   1. Revendedor visualiza métricas básicas: acessos à vitrine, produtos mais visualizados e cliques no botão WhatsApp por produto
   2. Dashboard exibe métricas resumidas (total de produtos, disponíveis, esgotados, acessos) e uma lista de produtos recentes
 
-**Plans**: 3/4 plans executed
+**Plans**: 4/4 plans complete
 
 **Wave 1**
 
@@ -234,7 +234,7 @@ Fases decimais aparecem entre suas fases inteiras vizinhas, em ordem numérica.
 
 **Wave 3** *(blocked on Wave 2 — 06-03)*
 
-- [ ] 06-04-PLAN.md — Shell de navegação: grupo de rotas `(painel)` + `AdminSidebar` (desktop `<aside>` + drawer `<dialog>` mobile) + mover páginas + checkpoint humano (D-05/D-06/D-07)
+- [x] 06-04-PLAN.md — Shell de navegação: grupo de rotas `(painel)` + `AdminSidebar` (desktop `<aside>` + drawer `<dialog>` mobile) + mover páginas + checkpoint humano (D-05/D-06/D-07)
 
 **UI hint**: yes
 
@@ -250,4 +250,4 @@ As fases executam em ordem numérica: 1 → 2 → 3 → 4 → 5 → 6
 | 3. CRUD de Produtos e Pipeline de Mídia | 6/6 | Complete    | 2026-07-13 |
 | 4. Vitrine Pública e Filtragem | 6/6 | Complete   | 2026-07-14 |
 | 5. Fluxo de Pedido no WhatsApp (CRÍTICO) | 4/4 | Complete    | 2026-07-15 |
-| 6. Métricas e Dashboard | 3/4 | In Progress|  |
+| 6. Métricas e Dashboard | 4/4 | Complete   | 2026-07-15 |
