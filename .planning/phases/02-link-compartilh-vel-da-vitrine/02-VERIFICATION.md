@@ -1,17 +1,20 @@
 ---
 phase: 02-link-compartilh-vel-da-vitrine
 verified: 2026-07-14T15:30:00Z
-status: human_needed
+status: passed
 score: 4/4 must-haves verified
 behavior_unverified: 0
 overrides_applied: 0
 human_verification:
+
   - test: "Editar Loja/WhatsApp em /configuracoes e salvar"
     expected: "Editar nome/logo/cor/frase/WhatsApp/template em /configuracoes, clicar 'Salvar alterações', ver o toast 'Configurações salvas!' e confirmar que os valores persistem após refresh. Acessar /configuracoes deslogado deve redirecionar para /login."
     why_human: "Confirmação visual de toast e persistência pós-refresh em sessão real de navegador — não provável apenas por grep/tsc (o build e o guard de código já foram confirmados estaticamente)."
+
   - test: "Trocar o slug em /configuracoes → Link e QR Code"
     expected: "Digitar um nome com acentos (ex. 'Café São Paulo') e ver o campo virar 'cafe-sao-paulo' sem letras perdidas; digitar um slug já existente (segunda conta) e ver 'Este link já está em uso.'; digitar um slug livre e ver 'Disponível' após ~400ms. Clicar 'Salvar novo link' deve abrir um diálogo com aviso em linguagem simples; Escape/Cancelar não deve alterar o slug; confirmar em 'Sim, trocar o link' deve salvar, mostrar toast e atualizar o QR/link exibidos."
     why_human: "Timing visual do debounce (~400ms) e o comportamento real do <dialog> nativo (cancelar vs. confirmar) em uma sessão de navegador real são julgamentos de UX/interação que grep e leitura estática de código não provam por si só, mesmo com a estrutura do código já confirmando que updateStoreSlug só é chamado a partir do onClick do botão de confirmação."
+
   - test: "QR Code e cópia de link em /configuracoes → Link e QR Code"
     expected: "O preview do QR deve renderizar ao carregar a página; 'Baixar PNG' deve baixar 'vitrine-qrcode.png'; escanear o PNG baixado com a câmera de um celular real deve abrir a URL correta da vitrine; 'Copiar' deve colocar a URL exata na área de transferência (confirmar colando) e mostrar o toast 'Link copiado!'."
     why_human: "Renderização visual do canvas e leitura por câmera física exigem um navegador e um dispositivo reais — o próprio plano 02-06 já classifica isso como human-check; os testes unitários só provam o contrato programático (generateQrDataUrl/copyText) que a UI consome."
