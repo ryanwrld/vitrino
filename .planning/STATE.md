@@ -3,16 +3,18 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 current_phase: 06
-status: executing
-stopped_at: Phase 06 UI-SPEC approved
-last_updated: "2026-07-15T21:16:11.342Z"
+current_phase_name: última fase do milestone
+status: completed
+stopped_at: Milestone v1.0 completo (6/6 fases) — pronto para /gsd-complete-milestone
+last_updated: "2026-07-15T21:23:45.131Z"
+last_activity: 2026-07-15
+last_activity_desc: Milestone v1.0 completed and archived
 progress:
   total_phases: 6
   completed_phases: 6
   total_plans: 34
   completed_plans: 34
   percent: 100
-current_phase_name: Métricas e Dashboard
 ---
 
 # Estado do Projeto
@@ -181,3 +183,14 @@ Arquivo de retomada: Nenhum
 ### Blockers
 
 - [Fase 3, herdado, mitigação disponível 2026-07-14] Suíte completa npm test não fica verde por rate-limit de signup do Supabase Auth — código já suporta seed via admin.createUser (service_role) para contornar o rate limit (ver tests/setup/supabase-test.ts e deferred-items.md do Plan 03-04/03-06), mas requer o usuário configurar `SUPABASE_SERVICE_ROLE_KEY` em `.env.local` (não commitável) para o benefício surtir efeito.
+
+## Current Position
+
+Phase: Milestone v1.0 complete
+Plan: —
+Status: Awaiting next milestone
+Last activity: 2026-07-15 — Milestone v1.0 completed and archived
+
+## Operator Next Steps
+
+- Start the next milestone with /gsd-new-milestone
