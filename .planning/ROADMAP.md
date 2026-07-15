@@ -16,7 +16,7 @@ Fases decimais aparecem entre suas fases inteiras vizinhas, em ordem numérica.
 - [x] **Phase 1: Fundação, Conta e Isolamento Multi-Tenant** - Revendedor cria conta, entra, recupera senha e passa por onboarding (identidade da loja + WhatsApp), sobre uma base de dados isolada por RLS com rota pública garantidamente sem auth (completed 2026-07-12)
 - [x] **Phase 2: Link Compartilhável da Vitrine** - Revendedor define slug personalizado, gera QR Code e copia o link; pode revisitar/editar configurações do onboarding (completed 2026-07-12)
 - [x] **Phase 3: CRUD de Produtos e Pipeline de Mídia** - Revendedor cadastra, edita e gerencia produtos com fotos comprimidas e controle de estoque (completed 2026-07-13)
-- [ ] **Phase 4: Vitrine Pública e Filtragem** - Cliente final acessa a vitrine sem login, filtra e navega produtos paginados com estoque atualizado
+- [x] **Phase 4: Vitrine Pública e Filtragem** - Cliente final acessa a vitrine sem login, filtra e navega produtos paginados com estoque atualizado (completed 2026-07-14)
 - [x] **Phase 5: Fluxo de Pedido no WhatsApp (CRÍTICO)** - Cliente seleciona tamanho e dispara mensagem de pedido pronta no WhatsApp, validada em matriz de dispositivos (completed 2026-07-15)
 - [ ] **Phase 6: Métricas e Dashboard** - Revendedor visualiza acessos, produtos mais vistos, cliques no WhatsApp e resumo da loja
 
@@ -234,6 +234,6 @@ As fases executam em ordem numérica: 1 → 2 → 3 → 4 → 5 → 6
 | 1. Fundação, Conta e Isolamento Multi-Tenant | 8/8 | Complete   | 2026-07-12 |
 | 2. Link Compartilhável da Vitrine | 6/6 | Complete   | 2026-07-12 |
 | 3. CRUD de Produtos e Pipeline de Mídia | 6/6 | Complete    | 2026-07-13 |
-| 4. Vitrine Pública e Filtragem | 6/6 | In Progress|  |
+| 4. Vitrine Pública e Filtragem | 6/6 | Complete   | 2026-07-14 |
 | 5. Fluxo de Pedido no WhatsApp (CRÍTICO) | 4/4 | Complete    | 2026-07-15 |
 | 6. Métricas e Dashboard | 0/TBD | Not started | - |

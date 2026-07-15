@@ -22,16 +22,16 @@ progress:
 Ver: .planning/PROJECT.md (atualizado 2026-07-10)
 
 **Valor central:** O cliente final consegue escolher um modelo e tamanho na vitrine e disparar uma mensagem de pedido pronta no WhatsApp do revendedor — sem fricção, sem cadastro, sem o revendedor precisar estar online.
-**Foco atual:** Phase 3 — CRUD de Produtos e Pipeline de Mídia
+**Foco atual:** Phase 6 — Métricas e Dashboard (ainda não planejada em detalhe)
 
 ## Posição Atual
 
 Phase: 6 — Métricas e Dashboard
 Plan: Not started
-Status: Executing Phase 05
-Última atividade: 2026-07-13 — Plan 03-06 concluído (queryProducts com busca/filtro/ordenação/disponibilidade derivada; /produtos lendo searchParams como fonte de verdade; toolbar debounced; rollup de disponibilidade + capa na listagem; checkpoint humano final da Fase 3 APROVADO pelo usuário no mobile — caso de teste Nike/Mercurial/FG; fix pós-checkpoint: bodySizeLimit das Server Actions ampliado para 10mb, commit 81cf8b5; PROD-06 marcado como Completo)
+Status: Fase 5 completa e verificada (9/9); aguardando planejamento da Fase 6
+Última atividade: 2026-07-15 — Fase 5 (Fluxo de Pedido no WhatsApp) concluída e verificada: checkpoint manual aprovado em toda a matriz obrigatória de dispositivos/navegadores (Android, iOS, Instagram in-app, WhatsApp in-app, Windows); bug crítico de iOS encontrado e corrigido durante o checkpoint (link wa.me terminando em URL de imagem disparava compartilhamento nativo de foto, pulando a mensagem — corrigido linkando pra página do produto com Open Graph); PED-01..04 marcados como Completo. Gap #10 da verificação (link "Voltar para a loja" do 404 apontando pra "/" em vez de "/loja/[slug]") também corrigido e reverificado.
 
-Progresso: [██████████] 100% (20/20 plans já planejados concluídos; Fases 4-6 ainda não planejadas em detalhe)
+Progresso: [██████████] 100% (30/30 plans concluídos — Fases 1-5 completas; Fase 6 ainda não planejada em detalhe)
 
 ## Métricas de Desempenho
 
