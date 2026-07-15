@@ -7,6 +7,7 @@ import { buildProductUrl } from "@/lib/slug/store-url";
 import { formatBRLPrice } from "@/lib/currency/brl";
 import { DEFAULT_MESSAGE_TEMPLATE } from "@/lib/validation/onboarding";
 import { ProductOrderPanel } from "./product-order-panel";
+import { ProductNotFoundContent } from "./product-not-found-content";
 
 /**
  * Rota de detalhe do produto — Server Component totalmente dinâmico, SEM
@@ -19,8 +20,12 @@ import { ProductOrderPanel } from "./product-order-panel";
  * `createClient()` funciona sem sessão nesta rota (papel `anon` no
  * Postgres, RLS pública). `queryPublicProductDetail` (05-03) já resolve o
  * guard de visibilidade completo (inexistente, rascunho OU oculto pela
- * regra de esgotado — Pitfall 8, sem bypass por link direto): um único
- * `notFound()` cobre os três casos.
+ * regra de esgotado — Pitfall 8, sem bypass por link direto): os três
+ * casos retornam `null` igualmente, e o 404 é renderizado inline via
+ * `ProductNotFoundContent` (não `notFound()`) pra poder linkar "Voltar
+ * para a loja" pra `/loja/${slug}` de verdade — `notFound()` só é usado
+ * quando a PRÓPRIA loja não existe (nesse caso não há slug válido pra
+ * linkar, então o fallback genérico do not-found.tsx de segmento serve).
  *
  * `store_settings` (whatsapp_e164/message_template) é lido via a nova
  * policy anon `public_read_store_settings_for_published_stores` (05-01) —
@@ -88,8 +93,13 @@ export default async function ProductDetailPage({ params }: PageProps) {
 
   const detail = await queryPublicProductDetail(supabase, store.id, produto, store.hide_sold_out_default);
 
+  // Loja existe (slug válido), mas o produto não é visível — renderiza o
+  // 404 diretamente aqui (em vez de notFound(), que delegaria pro
+  // not-found.tsx de segmento, que não recebe params) pra poder linkar
+  // "Voltar para a loja" pra /loja/${slug} de verdade, não pra raiz do
+  // site (05-VERIFICATION.md gap #10).
   if (!detail) {
-    notFound();
+    return <ProductNotFoundContent backHref={`/loja/${slug}`} />;
   }
 
   const { data: storeSettings } = await supabase
