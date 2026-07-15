@@ -210,6 +210,24 @@ Fases decimais aparecem entre suas fases inteiras vizinhas, em ordem numérica.
 
 **UI hint**: yes
 
+### Phase 05.1: Rebrand de Identidade Visual (INSERTED)
+
+**Goal:** Substituir a paleta de cores verde (#00C46A) pela nova paleta azul — Alice Blue (#E7F2FD), Vivid Royal (#0D21A1), Prussian Blue (#090C16) — em todo o app (vitrine pública, admin, dashboard), mantendo consistência visual nas 5 fases já construídas, antes da Fase 06 ser executada.
+**Requirements**: TBD
+**Depends on:** Phase 5
+**Success Criteria** (o que precisa ser VERDADE):
+
+  1. Todas as telas do admin e da vitrine pública usam a nova paleta azul em vez do verde antigo
+  2. Nenhuma referência ao hex antigo (#00C46A) permanece em componentes de UI ativos
+  3. Fase 06 pode ser planejada/construída já com a paleta nova aplicada
+
+**UI hint**: yes
+**Plans:** 0 plans
+
+Plans:
+
+- [ ] TBD (run /gsd-plan-phase 05.1 to break down)
+
 ### Phase 6: Métricas e Dashboard
 
 **Goal**: O revendedor consegue visualizar métricas básicas de desempenho da vitrine e um resumo do estado da loja, agregando os eventos coletados nas fases anteriores em contadores simples e úteis.
