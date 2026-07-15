@@ -83,7 +83,7 @@ export default async function ProdutosPage({
   }));
 
   return (
-    <main className="bg-white mx-auto flex min-h-dvh w-full max-w-md flex-col gap-8 px-4 py-10">
+    <div className="bg-white mx-auto flex min-h-dvh w-full max-w-md flex-col gap-8 px-4 py-10">
       <div className="flex flex-col gap-4">
         <h1 className="text-2xl font-bold text-[#000000]">Produtos</h1>
         <Link
@@ -125,6 +125,6 @@ export default async function ProdutosPage({
       >
         Voltar ao painel
       </Link>
-    </main>
+    </div>
   );
 }

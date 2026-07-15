@@ -14,7 +14,7 @@ const ADMIN_PAGES_WITH_MAIN = [
   "src/app/(admin)/onboarding/onboarding-wizard.tsx",
   "src/app/(admin)/cadastro/page.tsx",
   "src/app/(admin)/login/page.tsx",
-  "src/app/(admin)/dashboard/page.tsx",
+  "src/app/(admin)/(painel)/layout.tsx",
   "src/app/(admin)/esqueci-senha/page.tsx",
   "src/app/(admin)/redefinir-senha/page.tsx",
 ];
