@@ -89,9 +89,9 @@ export function ProductList({ products }: ProductListProps) {
           return (
             <li
               key={product.id}
-              className="flex items-center gap-3 rounded-lg border border-[#F5F5F3] bg-white p-3"
+              className="flex items-center gap-3 rounded-lg border border-[#E7F2FD] bg-white p-3"
             >
-              <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-[#F5F5F3]">
+              <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-[#E7F2FD]">
                 {product.coverUrl ? (
                   <Image
                     src={product.coverUrl}
@@ -112,11 +112,11 @@ export function ProductList({ products }: ProductListProps) {
                 {secondaryLine && <span className="truncate text-xs text-[#6B6B6B]">{secondaryLine}</span>}
                 <span
                   className={`flex items-center gap-1 text-xs ${
-                    product.disponivel ? "text-[#00C46A]" : "text-[#6B6B6B]"
+                    product.disponivel ? "text-[#0D21A1]" : "text-[#6B6B6B]"
                   }`}
                 >
                   <span
-                    className={`h-1.5 w-1.5 rounded-full ${product.disponivel ? "bg-[#00C46A]" : "bg-[#6B6B6B]"}`}
+                    className={`h-1.5 w-1.5 rounded-full ${product.disponivel ? "bg-[#0D21A1]" : "bg-[#6B6B6B]"}`}
                     aria-hidden="true"
                   />
                   {product.disponivel ? "Disponível" : "Esgotado"}
@@ -125,7 +125,7 @@ export function ProductList({ products }: ProductListProps) {
 
               <div className="flex shrink-0 flex-col items-end gap-1">
                 <span className="text-sm font-medium text-[#111111]">{formatBRLPrice(product.price)}</span>
-                <span className="rounded-full bg-[#F5F5F3] px-2 py-0.5 text-xs text-[#6B6B6B]">
+                <span className="rounded-full bg-[#E7F2FD] px-2 py-0.5 text-xs text-[#6B6B6B]">
                   {product.status === "published" ? "Publicado" : "Rascunho"}
                 </span>
               </div>
@@ -134,7 +134,7 @@ export function ProductList({ products }: ProductListProps) {
                 <Link
                   href={`/produtos/${product.id}/editar`}
                   aria-label={`Editar ${product.name}`}
-                  className="flex h-11 w-11 items-center justify-center rounded-lg text-[#6B6B6B] transition hover:bg-[#F5F5F3] hover:text-[#111111]"
+                  className="flex h-11 w-11 items-center justify-center rounded-lg text-[#6B6B6B] transition hover:bg-[#E7F2FD] hover:text-[#111111]"
                 >
                   <Pencil className="h-5 w-5" aria-hidden="true" />
                 </Link>
@@ -161,7 +161,7 @@ export function ProductList({ products }: ProductListProps) {
           <button
             type="submit"
             onClick={() => setDeleteTarget(null)}
-            className="rounded-lg border border-[#0D3D2B] px-4 py-2 font-medium text-[#0D3D2B]"
+            className="rounded-lg border border-[#000000] px-4 py-2 font-medium text-[#000000]"
           >
             Cancelar
           </button>

@@ -220,7 +220,7 @@ export function ProductOrderPanel({
           {photosToRender.map((url, index) => (
             <div
               key={url ?? index}
-              className="relative aspect-square w-full shrink-0 snap-center overflow-hidden rounded-xl bg-[#F5F5F3]"
+              className="relative aspect-square w-full shrink-0 snap-center overflow-hidden rounded-xl bg-[#E7F2FD]"
             >
               <ImageWithFallback src={url} alt={product.name} />
             </div>
@@ -250,10 +250,10 @@ export function ProductOrderPanel({
               tabIndex={available ? 0 : -1}
               className={cn(
                 "flex min-h-11 min-w-11 items-center justify-center rounded-lg border text-base transition",
-                available && selectedSize !== size && "border-[#F5F5F3] bg-white text-[#111111]",
-                available && selectedSize === size && "border-[#00C46A] bg-[#00C46A] text-white",
+                available && selectedSize !== size && "border-[#E7F2FD] bg-white text-[#111111]",
+                available && selectedSize === size && "border-[#0D21A1] bg-[#0D21A1] text-white",
                 !available &&
-                  "pointer-events-none border-[#F5F5F3] bg-[#F5F5F3] text-[#6B6B6B] line-through opacity-60"
+                  "pointer-events-none border-[#E7F2FD] bg-[#E7F2FD] text-[#6B6B6B] line-through opacity-60"
               )}
             >
               {size}
@@ -276,7 +276,7 @@ export function ProductOrderPanel({
             rel="noopener noreferrer"
             onClick={handleOrderClick}
             className={cn(
-              "block min-h-11 w-full rounded-lg bg-[#00C46A] px-4 py-2 text-center text-sm font-medium text-white transition",
+              "block min-h-11 w-full rounded-lg bg-[#0D21A1] px-4 py-2 text-center text-sm font-medium text-white transition",
               orderShakeKey > 0 && "animate-shake"
             )}
           >

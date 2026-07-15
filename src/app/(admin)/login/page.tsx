@@ -36,7 +36,7 @@ export default function LoginPage() {
   return (
     <main className="bg-white mx-auto flex min-h-dvh w-full max-w-sm flex-col justify-center gap-6 px-4 py-10">
       <div>
-        <h1 className="text-2xl font-bold text-[#0D3D2B]">Entrar</h1>
+        <h1 className="text-2xl font-bold text-[#000000]">Entrar</h1>
         <p className="mt-1 text-sm text-[#6B6B6B]">Acesse o painel da sua vitrine.</p>
       </div>
 
@@ -50,7 +50,7 @@ export default function LoginPage() {
             type="email"
             autoComplete="email"
             {...register("email")}
-            className="rounded-lg border border-[#F5F5F3] bg-white px-3 py-2 text-base outline-none focus:border-[#00C46A]"
+            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
           />
           {errors.email && <span className="text-sm text-[#FF4D4D]">{errors.email.message}</span>}
         </div>
@@ -64,7 +64,7 @@ export default function LoginPage() {
             type="password"
             autoComplete="current-password"
             {...register("password")}
-            className="rounded-lg border border-[#F5F5F3] bg-white px-3 py-2 text-base outline-none focus:border-[#00C46A]"
+            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
           />
           {errors.password && <span className="text-sm text-[#FF4D4D]">{errors.password.message}</span>}
         </div>
@@ -72,7 +72,7 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={isPending}
-          className="rounded-lg bg-[#00C46A] px-4 py-2 font-medium text-white transition disabled:opacity-60"
+          className="rounded-lg bg-[#0D21A1] px-4 py-2 font-medium text-white transition disabled:opacity-60"
         >
           {isPending ? "Entrando…" : "Entrar"}
         </button>
@@ -80,7 +80,7 @@ export default function LoginPage() {
 
       <p className="text-center text-sm text-[#6B6B6B]">
         Ainda não tem conta?{" "}
-        <a href="/cadastro" className="font-medium text-[#0D3D2B] underline">
+        <a href="/cadastro" className="font-medium text-[#000000] underline">
           Criar minha vitrine grátis
         </a>
       </p>

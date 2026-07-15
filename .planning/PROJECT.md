@@ -45,7 +45,7 @@ O cliente final consegue escolher um modelo e tamanho na vitrine e disparar uma 
 
 **Identidade visual:**
 
-- Paleta: verde escuro `#0D3D2B` (fundo/destaque), verde vibrante `#00C46A` (CTAs, badges disponível), branco `#FFFFFF`, cinza claro `#F5F5F3`, preto suave `#111111`, cinza médio `#6B6B6B`, vermelho suave `#FF4D4D` (badge esgotado)
+- Paleta: preto puro `#000000` (fundo/destaque), azul royal `#0D21A1` (CTAs, badges disponível), branco `#FFFFFF`, azul claro `#E7F2FD`, preto suave `#111111`, cinza médio `#6B6B6B`, vermelho suave `#FF4D4D` (badge esgotado)
 - Tipografia: Syne 700 para display/títulos, Inter 400/500 para body/interface (Google Fonts). Base 16px, escala 12/14/16/20/28/40px
 - Border radius: 12px cards, 8px botões, 999px pills/badges
 - Animações: entrada de cards com fade+slide-up e stagger de 80ms; hover com elevação (translateY -4px, 200ms); pulse leve no botão WhatsApp idle; transições suaves em filtros; skeleton loader antes de carregar

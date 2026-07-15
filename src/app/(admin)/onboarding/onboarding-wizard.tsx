@@ -36,7 +36,7 @@ export function OnboardingWizard() {
     resolver: zodResolver(onboardingSchema),
     defaultValues: {
       name: "",
-      accentColor: "#00C46A",
+      accentColor: "#0D21A1",
       tagline: "",
       whatsapp: "",
       messageTemplate: DEFAULT_MESSAGE_TEMPLATE,
@@ -68,7 +68,7 @@ export function OnboardingWizard() {
   return (
     <main className="bg-white mx-auto flex min-h-dvh w-full max-w-md flex-col justify-center gap-6 px-4 py-10">
       <div>
-        <h1 className="text-2xl font-bold text-[#0D3D2B]">Configure sua vitrine</h1>
+        <h1 className="text-2xl font-bold text-[#000000]">Configure sua vitrine</h1>
         <p className="mt-1 text-sm text-[#6B6B6B]">
           Só o essencial para começar — você pode ajustar tudo depois no painel.
         </p>
@@ -84,7 +84,7 @@ export function OnboardingWizard() {
             type="text"
             autoComplete="organization"
             {...register("name")}
-            className="rounded-lg border border-[#F5F5F3] bg-white px-3 py-2 text-base outline-none focus:border-[#00C46A]"
+            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
           />
           {errors.name && <span className="text-sm text-[#FF4D4D]">{errors.name.message}</span>}
         </div>
@@ -98,7 +98,7 @@ export function OnboardingWizard() {
             type="file"
             accept="image/png,image/jpeg,image/webp"
             onChange={(event) => setLogoFile(event.target.files?.[0] ?? null)}
-            className="rounded-lg border border-[#F5F5F3] bg-white px-3 py-2 text-sm outline-none focus:border-[#00C46A]"
+            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-sm outline-none focus:border-[#0D21A1]"
           />
         </div>
 
@@ -110,7 +110,7 @@ export function OnboardingWizard() {
             id="accentColor"
             type="color"
             {...register("accentColor")}
-            className="h-10 w-20 rounded-lg border border-[#F5F5F3] bg-white p-1"
+            className="h-10 w-20 rounded-lg border border-[#E7F2FD] bg-white p-1"
           />
           {errors.accentColor && (
             <span className="text-sm text-[#FF4D4D]">{errors.accentColor.message}</span>
@@ -126,7 +126,7 @@ export function OnboardingWizard() {
             type="text"
             maxLength={100}
             {...register("tagline")}
-            className="rounded-lg border border-[#F5F5F3] bg-white px-3 py-2 text-base outline-none focus:border-[#00C46A]"
+            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
           />
           {errors.tagline && <span className="text-sm text-[#FF4D4D]">{errors.tagline.message}</span>}
         </div>
@@ -140,7 +140,7 @@ export function OnboardingWizard() {
             type="tel"
             placeholder="(11) 99999-9999"
             {...register("whatsapp")}
-            className="rounded-lg border border-[#F5F5F3] bg-white px-3 py-2 text-base outline-none focus:border-[#00C46A]"
+            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
           />
           {formattedPreview && (
             <span className="text-xs text-[#6B6B6B]">Prévia: {formattedPreview}</span>
@@ -156,7 +156,7 @@ export function OnboardingWizard() {
             id="messageTemplate"
             rows={6}
             {...register("messageTemplate")}
-            className="rounded-lg border border-[#F5F5F3] bg-white px-3 py-2 text-sm outline-none focus:border-[#00C46A]"
+            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-sm outline-none focus:border-[#0D21A1]"
           />
           {errors.messageTemplate && (
             <span className="text-sm text-[#FF4D4D]">{errors.messageTemplate.message}</span>
@@ -166,7 +166,7 @@ export function OnboardingWizard() {
         <button
           type="submit"
           disabled={isPending}
-          className="rounded-lg bg-[#00C46A] px-4 py-2 font-medium text-white transition disabled:opacity-60"
+          className="rounded-lg bg-[#0D21A1] px-4 py-2 font-medium text-white transition disabled:opacity-60"
         >
           {isPending ? "Salvando…" : "Concluir e ver minha vitrine"}
         </button>

@@ -33,7 +33,7 @@ export function ProductCard({ product, slug }: { product: PublicProductCardData;
 
   return (
     <Link href={`/loja/${slug}/${product.id}`} className="flex flex-col gap-2">
-      <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-[#F5F5F3]">
+      <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-[#E7F2FD]">
         <ImageWithFallback src={product.coverUrl} alt={product.name} />
       </div>
 
@@ -43,11 +43,11 @@ export function ProductCard({ product, slug }: { product: PublicProductCardData;
         <span className="text-sm font-medium text-[#111111]">{formatBRLPrice(product.price)}</span>
         <span
           className={`flex items-center gap-1 text-xs ${
-            product.disponivel ? "text-[#00C46A]" : "text-[#6B6B6B]"
+            product.disponivel ? "text-[#0D21A1]" : "text-[#6B6B6B]"
           }`}
         >
           <span
-            className={`h-1.5 w-1.5 rounded-full ${product.disponivel ? "bg-[#00C46A]" : "bg-[#6B6B6B]"}`}
+            className={`h-1.5 w-1.5 rounded-full ${product.disponivel ? "bg-[#0D21A1]" : "bg-[#6B6B6B]"}`}
             aria-hidden="true"
           />
           {product.disponivel ? "Disponível" : "Esgotado"}

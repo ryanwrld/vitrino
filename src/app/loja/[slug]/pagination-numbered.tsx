@@ -25,7 +25,7 @@ export function PaginationNumbered({ slug, currentPage, hasMore, searchParamsStr
       {currentPage > 1 && (
         <Link
           href={`/loja/${slug}?${prefix}page=${currentPage - 1}`}
-          className="rounded-lg border border-[#0D3D2B] px-4 py-2 font-medium text-[#0D3D2B] transition hover:bg-[#0D3D2B] hover:text-white"
+          className="rounded-lg border border-[#000000] px-4 py-2 font-medium text-[#000000] transition hover:bg-[#000000] hover:text-white"
         >
           Anterior
         </Link>
@@ -33,7 +33,7 @@ export function PaginationNumbered({ slug, currentPage, hasMore, searchParamsStr
       {hasMore && (
         <Link
           href={`/loja/${slug}?${prefix}page=${currentPage + 1}`}
-          className="rounded-lg border border-[#0D3D2B] px-4 py-2 font-medium text-[#0D3D2B] transition hover:bg-[#0D3D2B] hover:text-white"
+          className="rounded-lg border border-[#000000] px-4 py-2 font-medium text-[#000000] transition hover:bg-[#000000] hover:text-white"
         >
           Próxima
         </Link>

@@ -133,11 +133,11 @@ export default async function LojaPublicaPage({ params, searchParams }: PageProp
           </div>
         </>
       ) : hasAnyPublished ? (
-        <div className="flex flex-col gap-1 rounded-lg border border-dashed border-[#F5F5F3] px-4 py-8 text-center">
+        <div className="flex flex-col gap-1 rounded-lg border border-dashed border-[#E7F2FD] px-4 py-8 text-center">
           <span className="font-medium text-[#111111]">Nenhum produto encontrado com esse filtro.</span>
         </div>
       ) : (
-        <div className="flex flex-col gap-1 rounded-lg border border-dashed border-[#F5F5F3] px-4 py-8 text-center">
+        <div className="flex flex-col gap-1 rounded-lg border border-dashed border-[#E7F2FD] px-4 py-8 text-center">
           <span className="font-medium text-[#111111]">Esta loja ainda não tem produtos disponíveis.</span>
         </div>
       )}

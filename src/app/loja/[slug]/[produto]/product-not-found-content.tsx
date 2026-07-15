@@ -16,7 +16,7 @@ export function ProductNotFoundContent({ backHref }: { backHref: string }) {
     <main className="mx-auto flex min-h-dvh w-full max-w-2xl flex-col items-center justify-center gap-3 bg-white px-4 py-6 text-center">
       <h1 className="text-2xl font-bold text-[#111111]">Produto não encontrado</h1>
       <p className="text-[#6B6B6B]">Este produto não está mais disponível ou o link mudou.</p>
-      <Link href={backHref} className="text-sm font-medium text-[#00C46A]">
+      <Link href={backHref} className="text-sm font-medium text-[#0D21A1]">
         Voltar para a loja
       </Link>
     </main>

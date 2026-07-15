@@ -11,7 +11,7 @@ import { ImageOff } from "lucide-react";
  * Examples). Reusado tanto pelo card de produto quanto pelo logo do hero da
  * loja (mesma robustez, sem custo extra).
  *
- * Tokens de cor (#F5F5F3/#6B6B6B) e ícone ImageOff idênticos ao fallback já
+ * Tokens de cor (#E7F2FD/#6B6B6B) e ícone ImageOff idênticos ao fallback já
  * usado em src/app/(admin)/produtos/product-list.tsx — nenhuma nova
  * dependência.
  */
@@ -20,7 +20,7 @@ export function ImageWithFallback({ src, alt }: { src: string | null; alt: strin
 
   if (errored || !src) {
     return (
-      <div className="flex h-full w-full items-center justify-center rounded-xl bg-[#F5F5F3]">
+      <div className="flex h-full w-full items-center justify-center rounded-xl bg-[#E7F2FD]">
         <ImageOff className="h-8 w-8 text-[#6B6B6B]" aria-hidden="true" />
       </div>
     );

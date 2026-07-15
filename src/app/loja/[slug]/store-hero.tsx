@@ -14,7 +14,7 @@ export type StoreHeroData = {
  * (logo_url/accent_color/tagline), mas como exibição pública, não formulário.
  *
  * Cor de destaque da loja como fundo/acento (D-12) — fallback para o verde
- * escuro de marca (#0D3D2B) quando a loja não configurou uma cor própria.
+ * escuro de marca (#000000) quando a loja não configurou uma cor própria.
  * A frase de apresentação SÓ renderiza quando preenchida (D-13) — sem
  * elemento/espaço vazio quando ausente.
  */
@@ -22,7 +22,7 @@ export function StoreHero({ store }: { store: StoreHeroData }) {
   return (
     <div
       className="flex flex-col items-center gap-3 rounded-2xl px-6 py-8 text-center text-white"
-      style={{ backgroundColor: store.accentColor ?? "#0D3D2B" }}
+      style={{ backgroundColor: store.accentColor ?? "#000000" }}
     >
       <div className="relative h-16 w-16 overflow-hidden rounded-full bg-white/20">
         <ImageWithFallback src={store.logoUrl} alt={store.name} />

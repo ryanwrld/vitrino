@@ -54,7 +54,7 @@ Exceptions:
 | Heading | 20px (`text-xl`) | Medium (500) | 1.2 (`leading-tight`) — section titles: "Produtos recentes", "Mais visualizados", "Cliques no WhatsApp"; mirrors the existing `text-xl font-medium` convention used by every other admin section header (`size-grid.tsx`, `product-form.tsx`, `settings-form.tsx`) |
 | Display | 28px (`text-[28px]`) | Bold (700) | 1.2 (`leading-tight`) — the big number inside each stat card (total/disponível/esgotado/acessos count). First component in the codebase to use PROJECT.md's declared 28px scale step (previously only 12/14/16/20/24px were in use) — introduced here because a metrics dashboard is the first surface where a number itself is the primary content, and 24px (the existing page-`<h1>` size) would visually compete with the page title instead of standing out as data |
 
-Page `<h1>` ("Dashboard"): reuses the pre-existing project-wide convention verbatim — `text-2xl font-bold text-[#0D3D2B]` (24px/700), same as every other admin page title (`Produtos`, `Configurações`). Not part of the "Display" role above; this is the established page-title pattern, unchanged.
+Page `<h1>` ("Dashboard"): reuses the pre-existing project-wide convention verbatim — `text-2xl font-bold text-[#000000]` (24px/700), same as every other admin page title (`Produtos`, `Configurações`). Not part of the "Display" role above; this is the established page-title pattern, unchanged.
 
 Weight discipline: only **2 weights used in this phase's new components** — Regular (400, nav labels/list body text) and Medium (500, labels/section headings). Bold (700) is reused only where the existing project convention already uses it: the page `<h1>` and — newly, deliberately — the stat-card Display numbers (justified above), never on any other new element in this phase.
 
@@ -65,8 +65,8 @@ Weight discipline: only **2 weights used in this phase's new components** — Re
 | Role | Value | Usage |
 |------|-------|-------|
 | Dominant (60%) | `#FFFFFF` | Page background of `/dashboard` and every `(painel)` route; sidebar background; drawer background; stat card background |
-| Secondary (30%) | `#F5F5F3` | Stat card border, sidebar `border-r`, list-row dividers/borders (Top-10 rows, "produtos recentes" rows), empty-state dashed border |
-| Accent (10%) | `#00C46A` | **Reserved for:** the "Disponíveis" stat card's number + icon (matches the existing green "disponível" dot convention from `product-list.tsx`); the active sidebar/drawer nav link's text color + a 2px left border indicator bar |
+| Secondary (30%) | `#E7F2FD` | Stat card border, sidebar `border-r`, list-row dividers/borders (Top-10 rows, "produtos recentes" rows), empty-state dashed border |
+| Accent (10%) | `#0D21A1` | **Reserved for:** the "Disponíveis" stat card's number + icon (matches the existing blue "disponível" dot convention from `product-list.tsx`); the active sidebar/drawer nav link's text color + a 2px left border indicator bar |
 | Destructive | `#FF4D4D` | Not introduced by this phase — no new destructive action exists here (dashboard is read-only metrics + navigation). Reused unchanged by the pre-existing product delete flow (`product-list.tsx`), which this phase does not touch |
 
 Accent reserved for: **"Disponíveis" stat number/icon, active sidebar/drawer nav link (text + left indicator bar).** Never applied to "Total de produtos" or "Acessos" (neutral, see below), never applied to "Esgotados" (muted gray, see below — explicitly NOT red, matching the established `product-list.tsx` precedent where the product-level "Esgotado" indicator uses `#6B6B6B`, not `#FF4D4D`), never applied to inactive nav links, never applied to Top-10 list rows (those are neutral/informational, not calls to action).
@@ -77,7 +77,7 @@ Additional tokens already established project-wide, reused (not redefined) in th
 |------|-------|-------|
 | Text primary | `#111111` | Stat numbers for "Total de produtos" and "Acessos" (neutral counts — neither positive nor negative), Top-10 list product names, "produtos recentes" row titles |
 | Text secondary/muted | `#6B6B6B` | "Esgotados" stat number + icon (muted, not red — see Accent note above), stat card labels, inactive sidebar/drawer nav links, Top-10 list count text, empty-state body copy |
-| Brand dark green | `#0D3D2B` | Page `<h1>` ("Dashboard"), "Total de produtos" stat icon (neutral-brand tone, distinct from the accent green used for "Disponíveis") |
+| Brand black | `#000000` | Page `<h1>` ("Dashboard"), "Total de produtos" stat icon (neutral-brand tone, distinct from the accent blue used for "Disponíveis") |
 
 ---
 
@@ -104,13 +104,13 @@ Additional tokens already established project-wide, reused (not redefined) in th
 *(Supplementary detail beyond the template's minimum — included because this phase introduces two structurally new component families: the sidebar/drawer shell and the stat-card/Top-10-list dashboard body.)*
 
 ### Stat card (4 instances: Total de produtos, Disponíveis, Esgotados, Acessos)
-- Container: `rounded-lg border border-[#F5F5F3] bg-white p-4 flex flex-col gap-1`.
-- Icon (top, `h-5 w-5`, color per the Color table above — `#0D3D2B` neutral / `#00C46A` accent for Disponíveis / `#6B6B6B` muted for Esgotados / `#0D3D2B` for Acessos) + Label (14px/500, `#6B6B6B`) on one row; Display number (28px/700, color per role) below.
+- Container: `rounded-lg border border-[#E7F2FD] bg-white p-4 flex flex-col gap-1`.
+- Icon (top, `h-5 w-5`, color per the Color table above — `#000000` neutral / `#0D21A1` accent for Disponíveis / `#6B6B6B` muted for Esgotados / `#000000` for Acessos) + Label (14px/500, `#6B6B6B`) on one row; Display number (28px/700, color per role) below.
 - Layout: mobile-first `grid grid-cols-2 gap-3` (2 columns × 2 rows on mobile); `md:grid-cols-4 md:gap-4` (single row on desktop). Matches the mobile-first grid discipline already used by the public product grid (`loja/[slug]/page.tsx`).
 - Not clickable/interactive — pure display, no hover/focus states needed (no `<button>`/`<a>` wrapper).
 
 ### Top-10 list (2 instances: Mais visualizados, Cliques no WhatsApp — always rendered as two separate, parallel lists per D-08/D-09, never merged)
-- Row: `flex items-center gap-3 rounded-lg border border-[#F5F5F3] bg-white p-3`, mirroring `product-list.tsx`'s existing row shell.
+- Row: `flex items-center gap-3 rounded-lg border border-[#E7F2FD] bg-white p-3`, mirroring `product-list.tsx`'s existing row shell.
 - Left: rank number (`1`–`10`), 14px/500, `#6B6B6B`, fixed-width `w-5` for alignment.
 - Middle: product name (16px/400, `#111111`, `truncate`), optionally the brand/line secondary line (12px, `#6B6B6B`) exactly as in `product-list.tsx`'s `secondaryLine` pattern.
 - Right: count (14px/500), with the metric's icon (`Eye` for views, `MessageCircle` for clicks) at `h-4 w-4`, `#6B6B6B` — never accent-colored (these are informational counts, not calls to action; see Color contract).
@@ -123,10 +123,10 @@ Additional tokens already established project-wide, reused (not redefined) in th
 - No edit/delete action buttons on these rows (unlike the full `/produtos` list) — each row is a plain `<Link>` to `/produtos/[id]/editar`, keeping the dashboard read-summary-only in spirit; full management stays on the dedicated Produtos page.
 
 ### Sidebar (desktop, `md:` and up)
-- `<aside className="hidden w-56 shrink-0 flex-col gap-6 border-r border-[#F5F5F3] bg-white p-4 md:flex">`, always in the DOM, hidden below `md`.
+- `<aside className="hidden w-56 shrink-0 flex-col gap-6 border-r border-[#E7F2FD] bg-white p-4 md:flex">`, always in the DOM, hidden below `md`.
 - Nav links (`Dashboard`/`Produtos`/`Configurações`) stacked vertically, `gap-3`, each `min-h-11` for touch/click-target consistency even though desktop pointer precision doesn't strictly require it (keeps one shared style across breakpoints).
-- Active link: `font-medium text-[#00C46A]` + a `border-l-2 border-[#00C46A] pl-3 -ml-3` indicator (accent, per Color contract). Inactive: `text-[#6B6B6B]`. Active detection via `usePathname().startsWith(item.href)`.
-- "Sair da conta" pinned to the bottom via `mt-auto`, visually separated by a `border-t border-[#F5F5F3] pt-4` divider (per D-07 "separado visualmente"), calling the existing `signOutAction` form — neutral styling (`text-[#6B6B6B]`), not destructive red.
+- Active link: `font-medium text-[#0D21A1]` + a `border-l-2 border-[#0D21A1] pl-3 -ml-3` indicator (accent, per Color contract). Inactive: `text-[#6B6B6B]`. Active detection via `usePathname().startsWith(item.href)`.
+- "Sair da conta" pinned to the bottom via `mt-auto`, visually separated by a `border-t border-[#E7F2FD] pt-4` divider (per D-07 "separado visualmente"), calling the existing `signOutAction` form — neutral styling (`text-[#6B6B6B]`), not destructive red.
 
 ### Drawer (mobile, below `md:`)
 - Hamburger trigger: `<button aria-label="Abrir menu">` with `Menu` icon (`h-6 w-6`), `min-h-11 min-w-11`, positioned in a small top bar above `{children}` (the `(painel)/layout.tsx` mobile header — not present on desktop, where the sidebar is always visible instead).
