@@ -11,6 +11,7 @@ import {
   type OnboardingInput,
 } from "@/lib/validation/onboarding";
 import { saveOnboarding } from "@/lib/onboarding/actions";
+import { VitrinoLogo } from "@/components/vitrino-logo";
 
 /**
  * Wizard de onboarding em tela única (decisão de UI a critério do executor,
@@ -66,8 +67,10 @@ export function OnboardingWizard() {
   };
 
   return (
-    <main className="flex min-h-dvh items-center justify-center bg-gray-50 p-6">
-      <div className="flex w-full max-w-lg flex-col gap-6 rounded-xl bg-white p-8 shadow-lg">
+    <main className="flex min-h-dvh items-center justify-center bg-gradient-to-br from-surface-subtle via-surface-panel to-primary-subtle p-6">
+      <div className="flex w-full max-w-lg flex-col items-center gap-6">
+        <VitrinoLogo size={40} className="text-primary" />
+        <div className="flex w-full flex-col gap-6 rounded-xl bg-white p-8 shadow-lg">
         <div>
           <h1 className="font-display text-2xl font-extrabold text-gray-900">Configure sua vitrine</h1>
           <p className="mt-1 text-sm text-gray-500">
@@ -172,6 +175,7 @@ export function OnboardingWizard() {
             {isPending ? "Salvando…" : "Concluir e ver minha vitrine"}
           </button>
         </form>
+        </div>
       </div>
     </main>
   );
