@@ -68,14 +68,14 @@ Este documento consolida duas auditorias independentes de UI/UX feitas em **2026
 - [x] Botão "Salvar alterações" de Configurações não é full-width (`settings-form.tsx:195`), diferente de todo outro CTA primário do painel. — corrigido (quick-260716-0z2, Task 4), 2026-07-16
 - [x] QR Code panel usa dois estilos de botão diferentes pra duas ações equivalentes (baixar = outline preto, copiar = preenchido azul). — corrigido (quick-260716-0z2, Task 4), 2026-07-16
 - [x] Nenhuma cor distingue "Publicado" de "Rascunho" na lista de produtos (`product-list.tsx:128-130`) — mesma pill cinza pros dois. — corrigido (quick-260716-0z2, Task 4), 2026-07-16
-- [ ] Duplicação confirmada pelo próprio comentário do código entre `onboarding-wizard.tsx` e `configuracoes/settings-form.tsx` — mesmos campos, escritos do zero.
-- [ ] `PaginationNumbered` não tem números — só Anterior/Próxima, nome não bate com o comportamento.
+- [x] Duplicação confirmada pelo próprio comentário do código entre `onboarding-wizard.tsx` e `configuracoes/settings-form.tsx` — mesmos campos, escritos do zero. — corrigido (quick-260716-0z2, Task 5), 2026-07-16
+- [x] `PaginationNumbered` não tem números — só Anterior/Próxima, nome não bate com o comportamento. — corrigido (quick-260716-0z2, Task 5), 2026-07-16
 - [x] `text-[28px]` hardcoded nos stat cards do dashboard (`dashboard/page.tsx:85`), fora da escala tipográfica do Tailwind. — corrigido (quick-260716-0z2, Task 4), 2026-07-16
-- [ ] "Onboarding wizard" não tem indicador de progresso, apesar do nome sugerir multi-etapa.
-- [ ] Páginas de login/cadastro/esqueci-senha usam `<a href>` em vez de `<Link>`, forçando reload completo — único ponto do app assim.
-- [ ] Publicar/despublicar produto (efeito público imediato) não tem confirmação, mas excluir produto e trocar slug têm.
+- [x] "Onboarding wizard" não tem indicador de progresso, apesar do nome sugerir multi-etapa. — corrigido (quick-260716-0z2, Task 5), 2026-07-16
+- [x] Páginas de login/cadastro/esqueci-senha usam `<a href>` em vez de `<Link>`, forçando reload completo — único ponto do app assim. — corrigido (quick-260716-0z2, Task 5), 2026-07-16
+- [x] Publicar/despublicar produto (efeito público imediato) não tem confirmação, mas excluir produto e trocar slug têm. — corrigido (quick-260716-0z2, Task 5), 2026-07-16
 - [x] Marca do produto some na página de detalhe — só aparece no card do grid. — corrigido (quick-260716-0z2, Task 4), 2026-07-16
-- [ ] Nav ativo na sidebar é só borda de 2px + cor de texto (`admin-sidebar.tsx:36-39`), muito sutil, enquanto o resto do app usa pílulas cheias pra indicar seleção (filtros, tamanhos) — dois sistemas de "selecionado" diferentes convivendo no mesmo produto.
+- [x] Nav ativo na sidebar é só borda de 2px + cor de texto (`admin-sidebar.tsx:36-39`), muito sutil, enquanto o resto do app usa pílulas cheias pra indicar seleção (filtros, tamanhos) — dois sistemas de "selecionado" diferentes convivendo no mesmo produto. — corrigido (quick-260716-0z2, Task 5), 2026-07-16
 
 ## 7. Responsividade / desktop
 

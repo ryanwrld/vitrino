@@ -1,6 +1,7 @@
 "use client";
 
 import { useTransition } from "react";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -84,9 +85,9 @@ export default function LoginPage() {
 
       <p className="text-center text-sm text-[#6B6B6B]">
         Ainda não tem conta?{" "}
-        <a href="/cadastro" className="font-medium text-[#000000] underline">
+        <Link href="/cadastro" className="font-medium text-[#000000] underline">
           Criar minha vitrine grátis
-        </a>
+        </Link>
       </p>
     </main>
   );

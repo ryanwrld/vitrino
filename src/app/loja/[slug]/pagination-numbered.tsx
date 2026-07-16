@@ -30,6 +30,7 @@ export function PaginationNumbered({ slug, currentPage, hasMore, searchParamsStr
           Anterior
         </Link>
       )}
+      <span className="text-sm text-[#6B6B6B]">Página {currentPage}</span>
       {hasMore && (
         <Link
           href={`/loja/${slug}?${prefix}page=${currentPage + 1}`}

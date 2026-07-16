@@ -1,6 +1,7 @@
 "use client";
 
 import { useTransition } from "react";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -77,9 +78,9 @@ export default function EsqueciSenhaPage() {
 
       <p className="text-center text-sm text-[#6B6B6B]">
         Lembrou a senha?{" "}
-        <a href="/login" className="font-medium text-[#000000] underline">
+        <Link href="/login" className="font-medium text-[#000000] underline">
           Entrar
-        </a>
+        </Link>
       </p>
     </main>
   );

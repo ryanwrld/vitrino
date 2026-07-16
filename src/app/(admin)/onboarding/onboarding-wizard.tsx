@@ -12,7 +12,7 @@ import {
 } from "@/lib/validation/onboarding";
 import { saveOnboarding } from "@/lib/onboarding/actions";
 import { VitrinoWordmark } from "@/components/vitrino-wordmark";
-import { AccentColorField } from "@/components/accent-color-field";
+import { StoreIdentityFields } from "@/components/store-identity-fields";
 
 /**
  * Wizard de onboarding em tela única (decisão de UI a critério do executor,
@@ -48,8 +48,6 @@ export function OnboardingWizard() {
 
   const whatsappValue = watch("whatsapp");
   const formattedPreview = whatsappValue ? new AsYouType("BR").input(whatsappValue) : "";
-  const nameValue = watch("name");
-  const accentColorValue = watch("accentColor");
 
   const onSubmit = (values: OnboardingInput) => {
     const formData = new FormData();
@@ -73,6 +71,7 @@ export function OnboardingWizard() {
   return (
     <main className="bg-white mx-auto flex min-h-dvh w-full max-w-md flex-col justify-center gap-6 px-4 py-10">
       <VitrinoWordmark />
+      <p className="text-center text-xs text-[#6B6B6B]">Etapa única — leva menos de 1 minuto</p>
       <div>
         <h1 className="text-2xl font-bold text-[#000000]">Configure sua vitrine</h1>
         <p className="mt-1 text-sm text-[#6B6B6B]">
@@ -81,63 +80,13 @@ export function OnboardingWizard() {
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">
-        <div className="flex flex-col gap-1">
-          <label htmlFor="name" className="text-sm font-medium text-[#111111]">
-            Nome da loja
-          </label>
-          <input
-            id="name"
-            type="text"
-            autoComplete="organization"
-            aria-invalid={errors.name ? true : undefined}
-            {...register("name")}
-            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1] aria-invalid:border-[#FF4D4D]"
-          />
-          {errors.name && <span className="text-sm text-[#FF4D4D]">{errors.name.message}</span>}
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <label htmlFor="logo" className="text-sm font-medium text-[#111111]">
-            Logo (opcional)
-          </label>
-          <input
-            id="logo"
-            type="file"
-            accept="image/png,image/jpeg,image/webp"
-            onChange={(event) => setLogoFile(event.target.files?.[0] ?? null)}
-            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-sm outline-none focus:border-[#0D21A1]"
-          />
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <label htmlFor="accentColor" className="text-sm font-medium text-[#111111]">
-            Cor de destaque
-          </label>
-          <AccentColorField
-            id="accentColor"
-            value={accentColorValue ?? "#0D21A1"}
-            onChange={(color) => setValue("accentColor", color)}
-            storeNamePreview={nameValue}
-          />
-          {errors.accentColor && (
-            <span className="text-sm text-[#FF4D4D]">{errors.accentColor.message}</span>
-          )}
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <label htmlFor="tagline" className="text-sm font-medium text-[#111111]">
-            Frase de apresentação (opcional, até 100 caracteres)
-          </label>
-          <input
-            id="tagline"
-            type="text"
-            maxLength={100}
-            aria-invalid={errors.tagline ? true : undefined}
-            {...register("tagline")}
-            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1] aria-invalid:border-[#FF4D4D]"
-          />
-          {errors.tagline && <span className="text-sm text-[#FF4D4D]">{errors.tagline.message}</span>}
-        </div>
+        <StoreIdentityFields
+          register={register}
+          errors={errors}
+          watch={watch}
+          setValue={setValue}
+          onLogoFileChange={setLogoFile}
+        />
 
         <div className="flex flex-col gap-1">
           <label htmlFor="whatsapp" className="text-sm font-medium text-[#111111]">

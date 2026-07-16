@@ -50,10 +50,11 @@ function NavLinks({ pathname }: { pathname: string }) {
           <Link
             key={item.href}
             href={item.href}
+            aria-current={isActive ? "page" : undefined}
             className={
               isActive
-                ? "flex min-h-11 items-center border-l-2 border-[#0D21A1] pl-3 -ml-3 font-medium text-[#0D21A1]"
-                : "flex min-h-11 items-center pl-3 -ml-3 text-[#6B6B6B]"
+                ? "flex min-h-11 items-center rounded-lg bg-[#E7F2FD] px-3 font-medium text-[#0D21A1]"
+                : "flex min-h-11 items-center px-3 text-[#6B6B6B]"
             }
           >
             {item.label}

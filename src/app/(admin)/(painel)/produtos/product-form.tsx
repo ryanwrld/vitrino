@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -48,6 +48,9 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [isPublishPending, startPublishTransition] = useTransition();
+  // Diálogo de confirmação de publicar/despublicar (Seção 6, item 10) — mesmo
+  // padrão nativo <dialog> do diálogo de exclusão em product-list.tsx.
+  const publishDialogRef = useRef<HTMLDialogElement>(null);
   // Espelha o status do produto (edição) só para atualizar o rótulo do botão
   // Publicar/Voltar-para-rascunho sem precisar de router.refresh() — a
   // listagem (Server Component) reflete o status real na próxima navegação.
@@ -119,10 +122,16 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
    * Publicar/despublicar (D-10) é uma ação distinta de "Salvar produto" —
    * nunca disparada pelo submit do form, sempre pelo próprio botão
    * secundário, com seu próprio `useTransition` para não desabilitar o botão
-   * de salvar enquanto alterna o status. Sem diálogo de confirmação
-   * (reversível, baixo risco — T-03-12, 03-UI-SPEC.md).
+   * de salvar enquanto alterna o status. Efeito público imediato — abre um
+   * diálogo de confirmação (Seção 6, item 10) antes de chamar a Server
+   * Action, mesmo padrão do diálogo de exclusão em product-list.tsx.
    */
   function handleTogglePublish() {
+    if (!productId) return;
+    publishDialogRef.current?.showModal();
+  }
+
+  function handleConfirmTogglePublish() {
     if (!productId) return;
     const willPublish = currentStatus !== "published";
 
@@ -130,14 +139,18 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
       const result = willPublish ? await publishProduct(productId) : await unpublishProduct(productId);
       if ("error" in result) {
         toast.error(result.error);
-        return;
+      } else {
+        setCurrentStatus(willPublish ? "published" : "draft");
+        toast.success(willPublish ? "Produto publicado!" : "Produto movido para rascunho.");
       }
-      setCurrentStatus(willPublish ? "published" : "draft");
-      toast.success(willPublish ? "Produto publicado!" : "Produto movido para rascunho.");
+      publishDialogRef.current?.close();
     });
   }
 
+  const willPublish = currentStatus !== "published";
+
   return (
+    <>
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-6">
       <div className="flex flex-col gap-4">
         <h2 className="text-xl font-medium text-[#111111]">Identificação</h2>
@@ -365,5 +378,36 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
         )}
       </div>
     </form>
+
+      {productId && (
+        <dialog ref={publishDialogRef} className="rounded-xl p-6 backdrop:bg-black/40">
+          <h2 className="text-xl font-medium text-[#111111]">
+            {willPublish ? "Publicar produto na sua vitrine?" : "Tirar produto da vitrine?"}
+          </h2>
+          <p className="mt-2 max-w-sm text-sm text-[#6B6B6B]">
+            {willPublish
+              ? "O produto ficará visível para qualquer pessoa que acessar sua vitrine."
+              : "O produto deixa de aparecer na sua vitrine pública imediatamente."}
+          </p>
+          <div className="mt-4 flex gap-3">
+            <button
+              type="button"
+              onClick={() => publishDialogRef.current?.close()}
+              className="rounded-lg border border-[#000000] px-4 py-2 font-medium text-[#000000]"
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              disabled={isPublishPending}
+              onClick={handleConfirmTogglePublish}
+              className="rounded-lg bg-[#0D21A1] px-4 py-2 font-medium text-white disabled:opacity-60"
+            >
+              {isPublishPending ? "Salvando…" : "Confirmar"}
+            </button>
+          </div>
+        </dialog>
+      )}
+    </>
   );
 }

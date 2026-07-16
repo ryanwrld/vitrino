@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { AsYouType } from "libphonenumber-js";
 import { onboardingSchema, type OnboardingInput } from "@/lib/validation/onboarding";
 import { saveStoreSettings } from "@/lib/settings/actions";
-import { AccentColorField } from "@/components/accent-color-field";
+import { StoreIdentityFields } from "@/components/store-identity-fields";
 
 /**
  * Formulário de edição pós-onboarding (Loja + WhatsApp), escrito do zero
@@ -56,8 +56,6 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
 
   const whatsappValue = watch("whatsapp");
   const formattedPreview = whatsappValue ? new AsYouType("BR").input(whatsappValue) : "";
-  const nameValue = watch("name");
-  const accentColorValue = watch("accentColor");
 
   const onSubmit = (values: OnboardingInput) => {
     const formData = new FormData();
@@ -86,63 +84,13 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
       <div className="flex flex-col gap-4">
         <h2 className="text-xl font-medium text-[#111111]">Loja</h2>
 
-        <div className="flex flex-col gap-1">
-          <label htmlFor="name" className="text-sm font-medium text-[#111111]">
-            Nome da loja
-          </label>
-          <input
-            id="name"
-            type="text"
-            autoComplete="organization"
-            aria-invalid={errors.name ? true : undefined}
-            {...register("name")}
-            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1] aria-invalid:border-[#FF4D4D]"
-          />
-          {errors.name && <span className="text-sm text-[#FF4D4D]">{errors.name.message}</span>}
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <label htmlFor="logo" className="text-sm font-medium text-[#111111]">
-            Logo (opcional)
-          </label>
-          <input
-            id="logo"
-            type="file"
-            accept="image/png,image/jpeg,image/webp"
-            onChange={(event) => setLogoFile(event.target.files?.[0] ?? null)}
-            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-sm outline-none focus:border-[#0D21A1]"
-          />
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <label htmlFor="accentColor" className="text-sm font-medium text-[#111111]">
-            Cor de destaque
-          </label>
-          <AccentColorField
-            id="accentColor"
-            value={accentColorValue ?? "#0D21A1"}
-            onChange={(color) => setValue("accentColor", color)}
-            storeNamePreview={nameValue}
-          />
-          {errors.accentColor && (
-            <span className="text-sm text-[#FF4D4D]">{errors.accentColor.message}</span>
-          )}
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <label htmlFor="tagline" className="text-sm font-medium text-[#111111]">
-            Frase de apresentação (opcional, até 100 caracteres)
-          </label>
-          <input
-            id="tagline"
-            type="text"
-            maxLength={100}
-            aria-invalid={errors.tagline ? true : undefined}
-            {...register("tagline")}
-            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1] aria-invalid:border-[#FF4D4D]"
-          />
-          {errors.tagline && <span className="text-sm text-[#FF4D4D]">{errors.tagline.message}</span>}
-        </div>
+        <StoreIdentityFields
+          register={register}
+          errors={errors}
+          watch={watch}
+          setValue={setValue}
+          onLogoFileChange={setLogoFile}
+        />
 
         <div className="flex flex-col gap-1">
           <label htmlFor="hideSoldOutDefault" className="text-sm font-medium text-[#111111]">
