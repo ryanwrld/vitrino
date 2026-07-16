@@ -85,7 +85,6 @@ Nenhum ainda.
 |---|-------------|------|--------|-----------|
 | 260715-du7 | Rebrand de cores: paleta verde → azul (Vivid Royal #0D21A1, Alice Blue #E7F2FD, preto #000000) em src/ e UI-SPECs | 2026-07-15 | 03e664e | [260715-du7-rebrand-de-cores-substituir-a-paleta-ver](./quick/260715-du7-rebrand-de-cores-substituir-a-paleta-ver/) |
 | 260715-odl | Criar README.md de apresentação do projeto para o GitHub | 2026-07-15 | a74432b | [260715-odl-criar-readme-md-de-apresenta-o-do-projet](./quick/260715-odl-criar-readme-md-de-apresenta-o-do-projet/) |
-| 260716-0z2 | Ajustes de UI/UX — identidade visual, hierarquia de formulário e consistência de design system (seções 2, 5 e 6 de ajustes-finais-ui-mvp.md, 22 itens) | 2026-07-16 | e5373db | [260716-0z2-implementar-secoes-2-5-e-6-do-checklist-](./quick/260716-0z2-implementar-secoes-2-5-e-6-do-checklist-/) |
 
 ## Itens Adiados
 
@@ -191,7 +190,7 @@ Arquivo de retomada: Nenhum
 Phase: Milestone v1.0 complete
 Plan: —
 Status: Awaiting next milestone
-Last activity: 2026-07-16 - Completed quick task 260716-0z2: Ajustes de UI/UX (identidade visual, hierarquia de formulário, consistência de design system)
+Last activity: 2026-07-15 — Milestone v1.0 completed and archived
 
 ## Operator Next Steps
 
