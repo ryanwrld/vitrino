@@ -140,31 +140,31 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-6">
-      <div className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-5">
+      <div className="flex flex-col gap-4 rounded-lg border border-divider bg-surface-subtle p-5">
         <h2 className="font-display font-bold text-gray-900">Identificação</h2>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="name" className="text-sm font-medium text-gray-700">
+          <label htmlFor="name" className="text-sm font-medium text-ink-navy">
             Nome
           </label>
           <input
             id="name"
             type="text"
             {...register("name")}
-            className="rounded-md border border-gray-300 bg-white px-3 h-11 text-base text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle placeholder:text-gray-400"
+            className="rounded-md border border-field-border bg-white px-3 h-11 text-base text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle placeholder:text-gray-400"
           />
           {errors.name && <span className="text-sm text-error-solid">{errors.name.message}</span>}
         </div>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="brand" className="text-sm font-medium text-gray-700">
+          <label htmlFor="brand" className="text-sm font-medium text-ink-navy">
             Marca
           </label>
           <div className="relative">
             <select
               id="brand"
               {...register("brand")}
-              className="w-full min-h-11 appearance-none rounded-md border border-gray-300 bg-white px-3 pr-9 h-11 text-base text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle"
+              className="w-full min-h-11 appearance-none rounded-md border border-field-border bg-white px-3 pr-9 h-11 text-base text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle"
             >
               <option value="">Selecione a marca</option>
               {BRANDS.map((brand) => (
@@ -180,14 +180,14 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
 
         {isBrandOther && (
           <div className="flex flex-col gap-1">
-            <label htmlFor="brandOther" className="text-sm font-medium text-gray-700">
+            <label htmlFor="brandOther" className="text-sm font-medium text-ink-navy">
               Qual marca?
             </label>
             <input
               id="brandOther"
               type="text"
               {...register("brandOther")}
-              className="rounded-md border border-gray-300 bg-white px-3 h-11 text-base text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle placeholder:text-gray-400"
+              className="rounded-md border border-field-border bg-white px-3 h-11 text-base text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle placeholder:text-gray-400"
             />
             {errors.brandOther && (
               <span className="text-sm text-error-solid">{errors.brandOther.message}</span>
@@ -196,7 +196,7 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
         )}
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="line" className="text-sm font-medium text-gray-700">
+          <label htmlFor="line" className="text-sm font-medium text-ink-navy">
             Linha (opcional)
           </label>
           <input
@@ -204,24 +204,24 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
             type="text"
             placeholder="Ex.: Mercurial"
             {...register("line")}
-            className="rounded-md border border-gray-300 bg-white px-3 h-11 text-base text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle placeholder:text-gray-400"
+            className="rounded-md border border-field-border bg-white px-3 h-11 text-base text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle placeholder:text-gray-400"
           />
           {errors.line && <span className="text-sm text-error-solid">{errors.line.message}</span>}
         </div>
       </div>
 
-      <div className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-5">
+      <div className="flex flex-col gap-4 rounded-lg border border-divider bg-surface-subtle p-5">
         <h2 className="font-display font-bold text-gray-900">Solado &amp; Categoria</h2>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="sole" className="text-sm font-medium text-gray-700">
+          <label htmlFor="sole" className="text-sm font-medium text-ink-navy">
             Solado (opcional)
           </label>
           <div className="relative">
             <select
               id="sole"
               {...register("sole")}
-              className="w-full min-h-11 appearance-none rounded-md border border-gray-300 bg-white px-3 pr-9 h-11 text-base text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle"
+              className="w-full min-h-11 appearance-none rounded-md border border-field-border bg-white px-3 pr-9 h-11 text-base text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle"
             >
               <option value="">—</option>
               {SOLES.map((sole) => (
@@ -235,14 +235,14 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
         </div>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="category" className="text-sm font-medium text-gray-700">
+          <label htmlFor="category" className="text-sm font-medium text-ink-navy">
             Categoria (opcional)
           </label>
           <div className="relative">
             <select
               id="category"
               {...register("category")}
-              className="w-full min-h-11 appearance-none rounded-md border border-gray-300 bg-white px-3 pr-9 h-11 text-base text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle"
+              className="w-full min-h-11 appearance-none rounded-md border border-field-border bg-white px-3 pr-9 h-11 text-base text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle"
             >
               <option value="">—</option>
               {CATEGORIES.map((category) => (
@@ -256,14 +256,14 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
         </div>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="fulfillment" className="text-sm font-medium text-gray-700">
+          <label htmlFor="fulfillment" className="text-sm font-medium text-ink-navy">
             Modalidade (opcional)
           </label>
           <div className="relative">
             <select
               id="fulfillment"
               {...register("fulfillment")}
-              className="w-full min-h-11 appearance-none rounded-md border border-gray-300 bg-white px-3 pr-9 h-11 text-base text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle"
+              className="w-full min-h-11 appearance-none rounded-md border border-field-border bg-white px-3 pr-9 h-11 text-base text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle"
             >
               <option value="">—</option>
               {FULFILLMENTS.map((fulfillment) => (
@@ -277,14 +277,14 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
         </div>
       </div>
 
-      <div className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-5">
+      <div className="flex flex-col gap-4 rounded-lg border border-divider bg-surface-subtle p-5">
         <h2 className="font-display font-bold text-gray-900">Preço</h2>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="price" className="text-sm font-medium text-gray-700">
+          <label htmlFor="price" className="text-sm font-medium text-ink-navy">
             Preço
           </label>
-          <div className="flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 h-11 transition-colors duration-150 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary-subtle">
+          <div className="flex items-center gap-2 rounded-md border border-field-border bg-white px-3 h-11 transition-colors duration-150 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary-subtle">
             <span className="text-base text-gray-500">R$</span>
             <input
               id="price"
@@ -299,18 +299,18 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
         </div>
       </div>
 
-      <div className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-5">
+      <div className="flex flex-col gap-4 rounded-lg border border-divider bg-surface-subtle p-5">
         <h2 className="font-display font-bold text-gray-900">Visibilidade</h2>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="hideWhenSoldOut" className="text-sm font-medium text-gray-700">
+          <label htmlFor="hideWhenSoldOut" className="text-sm font-medium text-ink-navy">
             Exibir quando esgotado
           </label>
           <div className="relative">
             <select
               id="hideWhenSoldOut"
               {...register("hideWhenSoldOut")}
-              className="w-full min-h-11 appearance-none rounded-md border border-gray-300 bg-white px-3 pr-9 h-11 text-base text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle"
+              className="w-full min-h-11 appearance-none rounded-md border border-field-border bg-white px-3 pr-9 h-11 text-base text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle"
             >
               <option value="">Usar padrão da loja</option>
               <option value="false">Sempre mostrar (esmaecido)</option>
@@ -325,18 +325,18 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
 
       <PhotoUploader productId={productId} initialPhotos={initialPhotos} onPendingFilesChange={setPendingPhotoFiles} />
 
-      <div className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-5">
+      <div className="flex flex-col gap-4 rounded-lg border border-divider bg-surface-subtle p-5">
         <h2 className="font-display font-bold text-gray-900">Descrição</h2>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="description" className="text-sm font-medium text-gray-700">
+          <label htmlFor="description" className="text-sm font-medium text-ink-navy">
             Descrição (opcional)
           </label>
           <textarea
             id="description"
             rows={4}
             {...register("description")}
-            className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle placeholder:text-gray-400"
+            className="rounded-md border border-field-border bg-white px-3 py-2 text-sm text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle placeholder:text-gray-400"
           />
           {errors.description && (
             <span className="text-sm text-error-solid">{errors.description.message}</span>

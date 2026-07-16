@@ -1,13 +1,14 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { AsYouType } from "libphonenumber-js";
 import { ChevronDown } from "lucide-react";
 import { onboardingSchema, type OnboardingInput } from "@/lib/validation/onboarding";
 import { saveStoreSettings } from "@/lib/settings/actions";
+import { ColorSwatchPicker } from "@/components/color-picker";
 
 /**
  * Formulário de edição pós-onboarding (Loja + WhatsApp), escrito do zero
@@ -40,6 +41,7 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
     register,
     handleSubmit,
     watch,
+    control,
     formState: { errors },
   } = useForm<OnboardingInput>({
     resolver: zodResolver(onboardingSchema),
@@ -80,11 +82,11 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-6">
-      <div className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-5">
+      <div className="flex flex-col gap-4 rounded-lg border border-divider bg-surface-subtle p-5">
         <h2 className="font-display font-bold text-gray-900">Identidade visual</h2>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="name" className="text-sm font-medium text-gray-700">
+          <label htmlFor="name" className="text-sm font-medium text-ink-navy">
             Nome da loja
           </label>
           <input
@@ -92,13 +94,13 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
             type="text"
             autoComplete="organization"
             {...register("name")}
-            className="rounded-md border border-gray-300 bg-white px-3 h-11 text-base text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle placeholder:text-gray-400"
+            className="rounded-md border border-field-border bg-white px-3 h-11 text-base text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle placeholder:text-gray-400"
           />
           {errors.name && <span className="text-sm text-error-solid">{errors.name.message}</span>}
         </div>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="logo" className="text-sm font-medium text-gray-700">
+          <label htmlFor="logo" className="text-sm font-medium text-ink-navy">
             Logo (opcional)
           </label>
           <input
@@ -106,19 +108,20 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
             type="file"
             accept="image/png,image/jpeg,image/webp"
             onChange={(event) => setLogoFile(event.target.files?.[0] ?? null)}
-            className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle"
+            className="rounded-md border border-field-border bg-white px-3 py-2 text-sm outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle"
           />
         </div>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="accentColor" className="text-sm font-medium text-gray-700">
+          <label htmlFor="accentColor" className="text-sm font-medium text-ink-navy">
             Cor de destaque
           </label>
-          <input
-            id="accentColor"
-            type="color"
-            {...register("accentColor")}
-            className="h-10 w-20 rounded-md border border-gray-300 bg-white p-1"
+          <Controller
+            control={control}
+            name="accentColor"
+            render={({ field }) => (
+              <ColorSwatchPicker id="accentColor" value={field.value ?? "#0D21A1"} onChange={field.onChange} />
+            )}
           />
           {errors.accentColor && (
             <span className="text-sm text-error-solid">{errors.accentColor.message}</span>
@@ -126,7 +129,7 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
         </div>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="tagline" className="text-sm font-medium text-gray-700">
+          <label htmlFor="tagline" className="text-sm font-medium text-ink-navy">
             Frase de apresentação (opcional, até 100 caracteres)
           </label>
           <input
@@ -134,20 +137,20 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
             type="text"
             maxLength={100}
             {...register("tagline")}
-            className="rounded-md border border-gray-300 bg-white px-3 h-11 text-base text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle placeholder:text-gray-400"
+            className="rounded-md border border-field-border bg-white px-3 h-11 text-base text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle placeholder:text-gray-400"
           />
           {errors.tagline && <span className="text-sm text-error-solid">{errors.tagline.message}</span>}
         </div>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="hideSoldOutDefault" className="text-sm font-medium text-gray-700">
+          <label htmlFor="hideSoldOutDefault" className="text-sm font-medium text-ink-navy">
             Ocultar produtos esgotados por padrão
           </label>
           <div className="relative">
             <select
               id="hideSoldOutDefault"
               {...register("hideSoldOutDefault")}
-              className="w-full min-h-11 appearance-none rounded-md border border-gray-300 bg-white px-3 pr-9 h-11 text-base text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle"
+              className="w-full min-h-11 appearance-none rounded-md border border-field-border bg-white px-3 pr-9 h-11 text-base text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle"
             >
               <option value="false">Não — mostrar esmaecido (padrão)</option>
               <option value="true">Sim — ocultar da vitrine</option>
@@ -157,11 +160,11 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
         </div>
       </div>
 
-      <div className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-5">
+      <div className="flex flex-col gap-4 rounded-lg border border-divider bg-surface-subtle p-5">
         <h2 className="font-display font-bold text-gray-900">WhatsApp e mensagem de pedido</h2>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="whatsapp" className="text-sm font-medium text-gray-700">
+          <label htmlFor="whatsapp" className="text-sm font-medium text-ink-navy">
             WhatsApp
           </label>
           <input
@@ -169,7 +172,7 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
             type="tel"
             placeholder="(11) 99999-9999"
             {...register("whatsapp")}
-            className="rounded-md border border-gray-300 bg-white px-3 h-11 text-base text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle placeholder:text-gray-400"
+            className="rounded-md border border-field-border bg-white px-3 h-11 text-base text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle placeholder:text-gray-400"
           />
           {formattedPreview && (
             <span className="text-xs text-gray-500">Prévia: {formattedPreview}</span>
@@ -178,14 +181,14 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
         </div>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="messageTemplate" className="text-sm font-medium text-gray-700">
+          <label htmlFor="messageTemplate" className="text-sm font-medium text-ink-navy">
             Template da mensagem de pedido
           </label>
           <textarea
             id="messageTemplate"
             rows={6}
             {...register("messageTemplate")}
-            className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle placeholder:text-gray-400"
+            className="rounded-md border border-field-border bg-white px-3 py-2 text-sm text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle placeholder:text-gray-400"
           />
           {errors.messageTemplate && (
             <span className="text-sm text-error-solid">{errors.messageTemplate.message}</span>
