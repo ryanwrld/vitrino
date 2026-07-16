@@ -25,7 +25,7 @@ export function PaginationNumbered({ slug, currentPage, hasMore, searchParamsStr
       {currentPage > 1 && (
         <Link
           href={`/loja/${slug}?${prefix}page=${currentPage - 1}`}
-          className="rounded-lg border border-[#000000] px-4 py-2 font-medium text-[#000000] transition hover:bg-[#000000] hover:text-white"
+          className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-900 transition-all duration-150 hover:bg-gray-100 active:bg-gray-200 active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2"
         >
           Anterior
         </Link>
@@ -33,7 +33,7 @@ export function PaginationNumbered({ slug, currentPage, hasMore, searchParamsStr
       {hasMore && (
         <Link
           href={`/loja/${slug}?${prefix}page=${currentPage + 1}`}
-          className="rounded-lg border border-[#000000] px-4 py-2 font-medium text-[#000000] transition hover:bg-[#000000] hover:text-white"
+          className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-900 transition-all duration-150 hover:bg-gray-100 active:bg-gray-200 active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2"
         >
           Próxima
         </Link>
