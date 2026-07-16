@@ -53,8 +53,9 @@ export default function CadastroPage() {
             id="email"
             type="email"
             autoComplete="email"
+            aria-invalid={errors.email ? true : undefined}
             {...register("email")}
-            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
+            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1] aria-invalid:border-[#FF4D4D]"
           />
           {errors.email && <span className="text-sm text-[#FF4D4D]">{errors.email.message}</span>}
         </div>
@@ -67,8 +68,9 @@ export default function CadastroPage() {
             id="password"
             type="password"
             autoComplete="new-password"
+            aria-invalid={errors.password ? true : undefined}
             {...register("password")}
-            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
+            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1] aria-invalid:border-[#FF4D4D]"
           />
           {errors.password && <span className="text-sm text-[#FF4D4D]">{errors.password.message}</span>}
         </div>

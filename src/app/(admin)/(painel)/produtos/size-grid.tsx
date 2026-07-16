@@ -116,7 +116,9 @@ export function SizeGrid({ control, productId }: SizeGridProps) {
                 "flex min-h-11 min-w-11 items-center justify-center rounded-lg border text-base transition",
                 !included && "border-[#E7F2FD] text-[#6B6B6B]",
                 included && !available && "border-[#E7F2FD] bg-[#E7F2FD] text-[#6B6B6B] line-through",
-                included && available && "border-[#0D21A1] bg-[#0D21A1] text-white"
+                included &&
+                  available &&
+                  "border-[#0D21A1] bg-[#0D21A1] font-semibold text-white ring-2 ring-[#0D21A1]/30"
               )}
             >
               {size}

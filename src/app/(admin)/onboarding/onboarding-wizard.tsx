@@ -83,8 +83,9 @@ export function OnboardingWizard() {
             id="name"
             type="text"
             autoComplete="organization"
+            aria-invalid={errors.name ? true : undefined}
             {...register("name")}
-            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
+            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1] aria-invalid:border-[#FF4D4D]"
           />
           {errors.name && <span className="text-sm text-[#FF4D4D]">{errors.name.message}</span>}
         </div>
@@ -125,8 +126,9 @@ export function OnboardingWizard() {
             id="tagline"
             type="text"
             maxLength={100}
+            aria-invalid={errors.tagline ? true : undefined}
             {...register("tagline")}
-            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
+            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1] aria-invalid:border-[#FF4D4D]"
           />
           {errors.tagline && <span className="text-sm text-[#FF4D4D]">{errors.tagline.message}</span>}
         </div>
@@ -139,8 +141,9 @@ export function OnboardingWizard() {
             id="whatsapp"
             type="tel"
             placeholder="(11) 99999-9999"
+            aria-invalid={errors.whatsapp ? true : undefined}
             {...register("whatsapp")}
-            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
+            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1] aria-invalid:border-[#FF4D4D]"
           />
           {formattedPreview && (
             <span className="text-xs text-[#6B6B6B]">Prévia: {formattedPreview}</span>
@@ -155,8 +158,9 @@ export function OnboardingWizard() {
           <textarea
             id="messageTemplate"
             rows={6}
+            aria-invalid={errors.messageTemplate ? true : undefined}
             {...register("messageTemplate")}
-            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-sm outline-none focus:border-[#0D21A1]"
+            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-sm outline-none focus:border-[#0D21A1] aria-invalid:border-[#FF4D4D]"
           />
           {errors.messageTemplate && (
             <span className="text-sm text-[#FF4D4D]">{errors.messageTemplate.message}</span>

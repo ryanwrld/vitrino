@@ -149,8 +149,9 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
           <input
             id="name"
             type="text"
+            aria-invalid={errors.name ? true : undefined}
             {...register("name")}
-            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
+            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1] aria-invalid:border-[#FF4D4D]"
           />
           {errors.name && <span className="text-sm text-[#FF4D4D]">{errors.name.message}</span>}
         </div>
@@ -161,8 +162,9 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
           </label>
           <select
             id="brand"
+            aria-invalid={errors.brand ? true : undefined}
             {...register("brand")}
-            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
+            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1] aria-invalid:border-[#FF4D4D]"
           >
             <option value="">Selecione a marca</option>
             {BRANDS.map((brand) => (
@@ -182,8 +184,9 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
             <input
               id="brandOther"
               type="text"
+              aria-invalid={errors.brandOther ? true : undefined}
               {...register("brandOther")}
-              className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
+              className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1] aria-invalid:border-[#FF4D4D]"
             />
             {errors.brandOther && (
               <span className="text-sm text-[#FF4D4D]">{errors.brandOther.message}</span>
@@ -199,8 +202,9 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
             id="line"
             type="text"
             placeholder="Ex.: Mercurial"
+            aria-invalid={errors.line ? true : undefined}
             {...register("line")}
-            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
+            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1] aria-invalid:border-[#FF4D4D]"
           />
           {errors.line && <span className="text-sm text-[#FF4D4D]">{errors.line.message}</span>}
         </div>
@@ -271,13 +275,18 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
           <label htmlFor="price" className="text-sm font-medium text-[#111111]">
             Preço
           </label>
-          <div className="flex items-center gap-2 rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 focus-within:border-[#0D21A1]">
+          <div
+            className={`flex items-center gap-2 rounded-lg border bg-white px-3 py-2 focus-within:border-[#0D21A1] ${
+              errors.price ? "border-[#FF4D4D]" : "border-[#E7F2FD]"
+            }`}
+          >
             <span className="text-base text-[#6B6B6B]">R$</span>
             <input
               id="price"
               type="text"
               inputMode="decimal"
               placeholder="0,00"
+              aria-invalid={errors.price ? true : undefined}
               {...register("price")}
               className="w-full text-base outline-none"
             />
@@ -319,8 +328,9 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
           <textarea
             id="description"
             rows={4}
+            aria-invalid={errors.description ? true : undefined}
             {...register("description")}
-            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-sm outline-none focus:border-[#0D21A1]"
+            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-sm outline-none focus:border-[#0D21A1] aria-invalid:border-[#FF4D4D]"
           />
           {errors.description && (
             <span className="text-sm text-[#FF4D4D]">{errors.description.message}</span>

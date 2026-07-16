@@ -234,8 +234,8 @@ export function ProductOrderPanel({
       </div>
 
       <div className="flex flex-col gap-1">
-        <h1 className="text-2xl font-bold text-[#111111]">{product.name}</h1>
-        <span className="text-sm font-medium text-[#111111]">{formatBRLPrice(product.price)}</span>
+        <h1 className="text-xl font-bold text-[#111111]">{product.name}</h1>
+        <span className="text-2xl font-bold text-[#111111]">{formatBRLPrice(product.price)}</span>
       </div>
 
       <div className="flex flex-col gap-4">
@@ -250,10 +250,11 @@ export function ProductOrderPanel({
               tabIndex={available ? 0 : -1}
               className={cn(
                 "flex min-h-11 min-w-11 items-center justify-center rounded-lg border text-base transition",
-                available && selectedSize !== size && "border-[#E7F2FD] bg-white text-[#111111]",
-                available && selectedSize === size && "border-[#0D21A1] bg-[#0D21A1] text-white",
-                !available &&
-                  "pointer-events-none border-[#E7F2FD] bg-[#E7F2FD] text-[#6B6B6B] line-through opacity-60"
+                available && selectedSize !== size && "border-[#0D21A1] bg-white text-[#0D21A1]",
+                available &&
+                  selectedSize === size &&
+                  "border-[#0D21A1] bg-[#0D21A1] font-semibold text-white ring-2 ring-[#0D21A1]/30",
+                !available && "pointer-events-none border-[#E7F2FD] bg-[#E7F2FD] text-[#6B6B6B] line-through"
               )}
             >
               {size}
@@ -276,7 +277,7 @@ export function ProductOrderPanel({
             rel="noopener noreferrer"
             onClick={handleOrderClick}
             className={cn(
-              "block min-h-11 w-full rounded-lg bg-[#0D21A1] px-4 py-2 text-center text-sm font-medium text-white transition",
+              "block min-h-11 w-full rounded-xl bg-[#0D21A1] px-4 py-3 text-center text-base font-semibold text-white transition",
               orderShakeKey > 0 && "animate-shake"
             )}
           >
