@@ -85,10 +85,10 @@ export default async function ProdutosPage({
   return (
     <div className="bg-white mx-auto flex min-h-dvh w-full max-w-md flex-col gap-8 px-4 py-10">
       <div className="flex flex-col gap-4">
-        <h1 className="text-2xl font-bold text-[#000000]">Produtos</h1>
+        <h1 className="text-2xl font-bold text-black">Produtos</h1>
         <Link
           href="/produtos/novo"
-          className="w-full rounded-lg bg-[#0D21A1] px-4 py-2 text-center font-medium text-white transition"
+          className="w-full rounded-lg bg-brand px-4 py-2 text-center font-medium text-white transition"
         >
           Novo produto
         </Link>
@@ -97,7 +97,7 @@ export default async function ProdutosPage({
       {hasAnyProduct && (
         <div className="flex flex-col gap-2">
           <ProductToolbar currentParams={params} />
-          <p className="text-xs text-[#6B6B6B]">
+          <p className="text-xs text-muted">
             {products.length} {products.length === 1 ? "produto" : "produtos"}
           </p>
         </div>
@@ -106,14 +106,14 @@ export default async function ProdutosPage({
       {hasFilteredResults ? (
         <ProductList products={productsWithCoverUrl} />
       ) : hasAnyProduct ? (
-        <div className="flex flex-col gap-1 rounded-lg border border-dashed border-[#E7F2FD] px-4 py-8 text-center">
-          <span className="font-medium text-[#111111]">Nenhum produto encontrado</span>
-          <span className="text-sm text-[#6B6B6B]">Tente ajustar os filtros ou buscar por outro termo.</span>
+        <div className="flex flex-col gap-1 rounded-lg border border-dashed border-surface px-4 py-8 text-center">
+          <span className="font-medium text-ink">Nenhum produto encontrado</span>
+          <span className="text-sm text-muted">Tente ajustar os filtros ou buscar por outro termo.</span>
         </div>
       ) : (
-        <div className="flex flex-col gap-1 rounded-lg border border-dashed border-[#E7F2FD] px-4 py-8 text-center">
-          <span className="font-medium text-[#111111]">Nenhum produto cadastrado ainda</span>
-          <span className="text-sm text-[#6B6B6B]">
+        <div className="flex flex-col gap-1 rounded-lg border border-dashed border-surface px-4 py-8 text-center">
+          <span className="font-medium text-ink">Nenhum produto cadastrado ainda</span>
+          <span className="text-sm text-muted">
             Cadastre seu primeiro produto para começar a vender pelo WhatsApp.
           </span>
         </div>
@@ -121,7 +121,7 @@ export default async function ProdutosPage({
 
       <Link
         href="/dashboard"
-        className="rounded-lg border border-[#000000] px-4 py-2 text-center font-medium text-[#000000] transition hover:bg-[#000000] hover:text-white"
+        className="rounded-lg border border-black px-4 py-2 text-center font-medium text-black transition hover:bg-black hover:text-white"
       >
         Voltar ao painel
       </Link>

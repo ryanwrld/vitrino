@@ -11,6 +11,19 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /*
+   * Tokens de paleta de marca (Seção 2, item 4 do checklist de UI) — fonte
+   * única de verdade para os seis hex oficiais do Vitrino. Preto usa o
+   * utilitário nativo `black` do Tailwind (não precisa de token próprio).
+   * Valores preservados EXATAMENTE do rebrand azul (quick-260715-du7) —
+   * nenhuma cor nova introduzida aqui.
+   */
+  --color-brand: #0D21A1;
+  --color-surface: #E7F2FD;
+  --color-danger: #FF4D4D;
+  --color-ink: #111111;
+  --color-muted: #6B6B6B;
 }
 
 body {
@@ -47,4 +60,65 @@ body {
 
 .animate-shake {
   animation: shake 400ms ease-in-out;
+}
+
+/*
+ * Animação de abertura para <dialog> nativos (drawer de navegação,
+ * confirmações) e seus backdrops (Seção 2, item 5 do checklist de UI) —
+ * fade-in genérico + dialog-in (fade + scale + leve translateY) para dar
+ * movimento perceptível a componentes que hoje abrem/fecham em corte seco.
+ * Nenhuma biblioteca de animação: só CSS, respeitando
+ * prefers-reduced-motion.
+ */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  dialog[open] {
+    animation: dialog-in 180ms ease-out;
+  }
+
+  dialog[open]::backdrop {
+    animation: fade-in 150ms ease-out;
+  }
+}
+
+/*
+ * Estilização mínima consistente de <dialog> entre navegadores (Seção 2,
+ * item 6) — sombra e raio padronizados, independente do user-agent
+ * stylesheet.
+ */
+dialog {
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+
+/*
+ * Seta customizada para todo <select> do app (Seção 2, item 6) — remove a
+ * seta nativa do navegador (`appearance-none`) e desenha um chevron via
+ * data-uri inline na cor `#6B6B6B`, consistente entre plataformas.
+ */
+.select-chevron {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B6B6B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem;
+  padding-right: 2.25rem;
 }

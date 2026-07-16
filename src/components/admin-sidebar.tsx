@@ -1,10 +1,28 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useFormStatus } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { signOutAction } from "@/lib/auth/actions";
+
+/**
+ * Botão de submit de `<form action={signOutAction}>` (Seção 6, item 1) —
+ * usa `useFormStatus()` para desabilitar e trocar o rótulo para "Saindo…"
+ * durante o pending, evitando clique duplo disparando duas submissões. Único
+ * componente usado nos dois lugares (sidebar desktop + drawer mobile) —
+ * nunca duas implementações divergentes.
+ */
+function LogoutButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <button type="submit" disabled={pending} className="min-h-11 text-sm text-muted disabled:opacity-60">
+      {pending ? "Saindo…" : "Sair da conta"}
+    </button>
+  );
+}
 
 /**
  * Itens de navegação do painel (D-07, copy verbatim): Dashboard, Produtos,
@@ -32,10 +50,11 @@ function NavLinks({ pathname }: { pathname: string }) {
           <Link
             key={item.href}
             href={item.href}
+            aria-current={isActive ? "page" : undefined}
             className={
               isActive
-                ? "flex min-h-11 items-center border-l-2 border-[#0D21A1] pl-3 -ml-3 font-medium text-[#0D21A1]"
-                : "flex min-h-11 items-center pl-3 -ml-3 text-[#6B6B6B]"
+                ? "flex min-h-11 items-center rounded-lg bg-surface px-3 font-medium text-brand"
+                : "flex min-h-11 items-center px-3 text-muted"
             }
           >
             {item.label}
@@ -79,19 +98,17 @@ export function AdminSidebar() {
   return (
     <>
       {/* Desktop: sidebar fixa, sempre no DOM, só visível >= md */}
-      <aside className="hidden w-56 shrink-0 flex-col gap-6 border-r border-[#E7F2FD] bg-white p-4 md:flex">
+      <aside className="hidden w-56 shrink-0 flex-col gap-6 border-r border-surface bg-white p-4 md:flex">
         <nav className="flex flex-col gap-3">
           <NavLinks pathname={pathname} />
         </nav>
-        <form action={signOutAction} className="mt-auto border-t border-[#E7F2FD] pt-4">
-          <button type="submit" className="min-h-11 text-sm text-[#6B6B6B]">
-            Sair da conta
-          </button>
+        <form action={signOutAction} className="mt-auto border-t border-surface pt-4">
+          <LogoutButton />
         </form>
       </aside>
 
       {/* Mobile: barra de topo com o hambúrguer, acima de {children} (D-06 / UI-SPEC linha 132) — só visível < md */}
-      <div className="flex h-14 shrink-0 items-center border-b border-[#E7F2FD] bg-white px-4 md:hidden">
+      <div className="flex h-14 shrink-0 items-center border-b border-surface bg-white px-4 md:hidden">
         <button
           type="button"
           onClick={() => dialogRef.current?.showModal()}
@@ -123,8 +140,8 @@ export function AdminSidebar() {
           }}>
             <NavLinks pathname={pathname} />
           </nav>
-          <form action={signOutAction} className="mt-auto border-t border-[#E7F2FD] pt-4">
-            <button type="submit" className="min-h-11 text-sm text-[#6B6B6B]">
+          <form action={signOutAction} className="mt-auto border-t border-surface pt-4">
+            <button type="submit" className="min-h-11 text-sm text-muted">
               Sair da conta
             </button>
           </form>

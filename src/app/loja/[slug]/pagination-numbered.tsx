@@ -25,15 +25,16 @@ export function PaginationNumbered({ slug, currentPage, hasMore, searchParamsStr
       {currentPage > 1 && (
         <Link
           href={`/loja/${slug}?${prefix}page=${currentPage - 1}`}
-          className="rounded-lg border border-[#000000] px-4 py-2 font-medium text-[#000000] transition hover:bg-[#000000] hover:text-white"
+          className="rounded-lg border border-black px-4 py-2 font-medium text-black transition hover:bg-black hover:text-white"
         >
           Anterior
         </Link>
       )}
+      <span className="text-sm text-muted">Página {currentPage}</span>
       {hasMore && (
         <Link
           href={`/loja/${slug}?${prefix}page=${currentPage + 1}`}
-          className="rounded-lg border border-[#000000] px-4 py-2 font-medium text-[#000000] transition hover:bg-[#000000] hover:text-white"
+          className="rounded-lg border border-black px-4 py-2 font-medium text-black transition hover:bg-black hover:text-white"
         >
           Próxima
         </Link>

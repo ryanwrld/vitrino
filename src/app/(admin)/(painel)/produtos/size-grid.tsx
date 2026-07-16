@@ -94,8 +94,8 @@ export function SizeGrid({ control, productId }: SizeGridProps) {
 
   return (
     <div className="flex flex-col gap-4">
-      <h2 className="text-xl font-medium text-[#111111]">Tamanhos</h2>
-      <p className="text-xs text-[#6B6B6B]">
+      <h2 className="text-xl font-medium text-ink">Tamanhos</h2>
+      <p className="text-xs text-muted">
         Toque em um tamanho para adicioná-lo. Toque de novo para marcar disponível.
       </p>
 
@@ -114,9 +114,11 @@ export function SizeGrid({ control, productId }: SizeGridProps) {
               aria-pressed={included}
               className={cn(
                 "flex min-h-11 min-w-11 items-center justify-center rounded-lg border text-base transition",
-                !included && "border-[#E7F2FD] text-[#6B6B6B]",
-                included && !available && "border-[#E7F2FD] bg-[#E7F2FD] text-[#6B6B6B] line-through",
-                included && available && "border-[#0D21A1] bg-[#0D21A1] text-white"
+                !included && "border-surface text-muted",
+                included && !available && "border-surface bg-surface text-muted line-through",
+                included &&
+                  available &&
+                  "border-brand bg-brand font-semibold text-white ring-2 ring-brand/30"
               )}
             >
               {size}
@@ -129,7 +131,7 @@ export function SizeGrid({ control, productId }: SizeGridProps) {
         type="button"
         onClick={handleMarkAllEsgotado}
         disabled={isPending}
-        className="w-fit rounded-lg border border-[#6B6B6B] px-4 py-2 text-sm font-medium text-[#6B6B6B] transition disabled:opacity-60"
+        className="w-fit rounded-lg border border-muted px-4 py-2 text-sm font-medium text-muted transition disabled:opacity-60"
       >
         {isPending ? "Marcando…" : "Marcar tudo como esgotado"}
       </button>

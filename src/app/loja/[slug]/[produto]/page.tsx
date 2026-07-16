@@ -121,6 +121,8 @@ export default async function ProductDetailPage({ params }: PageProps) {
       <ProductOrderPanel
         product={{
           name: detail.name,
+          brand: detail.brand,
+          brand_other: detail.brand_other,
           line: detail.line,
           sole: detail.sole,
           price: detail.price,
