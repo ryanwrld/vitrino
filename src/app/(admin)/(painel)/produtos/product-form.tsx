@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { ChevronDown } from "lucide-react";
 import { productSchema, type ProductInput } from "@/lib/validation/product";
 import { saveProduct, updateProduct, publishProduct, unpublishProduct } from "@/lib/products/actions";
 import { BRANDS, SOLES, CATEGORIES, FULFILLMENTS, DEFAULT_SIZE_RANGE } from "@/lib/products/constants";
@@ -140,59 +141,62 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-6">
       <div className="flex flex-col gap-4">
-        <h2 className="text-xl font-medium text-[#111111]">Identificação</h2>
+        <h2 className="font-display text-xl font-medium text-gray-900">Identificação</h2>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="name" className="text-sm font-medium text-[#111111]">
+          <label htmlFor="name" className="text-sm font-medium text-gray-700">
             Nome
           </label>
           <input
             id="name"
             type="text"
             {...register("name")}
-            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
+            className="rounded-md border border-gray-300 bg-white px-3 h-11 text-base text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle placeholder:text-gray-400"
           />
-          {errors.name && <span className="text-sm text-[#FF4D4D]">{errors.name.message}</span>}
+          {errors.name && <span className="text-sm text-error-solid">{errors.name.message}</span>}
         </div>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="brand" className="text-sm font-medium text-[#111111]">
+          <label htmlFor="brand" className="text-sm font-medium text-gray-700">
             Marca
           </label>
-          <select
-            id="brand"
-            {...register("brand")}
-            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
-          >
-            <option value="">Selecione a marca</option>
-            {BRANDS.map((brand) => (
-              <option key={brand} value={brand}>
-                {brand}
-              </option>
-            ))}
-          </select>
-          {errors.brand && <span className="text-sm text-[#FF4D4D]">{errors.brand.message}</span>}
+          <div className="relative">
+            <select
+              id="brand"
+              {...register("brand")}
+              className="w-full min-h-11 appearance-none rounded-md border border-gray-300 bg-white px-3 pr-9 h-11 text-base text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle"
+            >
+              <option value="">Selecione a marca</option>
+              {BRANDS.map((brand) => (
+                <option key={brand} value={brand}>
+                  {brand}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" aria-hidden="true" />
+          </div>
+          {errors.brand && <span className="text-sm text-error-solid">{errors.brand.message}</span>}
         </div>
 
         {isBrandOther && (
           <div className="flex flex-col gap-1">
-            <label htmlFor="brandOther" className="text-sm font-medium text-[#111111]">
+            <label htmlFor="brandOther" className="text-sm font-medium text-gray-700">
               Qual marca?
             </label>
             <input
               id="brandOther"
               type="text"
               {...register("brandOther")}
-              className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
+              className="rounded-md border border-gray-300 bg-white px-3 h-11 text-base text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle placeholder:text-gray-400"
             />
             {errors.brandOther && (
-              <span className="text-sm text-[#FF4D4D]">{errors.brandOther.message}</span>
+              <span className="text-sm text-error-solid">{errors.brandOther.message}</span>
             )}
           </div>
         )}
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="line" className="text-sm font-medium text-[#111111]">
+          <label htmlFor="line" className="text-sm font-medium text-gray-700">
             Linha (opcional)
           </label>
           <input
@@ -200,108 +204,120 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
             type="text"
             placeholder="Ex.: Mercurial"
             {...register("line")}
-            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
+            className="rounded-md border border-gray-300 bg-white px-3 h-11 text-base text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle placeholder:text-gray-400"
           />
-          {errors.line && <span className="text-sm text-[#FF4D4D]">{errors.line.message}</span>}
+          {errors.line && <span className="text-sm text-error-solid">{errors.line.message}</span>}
         </div>
       </div>
 
       <div className="flex flex-col gap-4">
-        <h2 className="text-xl font-medium text-[#111111]">Solado &amp; Categoria</h2>
+        <h2 className="font-display text-xl font-medium text-gray-900">Solado &amp; Categoria</h2>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="sole" className="text-sm font-medium text-[#111111]">
+          <label htmlFor="sole" className="text-sm font-medium text-gray-700">
             Solado (opcional)
           </label>
-          <select
-            id="sole"
-            {...register("sole")}
-            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
-          >
-            <option value="">—</option>
-            {SOLES.map((sole) => (
-              <option key={sole} value={sole}>
-                {sole}
-              </option>
-            ))}
-          </select>
+          <div className="relative">
+            <select
+              id="sole"
+              {...register("sole")}
+              className="w-full min-h-11 appearance-none rounded-md border border-gray-300 bg-white px-3 pr-9 h-11 text-base text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle"
+            >
+              <option value="">—</option>
+              {SOLES.map((sole) => (
+                <option key={sole} value={sole}>
+                  {sole}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" aria-hidden="true" />
+          </div>
         </div>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="category" className="text-sm font-medium text-[#111111]">
+          <label htmlFor="category" className="text-sm font-medium text-gray-700">
             Categoria (opcional)
           </label>
-          <select
-            id="category"
-            {...register("category")}
-            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
-          >
-            <option value="">—</option>
-            {CATEGORIES.map((category) => (
-              <option key={category} value={category}>
-                {category}
-              </option>
-            ))}
-          </select>
+          <div className="relative">
+            <select
+              id="category"
+              {...register("category")}
+              className="w-full min-h-11 appearance-none rounded-md border border-gray-300 bg-white px-3 pr-9 h-11 text-base text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle"
+            >
+              <option value="">—</option>
+              {CATEGORIES.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" aria-hidden="true" />
+          </div>
         </div>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="fulfillment" className="text-sm font-medium text-[#111111]">
+          <label htmlFor="fulfillment" className="text-sm font-medium text-gray-700">
             Modalidade (opcional)
           </label>
-          <select
-            id="fulfillment"
-            {...register("fulfillment")}
-            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
-          >
-            <option value="">—</option>
-            {FULFILLMENTS.map((fulfillment) => (
-              <option key={fulfillment.value} value={fulfillment.value}>
-                {fulfillment.label}
-              </option>
-            ))}
-          </select>
+          <div className="relative">
+            <select
+              id="fulfillment"
+              {...register("fulfillment")}
+              className="w-full min-h-11 appearance-none rounded-md border border-gray-300 bg-white px-3 pr-9 h-11 text-base text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle"
+            >
+              <option value="">—</option>
+              {FULFILLMENTS.map((fulfillment) => (
+                <option key={fulfillment.value} value={fulfillment.value}>
+                  {fulfillment.label}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" aria-hidden="true" />
+          </div>
         </div>
       </div>
 
       <div className="flex flex-col gap-4">
-        <h2 className="text-xl font-medium text-[#111111]">Preço</h2>
+        <h2 className="font-display text-xl font-medium text-gray-900">Preço</h2>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="price" className="text-sm font-medium text-[#111111]">
+          <label htmlFor="price" className="text-sm font-medium text-gray-700">
             Preço
           </label>
-          <div className="flex items-center gap-2 rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 focus-within:border-[#0D21A1]">
-            <span className="text-base text-[#6B6B6B]">R$</span>
+          <div className="flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 h-11 transition-colors duration-150 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary-subtle">
+            <span className="text-base text-gray-500">R$</span>
             <input
               id="price"
               type="text"
               inputMode="decimal"
               placeholder="0,00"
               {...register("price")}
-              className="w-full text-base outline-none"
+              className="w-full text-base text-gray-900 outline-none placeholder:text-gray-400"
             />
           </div>
-          {errors.price && <span className="text-sm text-[#FF4D4D]">{errors.price.message}</span>}
+          {errors.price && <span className="text-sm text-error-solid">{errors.price.message}</span>}
         </div>
       </div>
 
       <div className="flex flex-col gap-4">
-        <h2 className="text-xl font-medium text-[#111111]">Visibilidade</h2>
+        <h2 className="font-display text-xl font-medium text-gray-900">Visibilidade</h2>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="hideWhenSoldOut" className="text-sm font-medium text-[#111111]">
+          <label htmlFor="hideWhenSoldOut" className="text-sm font-medium text-gray-700">
             Exibir quando esgotado
           </label>
-          <select
-            id="hideWhenSoldOut"
-            {...register("hideWhenSoldOut")}
-            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
-          >
-            <option value="">Usar padrão da loja</option>
-            <option value="false">Sempre mostrar (esmaecido)</option>
-            <option value="true">Ocultar da vitrine</option>
-          </select>
+          <div className="relative">
+            <select
+              id="hideWhenSoldOut"
+              {...register("hideWhenSoldOut")}
+              className="w-full min-h-11 appearance-none rounded-md border border-gray-300 bg-white px-3 pr-9 h-11 text-base text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle"
+            >
+              <option value="">Usar padrão da loja</option>
+              <option value="false">Sempre mostrar (esmaecido)</option>
+              <option value="true">Ocultar da vitrine</option>
+            </select>
+            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" aria-hidden="true" />
+          </div>
         </div>
       </div>
 
@@ -310,20 +326,20 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
       <PhotoUploader productId={productId} initialPhotos={initialPhotos} onPendingFilesChange={setPendingPhotoFiles} />
 
       <div className="flex flex-col gap-4">
-        <h2 className="text-xl font-medium text-[#111111]">Descrição</h2>
+        <h2 className="font-display text-xl font-medium text-gray-900">Descrição</h2>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="description" className="text-sm font-medium text-[#111111]">
+          <label htmlFor="description" className="text-sm font-medium text-gray-700">
             Descrição (opcional)
           </label>
           <textarea
             id="description"
             rows={4}
             {...register("description")}
-            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-sm outline-none focus:border-[#0D21A1]"
+            className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle placeholder:text-gray-400"
           />
           {errors.description && (
-            <span className="text-sm text-[#FF4D4D]">{errors.description.message}</span>
+            <span className="text-sm text-error-solid">{errors.description.message}</span>
           )}
         </div>
       </div>
@@ -332,7 +348,7 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
         <button
           type="submit"
           disabled={isPending}
-          className="flex-1 rounded-lg bg-[#0D21A1] px-4 py-2 font-medium text-white transition disabled:opacity-60"
+          className="flex-1 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white transition-all duration-150 hover:bg-primary-hover active:bg-primary-active active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 disabled:bg-gray-100 disabled:text-gray-400 disabled:pointer-events-none"
         >
           {isPending ? "Salvando…" : "Salvar produto"}
         </button>
@@ -344,7 +360,7 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
             type="button"
             onClick={handleTogglePublish}
             disabled={isPublishPending}
-            className="rounded-lg border border-[#000000] px-4 py-2 font-medium text-[#000000] transition disabled:opacity-60"
+            className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-900 transition-all duration-150 hover:bg-gray-100 active:bg-gray-200 active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 disabled:opacity-60"
           >
             {isPublishPending
               ? "Salvando…"

@@ -36,13 +36,13 @@ export default function LoginPage() {
   return (
     <main className="bg-white mx-auto flex min-h-dvh w-full max-w-sm flex-col justify-center gap-6 px-4 py-10">
       <div>
-        <h1 className="text-2xl font-bold text-[#000000]">Entrar</h1>
-        <p className="mt-1 text-sm text-[#6B6B6B]">Acesse o painel da sua vitrine.</p>
+        <h1 className="font-display text-2xl font-bold text-gray-900">Entrar</h1>
+        <p className="mt-1 text-sm text-gray-500">Acesse o painel da sua vitrine.</p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">
         <div className="flex flex-col gap-1">
-          <label htmlFor="email" className="text-sm font-medium text-[#111111]">
+          <label htmlFor="email" className="text-sm font-medium text-gray-700">
             Email
           </label>
           <input
@@ -50,13 +50,13 @@ export default function LoginPage() {
             type="email"
             autoComplete="email"
             {...register("email")}
-            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
+            className="rounded-md border border-gray-300 bg-white px-3 h-11 text-base text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle placeholder:text-gray-400"
           />
-          {errors.email && <span className="text-sm text-[#FF4D4D]">{errors.email.message}</span>}
+          {errors.email && <span className="text-sm text-error-solid">{errors.email.message}</span>}
         </div>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="password" className="text-sm font-medium text-[#111111]">
+          <label htmlFor="password" className="text-sm font-medium text-gray-700">
             Senha
           </label>
           <input
@@ -64,23 +64,23 @@ export default function LoginPage() {
             type="password"
             autoComplete="current-password"
             {...register("password")}
-            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
+            className="rounded-md border border-gray-300 bg-white px-3 h-11 text-base text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle placeholder:text-gray-400"
           />
-          {errors.password && <span className="text-sm text-[#FF4D4D]">{errors.password.message}</span>}
+          {errors.password && <span className="text-sm text-error-solid">{errors.password.message}</span>}
         </div>
 
         <button
           type="submit"
           disabled={isPending}
-          className="rounded-lg bg-[#0D21A1] px-4 py-2 font-medium text-white transition disabled:opacity-60"
+          className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white transition-all duration-150 hover:bg-primary-hover active:bg-primary-active active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 disabled:bg-gray-100 disabled:text-gray-400 disabled:pointer-events-none"
         >
           {isPending ? "Entrando…" : "Entrar"}
         </button>
       </form>
 
-      <p className="text-center text-sm text-[#6B6B6B]">
+      <p className="text-center text-sm text-gray-500">
         Ainda não tem conta?{" "}
-        <a href="/cadastro" className="font-medium text-[#000000] underline">
+        <a href="/cadastro" className="font-medium text-primary hover:text-primary-hover">
           Criar minha vitrine grátis
         </a>
       </p>

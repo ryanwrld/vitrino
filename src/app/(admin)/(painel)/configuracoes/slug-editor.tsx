@@ -104,7 +104,7 @@ export function SlugEditor({ currentSlug }: SlugEditorProps) {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex flex-col gap-1">
-        <label htmlFor="slug" className="text-sm font-medium text-[#111111]">
+        <label htmlFor="slug" className="text-sm font-medium text-gray-700">
           Link da vitrine
         </label>
         <input
@@ -112,11 +112,11 @@ export function SlugEditor({ currentSlug }: SlugEditorProps) {
           type="text"
           value={rawSlug}
           onChange={(event) => setRawSlug(event.target.value)}
-          className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
+          className="rounded-md border border-gray-300 bg-white px-3 h-11 text-base text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle placeholder:text-gray-400"
         />
-        <p className="text-xs text-[#6B6B6B]">/loja/{slug}</p>
+        <p className="text-xs text-gray-500">/loja/{slug}</p>
         {formatError ? (
-          <span className="text-sm text-[#FF4D4D]">{formatError}</span>
+          <span className="text-sm text-error-solid">{formatError}</span>
         ) : (
           <StatusPill status={displayStatus} />
         )}
@@ -126,36 +126,38 @@ export function SlugEditor({ currentSlug }: SlugEditorProps) {
         type="button"
         disabled={!canSave}
         onClick={openConfirmDialog}
-        className="self-start rounded-lg bg-[#0D21A1] px-4 py-2 font-medium text-white transition disabled:opacity-60"
+        className="self-start rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white transition-all duration-150 hover:bg-primary-hover active:bg-primary-active active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 disabled:bg-gray-100 disabled:text-gray-400 disabled:pointer-events-none"
       >
         Salvar novo link
       </button>
 
       <dialog
         ref={dialogRef}
-        className="rounded-lg p-6 backdrop:bg-black/40"
+        className="rounded-lg p-6 shadow-lg backdrop:bg-black/45 backdrop:backdrop-blur-[2px]"
       >
-        <h2 className="text-xl font-medium text-[#111111]">Trocar o link da sua vitrine?</h2>
-        <p className="mt-2 max-w-sm text-sm text-[#6B6B6B]">
-          Isso vai quebrar links já compartilhados: quem tiver o link antigo não vai mais
-          conseguir acessar sua vitrine. Essa ação não pode ser desfeita.
-        </p>
-        <form method="dialog" className="mt-4 flex gap-3">
-          <button
-            type="submit"
-            className="rounded-lg border border-[#000000] px-4 py-2 font-medium text-[#000000]"
-          >
-            Cancelar
-          </button>
-          <button
-            type="button"
-            disabled={isSaving}
-            onClick={handleConfirm}
-            className="rounded-lg bg-[#FF4D4D] px-4 py-2 font-medium text-white disabled:opacity-60"
-          >
-            {isSaving ? "Salvando…" : "Sim, trocar o link"}
-          </button>
-        </form>
+        <div className="animate-scale-in">
+          <h2 className="font-display text-xl font-medium text-gray-900">Trocar o link da sua vitrine?</h2>
+          <p className="mt-2 max-w-sm text-sm text-gray-500">
+            Isso vai quebrar links já compartilhados: quem tiver o link antigo não vai mais
+            conseguir acessar sua vitrine. Essa ação não pode ser desfeita.
+          </p>
+          <form method="dialog" className="mt-4 flex gap-3">
+            <button
+              type="submit"
+              className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-900 transition-all duration-150 hover:bg-gray-100 active:bg-gray-200 active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2"
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              disabled={isSaving}
+              onClick={handleConfirm}
+              className="rounded-md bg-error-solid px-4 py-2 text-sm font-semibold text-white transition-all duration-150 hover:bg-error-solid-hover active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-error-bg focus-visible:ring-offset-2 disabled:opacity-60"
+            >
+              {isSaving ? "Salvando…" : "Sim, trocar o link"}
+            </button>
+          </form>
+        </div>
       </dialog>
     </div>
   );
@@ -164,7 +166,7 @@ export function SlugEditor({ currentSlug }: SlugEditorProps) {
 function StatusPill({ status }: { status: AvailabilityStatus }) {
   if (status === "checking") {
     return (
-      <span className="flex items-center gap-1 text-xs text-[#6B6B6B]">
+      <span className="flex items-center gap-1 text-xs text-gray-500">
         <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
         Verificando disponibilidade…
       </span>
@@ -173,7 +175,7 @@ function StatusPill({ status }: { status: AvailabilityStatus }) {
 
   if (status === "available") {
     return (
-      <span className="flex items-center gap-1 text-xs text-[#0D21A1]">
+      <span className="flex items-center gap-1 text-xs text-success-fg">
         <Check className="h-3.5 w-3.5" aria-hidden="true" />
         Disponível
       </span>
@@ -182,7 +184,7 @@ function StatusPill({ status }: { status: AvailabilityStatus }) {
 
   if (status === "taken") {
     return (
-      <span className="flex items-center gap-1 text-xs text-[#FF4D4D]">
+      <span className="flex items-center gap-1 text-xs text-error-solid">
         <X className="h-3.5 w-3.5" aria-hidden="true" />
         Este link já está em uso.
       </span>

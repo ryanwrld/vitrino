@@ -27,7 +27,7 @@ export function StoreHero({ store }: { store: StoreHeroData }) {
       <div className="relative h-16 w-16 overflow-hidden rounded-full bg-white/20">
         <ImageWithFallback src={store.logoUrl} alt={store.name} />
       </div>
-      <h1 className="text-2xl font-bold">{store.name}</h1>
+      <h1 className="font-display text-2xl font-bold">{store.name}</h1>
       {store.tagline && <p className="max-w-sm text-sm text-white/90">{store.tagline}</p>}
     </div>
   );

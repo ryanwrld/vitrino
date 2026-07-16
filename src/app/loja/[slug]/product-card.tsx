@@ -32,22 +32,22 @@ export function ProductCard({ product, slug }: { product: PublicProductCardData;
   const secondaryLine = [brandLabel, product.line].filter(Boolean).join(" · ");
 
   return (
-    <Link href={`/loja/${slug}/${product.id}`} className="flex flex-col gap-2">
-      <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-[#E7F2FD]">
+    <Link href={`/loja/${slug}/${product.id}`} className="flex flex-col gap-2 transition-all duration-150 hover:shadow-md hover:-translate-y-0.5">
+      <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-gray-100">
         <ImageWithFallback src={product.coverUrl} alt={product.name} />
       </div>
 
       <div className="flex flex-col gap-0.5">
-        <span className="truncate font-medium text-[#111111]">{product.name}</span>
-        {secondaryLine && <span className="truncate text-xs text-[#6B6B6B]">{secondaryLine}</span>}
-        <span className="text-sm font-medium text-[#111111]">{formatBRLPrice(product.price)}</span>
+        <span className="truncate font-display font-medium text-gray-900">{product.name}</span>
+        {secondaryLine && <span className="truncate text-xs text-gray-500">{secondaryLine}</span>}
+        <span className="font-display text-sm font-bold text-primary">{formatBRLPrice(product.price)}</span>
         <span
-          className={`flex items-center gap-1 text-xs ${
-            product.disponivel ? "text-[#0D21A1]" : "text-[#6B6B6B]"
+          className={`flex items-center gap-1 text-xs transition-colors duration-150 ${
+            product.disponivel ? "text-success-fg" : "text-gray-500"
           }`}
         >
           <span
-            className={`h-1.5 w-1.5 rounded-full ${product.disponivel ? "bg-[#0D21A1]" : "bg-[#6B6B6B]"}`}
+            className={`h-1.5 w-1.5 rounded-full ${product.disponivel ? "bg-success-solid" : "bg-gray-400"}`}
             aria-hidden="true"
           />
           {product.disponivel ? "Disponível" : "Esgotado"}

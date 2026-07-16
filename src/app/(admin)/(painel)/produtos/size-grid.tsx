@@ -94,8 +94,8 @@ export function SizeGrid({ control, productId }: SizeGridProps) {
 
   return (
     <div className="flex flex-col gap-4">
-      <h2 className="text-xl font-medium text-[#111111]">Tamanhos</h2>
-      <p className="text-xs text-[#6B6B6B]">
+      <h2 className="font-display text-xl font-medium text-gray-900">Tamanhos</h2>
+      <p className="text-xs text-gray-500">
         Toque em um tamanho para adicioná-lo. Toque de novo para marcar disponível.
       </p>
 
@@ -113,10 +113,10 @@ export function SizeGrid({ control, productId }: SizeGridProps) {
               onClick={() => handleTogglePill(size)}
               aria-pressed={included}
               className={cn(
-                "flex min-h-11 min-w-11 items-center justify-center rounded-lg border text-base transition",
-                !included && "border-[#E7F2FD] text-[#6B6B6B]",
-                included && !available && "border-[#E7F2FD] bg-[#E7F2FD] text-[#6B6B6B] line-through",
-                included && available && "border-[#0D21A1] bg-[#0D21A1] text-white"
+                "flex min-h-11 min-w-11 items-center justify-center rounded-lg border text-base transition-colors duration-150",
+                !included && "border-gray-300 bg-white text-gray-900 hover:border-primary",
+                included && !available && "border-gray-200 bg-gray-100 text-gray-400 line-through",
+                included && available && "border-primary bg-primary text-white"
               )}
             >
               {size}
@@ -129,7 +129,7 @@ export function SizeGrid({ control, productId }: SizeGridProps) {
         type="button"
         onClick={handleMarkAllEsgotado}
         disabled={isPending}
-        className="w-fit rounded-lg border border-[#6B6B6B] px-4 py-2 text-sm font-medium text-[#6B6B6B] transition disabled:opacity-60"
+        className="w-fit rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-900 transition-all duration-150 hover:bg-gray-100 active:bg-gray-200 active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 disabled:opacity-60"
       >
         {isPending ? "Marcando…" : "Marcar tudo como esgotado"}
       </button>

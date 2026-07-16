@@ -1,22 +1,85 @@
 @import "tailwindcss";
 
+@theme {
+  /* Azul de marca — #0D21A1 e blue-600 (marca, nao alterar) */
+  --color-blue-50:  #EEF0FC;
+  --color-blue-100: #DCE0F8;
+  --color-blue-200: #B9C1F1;
+  --color-blue-300: #8D99E7;
+  --color-blue-400: #5C6BDA;
+  --color-blue-500: #3140C4;
+  --color-blue-600: #0D21A1;
+  --color-blue-700: #0A1A80;
+  --color-blue-800: #081560;
+  --color-blue-900: #060F45;
+  --color-blue-950: #030821;
+
+  /* Neutros azulados (nunca cinza quente) — gray-950 e #000000 (marca) */
+  --color-gray-50:  #F7F8FB;
+  --color-gray-100: #EEF0F6;
+  --color-gray-200: #DFE2ED;
+  --color-gray-300: #C5CADC;
+  --color-gray-400: #9CA3BE;
+  --color-gray-500: #767E9E;
+  --color-gray-600: #575E7D;
+  --color-gray-700: #40445C;
+  --color-gray-800: #292C3D;
+  --color-gray-900: #14151F;
+  --color-gray-950: #000000;
+
+  /* Aliases semanticos de marca */
+  --color-primary: #0D21A1;
+  --color-primary-hover: #0A1A80;
+  --color-primary-active: #081560;
+  --color-primary-subtle: #EEF0FC;
+  --color-primary-border: #B9C1F1;
+
+  /* Semanticas */
+  --color-success-bg: #EBFAF1;
+  --color-success-fg: #0B6238;
+  --color-success-solid: #1FA860;
+  --color-success-solid-hover: #128049;
+  --color-error-bg: #FDECEE;
+  --color-error-fg: #86172A;
+  --color-error-solid: #D82A44;
+  --color-error-solid-hover: #AE1F35;
+  --color-warning-bg: #FDF3E4;
+  --color-warning-fg: #7A4C14;
+  --color-warning-solid: #C9821F;
+
+  /* WhatsApp — excecao pontual, so no CTA "Pedir agora" */
+  --color-whatsapp: #25D366;
+  --color-whatsapp-hover: #1DA851;
+
+  /* Raio (remapeia rounded-sm/md/lg/xl para a escala do DS) */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+
+  /* Sombra rasa (remapeia shadow-sm/md/lg) */
+  --shadow-xs: 0 1px 2px rgba(3,8,33,0.06);
+  --shadow-sm: 0 1px 3px rgba(3,8,33,0.08), 0 1px 2px rgba(3,8,33,0.05);
+  --shadow-md: 0 4px 12px rgba(3,8,33,0.10), 0 2px 4px rgba(3,8,33,0.06);
+  --shadow-lg: 0 12px 28px rgba(3,8,33,0.14), 0 4px 8px rgba(3,8,33,0.06);
+}
+
+@theme inline {
+  --font-display: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
   color-scheme: light;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
 /*
@@ -48,3 +111,11 @@ body {
 .animate-shake {
   animation: shake 400ms ease-in-out;
 }
+
+/* Motion do Design System — transicoes de entrada de dialogos/conteudo */
+@keyframes vt-fade-in { from { opacity: 0 } to { opacity: 1 } }
+@keyframes vt-scale-in { from { opacity: 0; transform: scale(.96) translateY(4px) } to { opacity: 1; transform: scale(1) translateY(0) } }
+@keyframes vt-slide-up { from { opacity: 0; transform: translateY(8px) } to { opacity: 1; transform: translateY(0) } }
+.animate-fade-in { animation: vt-fade-in 180ms cubic-bezier(.4,0,.2,1); }
+.animate-scale-in { animation: vt-scale-in 280ms cubic-bezier(.2,0,0,1); }
+.animate-slide-up { animation: vt-slide-up 280ms cubic-bezier(.2,0,0,1); }
