@@ -65,22 +65,22 @@ export default async function DashboardPage() {
   }));
 
   const statCards = [
-    { label: "Total de produtos", value: totalProdutos, Icon: Package, iconClass: "text-[#000000]", numberClass: "text-[#111111]" },
-    { label: "Disponíveis", value: disponiveis, Icon: CheckCircle2, iconClass: "text-[#0D21A1]", numberClass: "text-[#0D21A1]" },
-    { label: "Esgotados", value: esgotados, Icon: XCircle, iconClass: "text-[#6B6B6B]", numberClass: "text-[#6B6B6B]" },
-    { label: "Acessos", value: acessos, Icon: Eye, iconClass: "text-[#000000]", numberClass: "text-[#111111]" },
+    { label: "Total de produtos", value: totalProdutos, Icon: Package, iconClass: "text-black", numberClass: "text-ink" },
+    { label: "Disponíveis", value: disponiveis, Icon: CheckCircle2, iconClass: "text-brand", numberClass: "text-brand" },
+    { label: "Esgotados", value: esgotados, Icon: XCircle, iconClass: "text-muted", numberClass: "text-muted" },
+    { label: "Acessos", value: acessos, Icon: Eye, iconClass: "text-black", numberClass: "text-ink" },
   ];
 
   return (
     <div className="bg-white mx-auto flex min-h-dvh w-full max-w-2xl flex-col gap-8 px-4 py-10">
-      <h1 className="text-2xl font-bold text-[#000000]">Dashboard</h1>
+      <h1 className="text-2xl font-bold text-black">Dashboard</h1>
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
         {statCards.map((card) => (
-          <div key={card.label} className="flex flex-col gap-1 rounded-lg border border-[#E7F2FD] bg-white p-4">
+          <div key={card.label} className="flex flex-col gap-1 rounded-lg border border-surface bg-white p-4">
             <div className="flex items-center gap-1">
               <card.Icon className={`h-5 w-5 ${card.iconClass}`} aria-hidden="true" />
-              <span className="text-sm font-medium text-[#6B6B6B]">{card.label}</span>
+              <span className="text-sm font-medium text-muted">{card.label}</span>
             </div>
             <span className={`text-3xl font-bold ${card.numberClass}`}>{card.value}</span>
           </div>
@@ -88,7 +88,7 @@ export default async function DashboardPage() {
       </div>
 
       <section className="flex flex-col gap-3">
-        <h2 className="text-xl font-medium text-[#111111]">Produtos recentes</h2>
+        <h2 className="text-xl font-medium text-ink">Produtos recentes</h2>
         {recentes.length > 0 ? (
           <ul className="flex flex-col gap-3">
             {recentes.map((product) => {
@@ -99,51 +99,51 @@ export default async function DashboardPage() {
                 <li key={product.id}>
                   <Link
                     href={`/produtos/${product.id}/editar`}
-                    className="flex min-h-11 items-center gap-3 rounded-lg border border-[#E7F2FD] bg-white p-3"
+                    className="flex min-h-11 items-center gap-3 rounded-lg border border-surface bg-white p-3"
                   >
-                    <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-[#E7F2FD]">
+                    <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-surface">
                       {product.coverUrl ? (
                         <Image src={product.coverUrl} alt={product.name} fill sizes="64px" className="object-cover" />
                       ) : (
                         <div className="flex h-full w-full items-center justify-center">
-                          <ImageOff className="h-6 w-6 text-[#6B6B6B]" aria-hidden="true" />
+                          <ImageOff className="h-6 w-6 text-muted" aria-hidden="true" />
                         </div>
                       )}
                     </div>
 
                     <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-                      <span className="truncate font-medium text-[#111111]">{product.name}</span>
-                      {secondaryLine && <span className="truncate text-xs text-[#6B6B6B]">{secondaryLine}</span>}
+                      <span className="truncate font-medium text-ink">{product.name}</span>
+                      {secondaryLine && <span className="truncate text-xs text-muted">{secondaryLine}</span>}
                       <span
                         className={`flex items-center gap-1 text-xs ${
-                          product.disponivel ? "text-[#0D21A1]" : "text-[#6B6B6B]"
+                          product.disponivel ? "text-brand" : "text-muted"
                         }`}
                       >
                         <span
-                          className={`h-1.5 w-1.5 rounded-full ${product.disponivel ? "bg-[#0D21A1]" : "bg-[#6B6B6B]"}`}
+                          className={`h-1.5 w-1.5 rounded-full ${product.disponivel ? "bg-brand" : "bg-muted"}`}
                           aria-hidden="true"
                         />
                         {product.disponivel ? "Disponível" : "Esgotado"}
                       </span>
                     </div>
 
-                    <span className="shrink-0 text-sm font-medium text-[#111111]">{formatBRLPrice(product.price)}</span>
+                    <span className="shrink-0 text-sm font-medium text-ink">{formatBRLPrice(product.price)}</span>
                   </Link>
                 </li>
               );
             })}
           </ul>
         ) : (
-          <div className="flex flex-col items-center gap-3 rounded-lg border border-dashed border-[#E7F2FD] px-4 py-8 text-center">
+          <div className="flex flex-col items-center gap-3 rounded-lg border border-dashed border-surface px-4 py-8 text-center">
             <div className="flex flex-col gap-1">
-              <span className="font-medium text-[#111111]">Nenhum produto cadastrado ainda</span>
-              <span className="text-sm text-[#6B6B6B]">
+              <span className="font-medium text-ink">Nenhum produto cadastrado ainda</span>
+              <span className="text-sm text-muted">
                 Cadastre seu primeiro produto para começar a vender pelo WhatsApp.
               </span>
             </div>
             <Link
               href="/produtos/novo"
-              className="rounded-lg bg-[#0D21A1] px-4 py-2 text-center font-medium text-white transition"
+              className="rounded-lg bg-brand px-4 py-2 text-center font-medium text-white transition"
             >
               Novo produto
             </Link>
@@ -152,21 +152,21 @@ export default async function DashboardPage() {
       </section>
 
       <section className="flex flex-col gap-3">
-        <h2 className="text-xl font-medium text-[#111111]">Mais visualizados</h2>
+        <h2 className="text-xl font-medium text-ink">Mais visualizados</h2>
         {maisVisualizados.length > 0 ? (
           <ul className="flex flex-col gap-2">
             {maisVisualizados.map((item, index) => (
               <li key={item.productId}>
                 <Link
                   href={`/produtos/${item.productId}/editar`}
-                  className="flex min-h-11 items-center gap-3 rounded-lg border border-[#E7F2FD] bg-white p-3"
+                  className="flex min-h-11 items-center gap-3 rounded-lg border border-surface bg-white p-3"
                 >
-                  <span className="w-5 text-sm font-medium text-[#6B6B6B]">{index + 1}</span>
+                  <span className="w-5 text-sm font-medium text-muted">{index + 1}</span>
                   <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-                    <span className="truncate text-base text-[#111111]">{item.name}</span>
-                    {item.secondary && <span className="truncate text-xs text-[#6B6B6B]">{item.secondary}</span>}
+                    <span className="truncate text-base text-ink">{item.name}</span>
+                    {item.secondary && <span className="truncate text-xs text-muted">{item.secondary}</span>}
                   </div>
-                  <span className="flex shrink-0 items-center gap-1 text-sm font-medium text-[#6B6B6B]">
+                  <span className="flex shrink-0 items-center gap-1 text-sm font-medium text-muted">
                     <Eye className="h-4 w-4" aria-hidden="true" />
                     {item.views}
                   </span>
@@ -175,9 +175,9 @@ export default async function DashboardPage() {
             ))}
           </ul>
         ) : (
-          <div className="flex flex-col gap-1 rounded-lg border border-dashed border-[#E7F2FD] px-4 py-8 text-center">
-            <span className="font-medium text-[#111111]">Ainda sem visualizações</span>
-            <span className="text-sm text-[#6B6B6B]">
+          <div className="flex flex-col gap-1 rounded-lg border border-dashed border-surface px-4 py-8 text-center">
+            <span className="font-medium text-ink">Ainda sem visualizações</span>
+            <span className="text-sm text-muted">
               Assim que sua vitrine receber acessos, os produtos mais vistos aparecem aqui.
             </span>
           </div>
@@ -185,21 +185,21 @@ export default async function DashboardPage() {
       </section>
 
       <section className="flex flex-col gap-3">
-        <h2 className="text-xl font-medium text-[#111111]">Cliques no WhatsApp</h2>
+        <h2 className="text-xl font-medium text-ink">Cliques no WhatsApp</h2>
         {cliquesWhatsapp.length > 0 ? (
           <ul className="flex flex-col gap-2">
             {cliquesWhatsapp.map((item, index) => (
               <li key={item.productId}>
                 <Link
                   href={`/produtos/${item.productId}/editar`}
-                  className="flex min-h-11 items-center gap-3 rounded-lg border border-[#E7F2FD] bg-white p-3"
+                  className="flex min-h-11 items-center gap-3 rounded-lg border border-surface bg-white p-3"
                 >
-                  <span className="w-5 text-sm font-medium text-[#6B6B6B]">{index + 1}</span>
+                  <span className="w-5 text-sm font-medium text-muted">{index + 1}</span>
                   <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-                    <span className="truncate text-base text-[#111111]">{item.name}</span>
-                    {item.secondary && <span className="truncate text-xs text-[#6B6B6B]">{item.secondary}</span>}
+                    <span className="truncate text-base text-ink">{item.name}</span>
+                    {item.secondary && <span className="truncate text-xs text-muted">{item.secondary}</span>}
                   </div>
-                  <span className="flex shrink-0 items-center gap-1 text-sm font-medium text-[#6B6B6B]">
+                  <span className="flex shrink-0 items-center gap-1 text-sm font-medium text-muted">
                     <MessageCircle className="h-4 w-4" aria-hidden="true" />
                     {item.clicks}
                   </span>
@@ -208,9 +208,9 @@ export default async function DashboardPage() {
             ))}
           </ul>
         ) : (
-          <div className="flex flex-col gap-1 rounded-lg border border-dashed border-[#E7F2FD] px-4 py-8 text-center">
-            <span className="font-medium text-[#111111]">Ainda sem cliques</span>
-            <span className="text-sm text-[#6B6B6B]">
+          <div className="flex flex-col gap-1 rounded-lg border border-dashed border-surface px-4 py-8 text-center">
+            <span className="font-medium text-ink">Ainda sem cliques</span>
+            <span className="text-sm text-muted">
               Assim que clientes clicarem em &quot;Pedir agora&quot;, os produtos mais pedidos aparecem aqui.
             </span>
           </div>

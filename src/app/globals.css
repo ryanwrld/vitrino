@@ -11,6 +11,19 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /*
+   * Tokens de paleta de marca (Seção 2, item 4 do checklist de UI) — fonte
+   * única de verdade para os seis hex oficiais do Vitrino. Preto usa o
+   * utilitário nativo `black` do Tailwind (não precisa de token próprio).
+   * Valores preservados EXATAMENTE do rebrand azul (quick-260715-du7) —
+   * nenhuma cor nova introduzida aqui.
+   */
+  --color-brand: #0D21A1;
+  --color-surface: #E7F2FD;
+  --color-danger: #FF4D4D;
+  --color-ink: #111111;
+  --color-muted: #6B6B6B;
 }
 
 body {

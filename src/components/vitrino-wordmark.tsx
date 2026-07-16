@@ -13,12 +13,12 @@ export function VitrinoWordmark({ className }: VitrinoWordmarkProps) {
   return (
     <div className={`flex items-center justify-center gap-2 ${className ?? ""}`}>
       <span
-        className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#0D21A1] text-lg font-bold text-white"
+        className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand text-lg font-bold text-white"
         aria-hidden="true"
       >
         V
       </span>
-      <span className="text-xl font-bold text-[#0D21A1]">Vitrino</span>
+      <span className="text-xl font-bold text-brand">Vitrino</span>
     </div>
   );
 }

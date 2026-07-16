@@ -46,15 +46,15 @@ export default function EsqueciSenhaPage() {
     <main className="bg-white mx-auto flex min-h-dvh w-full max-w-sm flex-col justify-center gap-6 px-4 py-10">
       <VitrinoWordmark />
       <div>
-        <h1 className="text-2xl font-bold text-[#000000]">Esqueci minha senha</h1>
-        <p className="mt-1 text-sm text-[#6B6B6B]">
+        <h1 className="text-2xl font-bold text-black">Esqueci minha senha</h1>
+        <p className="mt-1 text-sm text-muted">
           Informe o email da sua conta e enviaremos um link para redefinir sua senha.
         </p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">
         <div className="flex flex-col gap-1">
-          <label htmlFor="email" className="text-sm font-medium text-[#111111]">
+          <label htmlFor="email" className="text-sm font-medium text-ink">
             Email
           </label>
           <input
@@ -62,23 +62,23 @@ export default function EsqueciSenhaPage() {
             type="email"
             autoComplete="email"
             {...register("email")}
-            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
+            className="rounded-lg border border-surface bg-white px-3 py-2 text-base outline-none focus:border-brand"
           />
-          {errors.email && <span className="text-sm text-[#FF4D4D]">{errors.email.message}</span>}
+          {errors.email && <span className="text-sm text-danger">{errors.email.message}</span>}
         </div>
 
         <button
           type="submit"
           disabled={isPending}
-          className="rounded-lg bg-[#0D21A1] px-4 py-2 font-medium text-white transition disabled:opacity-60"
+          className="rounded-lg bg-brand px-4 py-2 font-medium text-white transition disabled:opacity-60"
         >
           {isPending ? "Enviando…" : "Enviar link de recuperação"}
         </button>
       </form>
 
-      <p className="text-center text-sm text-[#6B6B6B]">
+      <p className="text-center text-sm text-muted">
         Lembrou a senha?{" "}
-        <Link href="/login" className="font-medium text-[#000000] underline">
+        <Link href="/login" className="font-medium text-black underline">
           Entrar
         </Link>
       </p>

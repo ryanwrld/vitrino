@@ -82,7 +82,7 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-6">
       <div className="flex flex-col gap-4">
-        <h2 className="text-xl font-medium text-[#111111]">Loja</h2>
+        <h2 className="text-xl font-medium text-ink">Loja</h2>
 
         <StoreIdentityFields
           register={register}
@@ -93,13 +93,13 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
         />
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="hideSoldOutDefault" className="text-sm font-medium text-[#111111]">
+          <label htmlFor="hideSoldOutDefault" className="text-sm font-medium text-ink">
             Ocultar produtos esgotados por padrão
           </label>
           <select
             id="hideSoldOutDefault"
             {...register("hideSoldOutDefault")}
-            className="select-chevron rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
+            className="select-chevron rounded-lg border border-surface bg-white px-3 py-2 text-base outline-none focus:border-brand"
           >
             <option value="false">Não — mostrar esmaecido (padrão)</option>
             <option value="true">Sim — ocultar da vitrine</option>
@@ -108,10 +108,10 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
       </div>
 
       <div className="flex flex-col gap-4">
-        <h2 className="text-xl font-medium text-[#111111]">WhatsApp</h2>
+        <h2 className="text-xl font-medium text-ink">WhatsApp</h2>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="whatsapp" className="text-sm font-medium text-[#111111]">
+          <label htmlFor="whatsapp" className="text-sm font-medium text-ink">
             WhatsApp
           </label>
           <input
@@ -120,16 +120,16 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
             placeholder="(11) 99999-9999"
             aria-invalid={errors.whatsapp ? true : undefined}
             {...register("whatsapp")}
-            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1] aria-invalid:border-[#FF4D4D]"
+            className="rounded-lg border border-surface bg-white px-3 py-2 text-base outline-none focus:border-brand aria-invalid:border-danger"
           />
           {formattedPreview && (
-            <span className="text-xs text-[#6B6B6B]">Prévia: {formattedPreview}</span>
+            <span className="text-xs text-muted">Prévia: {formattedPreview}</span>
           )}
-          {errors.whatsapp && <span className="text-sm text-[#FF4D4D]">{errors.whatsapp.message}</span>}
+          {errors.whatsapp && <span className="text-sm text-danger">{errors.whatsapp.message}</span>}
         </div>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="messageTemplate" className="text-sm font-medium text-[#111111]">
+          <label htmlFor="messageTemplate" className="text-sm font-medium text-ink">
             Template da mensagem de pedido
           </label>
           <textarea
@@ -137,10 +137,10 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
             rows={6}
             aria-invalid={errors.messageTemplate ? true : undefined}
             {...register("messageTemplate")}
-            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-sm outline-none focus:border-[#0D21A1] aria-invalid:border-[#FF4D4D]"
+            className="rounded-lg border border-surface bg-white px-3 py-2 text-sm outline-none focus:border-brand aria-invalid:border-danger"
           />
           {errors.messageTemplate && (
-            <span className="text-sm text-[#FF4D4D]">{errors.messageTemplate.message}</span>
+            <span className="text-sm text-danger">{errors.messageTemplate.message}</span>
           )}
         </div>
       </div>
@@ -148,7 +148,7 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
       <button
         type="submit"
         disabled={isPending}
-        className="w-full rounded-lg bg-[#0D21A1] px-4 py-2 font-medium text-white transition disabled:opacity-60"
+        className="w-full rounded-lg bg-brand px-4 py-2 font-medium text-white transition disabled:opacity-60"
       >
         {isPending ? "Salvando…" : "Salvar alterações"}
       </button>

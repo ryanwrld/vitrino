@@ -153,10 +153,10 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
     <>
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-6">
       <div className="flex flex-col gap-4">
-        <h2 className="text-xl font-medium text-[#111111]">Identificação</h2>
+        <h2 className="text-xl font-medium text-ink">Identificação</h2>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="name" className="text-sm font-medium text-[#111111]">
+          <label htmlFor="name" className="text-sm font-medium text-ink">
             Nome
           </label>
           <input
@@ -164,20 +164,20 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
             type="text"
             aria-invalid={errors.name ? true : undefined}
             {...register("name")}
-            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1] aria-invalid:border-[#FF4D4D]"
+            className="rounded-lg border border-surface bg-white px-3 py-2 text-base outline-none focus:border-brand aria-invalid:border-danger"
           />
-          {errors.name && <span className="text-sm text-[#FF4D4D]">{errors.name.message}</span>}
+          {errors.name && <span className="text-sm text-danger">{errors.name.message}</span>}
         </div>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="brand" className="text-sm font-medium text-[#111111]">
+          <label htmlFor="brand" className="text-sm font-medium text-ink">
             Marca
           </label>
           <select
             id="brand"
             aria-invalid={errors.brand ? true : undefined}
             {...register("brand")}
-            className="select-chevron rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1] aria-invalid:border-[#FF4D4D]"
+            className="select-chevron rounded-lg border border-surface bg-white px-3 py-2 text-base outline-none focus:border-brand aria-invalid:border-danger"
           >
             <option value="">Selecione a marca</option>
             {BRANDS.map((brand) => (
@@ -186,12 +186,12 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
               </option>
             ))}
           </select>
-          {errors.brand && <span className="text-sm text-[#FF4D4D]">{errors.brand.message}</span>}
+          {errors.brand && <span className="text-sm text-danger">{errors.brand.message}</span>}
         </div>
 
         {isBrandOther && (
           <div className="flex flex-col gap-1">
-            <label htmlFor="brandOther" className="text-sm font-medium text-[#111111]">
+            <label htmlFor="brandOther" className="text-sm font-medium text-ink">
               Qual marca?
             </label>
             <input
@@ -199,16 +199,16 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
               type="text"
               aria-invalid={errors.brandOther ? true : undefined}
               {...register("brandOther")}
-              className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1] aria-invalid:border-[#FF4D4D]"
+              className="rounded-lg border border-surface bg-white px-3 py-2 text-base outline-none focus:border-brand aria-invalid:border-danger"
             />
             {errors.brandOther && (
-              <span className="text-sm text-[#FF4D4D]">{errors.brandOther.message}</span>
+              <span className="text-sm text-danger">{errors.brandOther.message}</span>
             )}
           </div>
         )}
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="line" className="text-sm font-medium text-[#111111]">
+          <label htmlFor="line" className="text-sm font-medium text-ink">
             Linha (opcional)
           </label>
           <input
@@ -217,23 +217,23 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
             placeholder="Ex.: Mercurial"
             aria-invalid={errors.line ? true : undefined}
             {...register("line")}
-            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1] aria-invalid:border-[#FF4D4D]"
+            className="rounded-lg border border-surface bg-white px-3 py-2 text-base outline-none focus:border-brand aria-invalid:border-danger"
           />
-          {errors.line && <span className="text-sm text-[#FF4D4D]">{errors.line.message}</span>}
+          {errors.line && <span className="text-sm text-danger">{errors.line.message}</span>}
         </div>
       </div>
 
       <div className="flex flex-col gap-4">
-        <h2 className="text-xl font-medium text-[#111111]">Solado &amp; Categoria</h2>
+        <h2 className="text-xl font-medium text-ink">Solado &amp; Categoria</h2>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="sole" className="text-sm font-medium text-[#111111]">
+          <label htmlFor="sole" className="text-sm font-medium text-ink">
             Solado (opcional)
           </label>
           <select
             id="sole"
             {...register("sole")}
-            className="select-chevron rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
+            className="select-chevron rounded-lg border border-surface bg-white px-3 py-2 text-base outline-none focus:border-brand"
           >
             <option value="">—</option>
             {SOLES.map((sole) => (
@@ -245,13 +245,13 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
         </div>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="category" className="text-sm font-medium text-[#111111]">
+          <label htmlFor="category" className="text-sm font-medium text-ink">
             Categoria (opcional)
           </label>
           <select
             id="category"
             {...register("category")}
-            className="select-chevron rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
+            className="select-chevron rounded-lg border border-surface bg-white px-3 py-2 text-base outline-none focus:border-brand"
           >
             <option value="">—</option>
             {CATEGORIES.map((category) => (
@@ -263,13 +263,13 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
         </div>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="fulfillment" className="text-sm font-medium text-[#111111]">
+          <label htmlFor="fulfillment" className="text-sm font-medium text-ink">
             Modalidade (opcional)
           </label>
           <select
             id="fulfillment"
             {...register("fulfillment")}
-            className="select-chevron rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
+            className="select-chevron rounded-lg border border-surface bg-white px-3 py-2 text-base outline-none focus:border-brand"
           >
             <option value="">—</option>
             {FULFILLMENTS.map((fulfillment) => (
@@ -282,18 +282,18 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
       </div>
 
       <div className="flex flex-col gap-4">
-        <h2 className="text-xl font-medium text-[#111111]">Preço</h2>
+        <h2 className="text-xl font-medium text-ink">Preço</h2>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="price" className="text-sm font-medium text-[#111111]">
+          <label htmlFor="price" className="text-sm font-medium text-ink">
             Preço
           </label>
           <div
-            className={`flex items-center gap-2 rounded-lg border bg-white px-3 py-2 focus-within:border-[#0D21A1] ${
-              errors.price ? "border-[#FF4D4D]" : "border-[#E7F2FD]"
+            className={`flex items-center gap-2 rounded-lg border bg-white px-3 py-2 focus-within:border-brand ${
+              errors.price ? "border-danger" : "border-surface"
             }`}
           >
-            <span className="text-base text-[#6B6B6B]">R$</span>
+            <span className="text-base text-muted">R$</span>
             <input
               id="price"
               type="text"
@@ -304,21 +304,21 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
               className="w-full text-base outline-none"
             />
           </div>
-          {errors.price && <span className="text-sm text-[#FF4D4D]">{errors.price.message}</span>}
+          {errors.price && <span className="text-sm text-danger">{errors.price.message}</span>}
         </div>
       </div>
 
       <div className="flex flex-col gap-4">
-        <h2 className="text-xl font-medium text-[#111111]">Visibilidade</h2>
+        <h2 className="text-xl font-medium text-ink">Visibilidade</h2>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="hideWhenSoldOut" className="text-sm font-medium text-[#111111]">
+          <label htmlFor="hideWhenSoldOut" className="text-sm font-medium text-ink">
             Exibir quando esgotado
           </label>
           <select
             id="hideWhenSoldOut"
             {...register("hideWhenSoldOut")}
-            className="select-chevron rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
+            className="select-chevron rounded-lg border border-surface bg-white px-3 py-2 text-base outline-none focus:border-brand"
           >
             <option value="">Usar padrão da loja</option>
             <option value="false">Sempre mostrar (esmaecido)</option>
@@ -332,10 +332,10 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
       <PhotoUploader productId={productId} initialPhotos={initialPhotos} onPendingFilesChange={setPendingPhotoFiles} />
 
       <div className="flex flex-col gap-4">
-        <h2 className="text-xl font-medium text-[#111111]">Descrição</h2>
+        <h2 className="text-xl font-medium text-ink">Descrição</h2>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="description" className="text-sm font-medium text-[#111111]">
+          <label htmlFor="description" className="text-sm font-medium text-ink">
             Descrição (opcional)
           </label>
           <textarea
@@ -343,10 +343,10 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
             rows={4}
             aria-invalid={errors.description ? true : undefined}
             {...register("description")}
-            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-sm outline-none focus:border-[#0D21A1] aria-invalid:border-[#FF4D4D]"
+            className="rounded-lg border border-surface bg-white px-3 py-2 text-sm outline-none focus:border-brand aria-invalid:border-danger"
           />
           {errors.description && (
-            <span className="text-sm text-[#FF4D4D]">{errors.description.message}</span>
+            <span className="text-sm text-danger">{errors.description.message}</span>
           )}
         </div>
       </div>
@@ -355,7 +355,7 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
         <button
           type="submit"
           disabled={isPending}
-          className="flex-1 rounded-lg bg-[#0D21A1] px-4 py-2 font-medium text-white transition disabled:opacity-60"
+          className="flex-1 rounded-lg bg-brand px-4 py-2 font-medium text-white transition disabled:opacity-60"
         >
           {isPending ? "Salvando…" : "Salvar produto"}
         </button>
@@ -367,7 +367,7 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
             type="button"
             onClick={handleTogglePublish}
             disabled={isPublishPending}
-            className="rounded-lg border border-[#000000] px-4 py-2 font-medium text-[#000000] transition disabled:opacity-60"
+            className="rounded-lg border border-black px-4 py-2 font-medium text-black transition disabled:opacity-60"
           >
             {isPublishPending
               ? "Salvando…"
@@ -381,10 +381,10 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
 
       {productId && (
         <dialog ref={publishDialogRef} className="rounded-xl p-6 backdrop:bg-black/40">
-          <h2 className="text-xl font-medium text-[#111111]">
+          <h2 className="text-xl font-medium text-ink">
             {willPublish ? "Publicar produto na sua vitrine?" : "Tirar produto da vitrine?"}
           </h2>
-          <p className="mt-2 max-w-sm text-sm text-[#6B6B6B]">
+          <p className="mt-2 max-w-sm text-sm text-muted">
             {willPublish
               ? "O produto ficará visível para qualquer pessoa que acessar sua vitrine."
               : "O produto deixa de aparecer na sua vitrine pública imediatamente."}
@@ -393,7 +393,7 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
             <button
               type="button"
               onClick={() => publishDialogRef.current?.close()}
-              className="rounded-lg border border-[#000000] px-4 py-2 font-medium text-[#000000]"
+              className="rounded-lg border border-black px-4 py-2 font-medium text-black"
             >
               Cancelar
             </button>
@@ -401,7 +401,7 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
               type="button"
               disabled={isPublishPending}
               onClick={handleConfirmTogglePublish}
-              className="rounded-lg bg-[#0D21A1] px-4 py-2 font-medium text-white disabled:opacity-60"
+              className="rounded-lg bg-brand px-4 py-2 font-medium text-white disabled:opacity-60"
             >
               {isPublishPending ? "Salvando…" : "Confirmar"}
             </button>

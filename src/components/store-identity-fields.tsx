@@ -38,7 +38,7 @@ export function StoreIdentityFields({
   return (
     <>
       <div className="flex flex-col gap-1">
-        <label htmlFor="name" className="text-sm font-medium text-[#111111]">
+        <label htmlFor="name" className="text-sm font-medium text-ink">
           Nome da loja
         </label>
         <input
@@ -47,13 +47,13 @@ export function StoreIdentityFields({
           autoComplete="organization"
           aria-invalid={errors.name ? true : undefined}
           {...register("name")}
-          className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1] aria-invalid:border-[#FF4D4D]"
+          className="rounded-lg border border-surface bg-white px-3 py-2 text-base outline-none focus:border-brand aria-invalid:border-danger"
         />
-        {errors.name && <span className="text-sm text-[#FF4D4D]">{errors.name.message}</span>}
+        {errors.name && <span className="text-sm text-danger">{errors.name.message}</span>}
       </div>
 
       <div className="flex flex-col gap-1">
-        <label htmlFor="logo" className="text-sm font-medium text-[#111111]">
+        <label htmlFor="logo" className="text-sm font-medium text-ink">
           Logo (opcional)
         </label>
         <input
@@ -61,12 +61,12 @@ export function StoreIdentityFields({
           type="file"
           accept="image/png,image/jpeg,image/webp"
           onChange={(event) => onLogoFileChange(event.target.files?.[0] ?? null)}
-          className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-sm outline-none focus:border-[#0D21A1]"
+          className="rounded-lg border border-surface bg-white px-3 py-2 text-sm outline-none focus:border-brand"
         />
       </div>
 
       <div className="flex flex-col gap-1">
-        <label htmlFor="accentColor" className="text-sm font-medium text-[#111111]">
+        <label htmlFor="accentColor" className="text-sm font-medium text-ink">
           Cor de destaque
         </label>
         <AccentColorField
@@ -76,12 +76,12 @@ export function StoreIdentityFields({
           storeNamePreview={nameValue}
         />
         {errors.accentColor && (
-          <span className="text-sm text-[#FF4D4D]">{errors.accentColor.message}</span>
+          <span className="text-sm text-danger">{errors.accentColor.message}</span>
         )}
       </div>
 
       <div className="flex flex-col gap-1">
-        <label htmlFor="tagline" className="text-sm font-medium text-[#111111]">
+        <label htmlFor="tagline" className="text-sm font-medium text-ink">
           Frase de apresentação (opcional, até 100 caracteres)
         </label>
         <input
@@ -90,9 +90,9 @@ export function StoreIdentityFields({
           maxLength={100}
           aria-invalid={errors.tagline ? true : undefined}
           {...register("tagline")}
-          className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1] aria-invalid:border-[#FF4D4D]"
+          className="rounded-lg border border-surface bg-white px-3 py-2 text-base outline-none focus:border-brand aria-invalid:border-danger"
         />
-        {errors.tagline && <span className="text-sm text-[#FF4D4D]">{errors.tagline.message}</span>}
+        {errors.tagline && <span className="text-sm text-danger">{errors.tagline.message}</span>}
       </div>
     </>
   );

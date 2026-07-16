@@ -66,8 +66,8 @@ export function ProductToolbar({ currentParams }: ProductToolbarProps) {
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="flex items-center gap-2 rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 focus-within:border-[#0D21A1]">
-        <Search className="h-4 w-4 shrink-0 text-[#6B6B6B]" aria-hidden="true" />
+      <div className="flex items-center gap-2 rounded-lg border border-surface bg-white px-3 py-2 focus-within:border-brand">
+        <Search className="h-4 w-4 shrink-0 text-muted" aria-hidden="true" />
         <input
           type="text"
           value={searchInput}
@@ -83,7 +83,7 @@ export function ProductToolbar({ currentParams }: ProductToolbarProps) {
           value={currentParams.status ?? ""}
           onChange={(event) => navigate({ status: event.target.value || undefined })}
           aria-label="Filtrar por status"
-          className="min-h-11 rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-sm outline-none focus:border-[#0D21A1]"
+          className="min-h-11 rounded-lg border border-surface bg-white px-3 py-2 text-sm outline-none focus:border-brand"
         >
           <option value="">Todos</option>
           <option value="published">Publicado</option>
@@ -94,7 +94,7 @@ export function ProductToolbar({ currentParams }: ProductToolbarProps) {
           value={currentParams.brand ?? ""}
           onChange={(event) => navigate({ brand: event.target.value || undefined })}
           aria-label="Filtrar por marca"
-          className="min-h-11 rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-sm outline-none focus:border-[#0D21A1]"
+          className="min-h-11 rounded-lg border border-surface bg-white px-3 py-2 text-sm outline-none focus:border-brand"
         >
           <option value="">Todas as marcas</option>
           {BRANDS.map((brand) => (
@@ -108,7 +108,7 @@ export function ProductToolbar({ currentParams }: ProductToolbarProps) {
           value={currentParams.sole ?? ""}
           onChange={(event) => navigate({ sole: event.target.value || undefined })}
           aria-label="Filtrar por solado"
-          className="min-h-11 rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-sm outline-none focus:border-[#0D21A1]"
+          className="min-h-11 rounded-lg border border-surface bg-white px-3 py-2 text-sm outline-none focus:border-brand"
         >
           <option value="">Todos os solados</option>
           {SOLES.map((sole) => (
@@ -122,7 +122,7 @@ export function ProductToolbar({ currentParams }: ProductToolbarProps) {
           value={currentParams.sort ?? "recente"}
           onChange={(event) => navigate({ sort: event.target.value === "recente" ? undefined : event.target.value })}
           aria-label="Ordenar por"
-          className="min-h-11 rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-sm outline-none focus:border-[#0D21A1]"
+          className="min-h-11 rounded-lg border border-surface bg-white px-3 py-2 text-sm outline-none focus:border-brand"
         >
           <option value="recente">Mais recente</option>
           <option value="nome">Nome</option>

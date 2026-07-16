@@ -71,10 +71,10 @@ export function OnboardingWizard() {
   return (
     <main className="bg-white mx-auto flex min-h-dvh w-full max-w-md flex-col justify-center gap-6 px-4 py-10">
       <VitrinoWordmark />
-      <p className="text-center text-xs text-[#6B6B6B]">Etapa única — leva menos de 1 minuto</p>
+      <p className="text-center text-xs text-muted">Etapa única — leva menos de 1 minuto</p>
       <div>
-        <h1 className="text-2xl font-bold text-[#000000]">Configure sua vitrine</h1>
-        <p className="mt-1 text-sm text-[#6B6B6B]">
+        <h1 className="text-2xl font-bold text-black">Configure sua vitrine</h1>
+        <p className="mt-1 text-sm text-muted">
           Só o essencial para começar — você pode ajustar tudo depois no painel.
         </p>
       </div>
@@ -89,7 +89,7 @@ export function OnboardingWizard() {
         />
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="whatsapp" className="text-sm font-medium text-[#111111]">
+          <label htmlFor="whatsapp" className="text-sm font-medium text-ink">
             WhatsApp
           </label>
           <input
@@ -98,16 +98,16 @@ export function OnboardingWizard() {
             placeholder="(11) 99999-9999"
             aria-invalid={errors.whatsapp ? true : undefined}
             {...register("whatsapp")}
-            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1] aria-invalid:border-[#FF4D4D]"
+            className="rounded-lg border border-surface bg-white px-3 py-2 text-base outline-none focus:border-brand aria-invalid:border-danger"
           />
           {formattedPreview && (
-            <span className="text-xs text-[#6B6B6B]">Prévia: {formattedPreview}</span>
+            <span className="text-xs text-muted">Prévia: {formattedPreview}</span>
           )}
-          {errors.whatsapp && <span className="text-sm text-[#FF4D4D]">{errors.whatsapp.message}</span>}
+          {errors.whatsapp && <span className="text-sm text-danger">{errors.whatsapp.message}</span>}
         </div>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="messageTemplate" className="text-sm font-medium text-[#111111]">
+          <label htmlFor="messageTemplate" className="text-sm font-medium text-ink">
             Template da mensagem de pedido
           </label>
           <textarea
@@ -115,17 +115,17 @@ export function OnboardingWizard() {
             rows={6}
             aria-invalid={errors.messageTemplate ? true : undefined}
             {...register("messageTemplate")}
-            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-sm outline-none focus:border-[#0D21A1] aria-invalid:border-[#FF4D4D]"
+            className="rounded-lg border border-surface bg-white px-3 py-2 text-sm outline-none focus:border-brand aria-invalid:border-danger"
           />
           {errors.messageTemplate && (
-            <span className="text-sm text-[#FF4D4D]">{errors.messageTemplate.message}</span>
+            <span className="text-sm text-danger">{errors.messageTemplate.message}</span>
           )}
         </div>
 
         <button
           type="submit"
           disabled={isPending}
-          className="rounded-lg bg-[#0D21A1] px-4 py-2 font-medium text-white transition disabled:opacity-60"
+          className="rounded-lg bg-brand px-4 py-2 font-medium text-white transition disabled:opacity-60"
         >
           {isPending ? "Salvando…" : "Concluir e ver minha vitrine"}
         </button>

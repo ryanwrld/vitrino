@@ -45,7 +45,7 @@ export function AccentColorField({ id, value, onChange, storeNamePreview }: Acce
               aria-pressed={isActive}
               onClick={() => onChange(swatch.color)}
               className={`h-9 w-9 rounded-full border transition ${
-                isActive ? "border-[#0D21A1] ring-2 ring-[#0D21A1]/40" : "border-[#E7F2FD]"
+                isActive ? "border-brand ring-2 ring-brand/40" : "border-surface"
               }`}
               style={{ backgroundColor: swatch.color }}
             />
@@ -54,7 +54,7 @@ export function AccentColorField({ id, value, onChange, storeNamePreview }: Acce
 
         <label
           htmlFor={id}
-          className="flex h-9 items-center gap-1 rounded-full border border-[#E7F2FD] px-2 text-xs font-medium text-[#6B6B6B]"
+          className="flex h-9 items-center gap-1 rounded-full border border-surface px-2 text-xs font-medium text-muted"
         >
           <input
             id={id}
