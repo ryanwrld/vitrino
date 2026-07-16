@@ -104,7 +104,7 @@ export function SlugEditor({ currentSlug }: SlugEditorProps) {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex flex-col gap-1">
-        <label htmlFor="slug" className="text-sm font-medium text-ink">
+        <label htmlFor="slug" className="text-sm font-medium text-[#111111]">
           Link da vitrine
         </label>
         <input
@@ -112,11 +112,11 @@ export function SlugEditor({ currentSlug }: SlugEditorProps) {
           type="text"
           value={rawSlug}
           onChange={(event) => setRawSlug(event.target.value)}
-          className="rounded-lg border border-surface bg-white px-3 py-2 text-base outline-none focus:border-brand"
+          className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
         />
-        <p className="text-xs text-muted">/loja/{slug}</p>
+        <p className="text-xs text-[#6B6B6B]">/loja/{slug}</p>
         {formatError ? (
-          <span className="text-sm text-danger">{formatError}</span>
+          <span className="text-sm text-[#FF4D4D]">{formatError}</span>
         ) : (
           <StatusPill status={displayStatus} />
         )}
@@ -126,7 +126,7 @@ export function SlugEditor({ currentSlug }: SlugEditorProps) {
         type="button"
         disabled={!canSave}
         onClick={openConfirmDialog}
-        className="self-start rounded-lg bg-brand px-4 py-2 font-medium text-white transition disabled:opacity-60"
+        className="self-start rounded-lg bg-[#0D21A1] px-4 py-2 font-medium text-white transition disabled:opacity-60"
       >
         Salvar novo link
       </button>
@@ -135,15 +135,15 @@ export function SlugEditor({ currentSlug }: SlugEditorProps) {
         ref={dialogRef}
         className="rounded-lg p-6 backdrop:bg-black/40"
       >
-        <h2 className="text-xl font-medium text-ink">Trocar o link da sua vitrine?</h2>
-        <p className="mt-2 max-w-sm text-sm text-muted">
+        <h2 className="text-xl font-medium text-[#111111]">Trocar o link da sua vitrine?</h2>
+        <p className="mt-2 max-w-sm text-sm text-[#6B6B6B]">
           Isso vai quebrar links já compartilhados: quem tiver o link antigo não vai mais
           conseguir acessar sua vitrine. Essa ação não pode ser desfeita.
         </p>
         <form method="dialog" className="mt-4 flex gap-3">
           <button
             type="submit"
-            className="rounded-lg border border-black px-4 py-2 font-medium text-black"
+            className="rounded-lg border border-[#000000] px-4 py-2 font-medium text-[#000000]"
           >
             Cancelar
           </button>
@@ -151,7 +151,7 @@ export function SlugEditor({ currentSlug }: SlugEditorProps) {
             type="button"
             disabled={isSaving}
             onClick={handleConfirm}
-            className="rounded-lg bg-danger px-4 py-2 font-medium text-white disabled:opacity-60"
+            className="rounded-lg bg-[#FF4D4D] px-4 py-2 font-medium text-white disabled:opacity-60"
           >
             {isSaving ? "Salvando…" : "Sim, trocar o link"}
           </button>
@@ -164,7 +164,7 @@ export function SlugEditor({ currentSlug }: SlugEditorProps) {
 function StatusPill({ status }: { status: AvailabilityStatus }) {
   if (status === "checking") {
     return (
-      <span className="flex items-center gap-1 text-xs text-muted">
+      <span className="flex items-center gap-1 text-xs text-[#6B6B6B]">
         <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
         Verificando disponibilidade…
       </span>
@@ -173,7 +173,7 @@ function StatusPill({ status }: { status: AvailabilityStatus }) {
 
   if (status === "available") {
     return (
-      <span className="flex items-center gap-1 text-xs text-brand">
+      <span className="flex items-center gap-1 text-xs text-[#0D21A1]">
         <Check className="h-3.5 w-3.5" aria-hidden="true" />
         Disponível
       </span>
@@ -182,7 +182,7 @@ function StatusPill({ status }: { status: AvailabilityStatus }) {
 
   if (status === "taken") {
     return (
-      <span className="flex items-center gap-1 text-xs text-danger">
+      <span className="flex items-center gap-1 text-xs text-[#FF4D4D]">
         <X className="h-3.5 w-3.5" aria-hidden="true" />
         Este link já está em uso.
       </span>

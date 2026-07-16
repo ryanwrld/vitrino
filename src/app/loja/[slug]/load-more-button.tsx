@@ -60,7 +60,7 @@ export function LoadMoreButton({ slug, initialPage, initialHasMore, filters }: L
           type="button"
           onClick={handleLoadMore}
           disabled={isPending}
-          className="w-full rounded-lg bg-brand px-4 py-2 font-medium text-white transition disabled:opacity-60"
+          className="w-full rounded-lg bg-[#0D21A1] px-4 py-2 font-medium text-white transition disabled:opacity-60"
         >
           {isPending ? "Carregando…" : "Carregar mais"}
         </button>

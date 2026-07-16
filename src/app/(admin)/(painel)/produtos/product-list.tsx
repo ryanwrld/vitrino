@@ -89,9 +89,9 @@ export function ProductList({ products }: ProductListProps) {
           return (
             <li
               key={product.id}
-              className="flex items-center gap-3 rounded-lg border border-surface bg-white p-3"
+              className="flex items-center gap-3 rounded-lg border border-[#E7F2FD] bg-white p-3"
             >
-              <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-surface">
+              <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-[#E7F2FD]">
                 {product.coverUrl ? (
                   <Image
                     src={product.coverUrl}
@@ -102,21 +102,21 @@ export function ProductList({ products }: ProductListProps) {
                   />
                 ) : (
                   <div className="flex h-full w-full items-center justify-center">
-                    <ImageOff className="h-6 w-6 text-muted" aria-hidden="true" />
+                    <ImageOff className="h-6 w-6 text-[#6B6B6B]" aria-hidden="true" />
                   </div>
                 )}
               </div>
 
               <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-                <span className="truncate font-medium text-ink">{product.name}</span>
-                {secondaryLine && <span className="truncate text-xs text-muted">{secondaryLine}</span>}
+                <span className="truncate font-medium text-[#111111]">{product.name}</span>
+                {secondaryLine && <span className="truncate text-xs text-[#6B6B6B]">{secondaryLine}</span>}
                 <span
                   className={`flex items-center gap-1 text-xs ${
-                    product.disponivel ? "text-brand" : "text-muted"
+                    product.disponivel ? "text-[#0D21A1]" : "text-[#6B6B6B]"
                   }`}
                 >
                   <span
-                    className={`h-1.5 w-1.5 rounded-full ${product.disponivel ? "bg-brand" : "bg-muted"}`}
+                    className={`h-1.5 w-1.5 rounded-full ${product.disponivel ? "bg-[#0D21A1]" : "bg-[#6B6B6B]"}`}
                     aria-hidden="true"
                   />
                   {product.disponivel ? "Disponível" : "Esgotado"}
@@ -124,14 +124,8 @@ export function ProductList({ products }: ProductListProps) {
               </div>
 
               <div className="flex shrink-0 flex-col items-end gap-1">
-                <span className="text-sm font-medium text-ink">{formatBRLPrice(product.price)}</span>
-                <span
-                  className={`rounded-full px-2 py-0.5 text-xs ${
-                    product.status === "published"
-                      ? "bg-brand/10 text-brand"
-                      : "bg-surface text-muted"
-                  }`}
-                >
+                <span className="text-sm font-medium text-[#111111]">{formatBRLPrice(product.price)}</span>
+                <span className="rounded-full bg-[#E7F2FD] px-2 py-0.5 text-xs text-[#6B6B6B]">
                   {product.status === "published" ? "Publicado" : "Rascunho"}
                 </span>
               </div>
@@ -140,7 +134,7 @@ export function ProductList({ products }: ProductListProps) {
                 <Link
                   href={`/produtos/${product.id}/editar`}
                   aria-label={`Editar ${product.name}`}
-                  className="flex h-11 w-11 items-center justify-center rounded-lg text-muted transition hover:bg-surface hover:text-ink"
+                  className="flex h-11 w-11 items-center justify-center rounded-lg text-[#6B6B6B] transition hover:bg-[#E7F2FD] hover:text-[#111111]"
                 >
                   <Pencil className="h-5 w-5" aria-hidden="true" />
                 </Link>
@@ -148,7 +142,7 @@ export function ProductList({ products }: ProductListProps) {
                   type="button"
                   onClick={() => openDeleteDialog(product)}
                   aria-label={`Excluir ${product.name}`}
-                  className="flex h-11 w-11 items-center justify-center rounded-lg text-danger transition hover:bg-danger/10"
+                  className="flex h-11 w-11 items-center justify-center rounded-lg text-[#FF4D4D] transition hover:bg-[#FF4D4D]/10"
                 >
                   <Trash2 className="h-5 w-5" aria-hidden="true" />
                 </button>
@@ -158,16 +152,16 @@ export function ProductList({ products }: ProductListProps) {
         })}
       </ul>
 
-      <dialog ref={dialogRef} className="rounded-xl p-6 backdrop:bg-black/40">
-        <h2 className="text-xl font-medium text-ink">Excluir {deleteTarget?.name}?</h2>
-        <p className="mt-2 max-w-sm text-sm text-muted">
+      <dialog ref={dialogRef} className="rounded-lg p-6 backdrop:bg-black/40">
+        <h2 className="text-xl font-medium text-[#111111]">Excluir {deleteTarget?.name}?</h2>
+        <p className="mt-2 max-w-sm text-sm text-[#6B6B6B]">
           Isso vai remover o produto e todas as fotos da sua vitrine. Essa ação não pode ser desfeita.
         </p>
         <form method="dialog" className="mt-4 flex gap-3">
           <button
             type="submit"
             onClick={() => setDeleteTarget(null)}
-            className="rounded-lg border border-black px-4 py-2 font-medium text-black"
+            className="rounded-lg border border-[#000000] px-4 py-2 font-medium text-[#000000]"
           >
             Cancelar
           </button>
@@ -175,7 +169,7 @@ export function ProductList({ products }: ProductListProps) {
             type="button"
             disabled={isDeleting}
             onClick={handleConfirmDelete}
-            className="rounded-lg bg-danger px-4 py-2 font-medium text-white disabled:opacity-60"
+            className="rounded-lg bg-[#FF4D4D] px-4 py-2 font-medium text-white disabled:opacity-60"
           >
             {isDeleting ? "Excluindo…" : "Sim, excluir"}
           </button>

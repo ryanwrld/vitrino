@@ -26,8 +26,6 @@ function cn(...inputs: ClassValue[]): string {
 export type ProductOrderPanelProps = {
   product: {
     name: string;
-    brand: string;
-    brand_other: string | null;
     line: string | null;
     sole: string | null;
     price: number;
@@ -118,9 +116,6 @@ export function ProductOrderPanel({
   // "folded in" quando presente — o template não tem placeholder próprio
   // para line.
   const modelo = product.line ? `${product.name} - ${product.line}` : product.name;
-  // Rótulo de marca exibido na página de detalhe (Seção 6, item 11) — mesmo
-  // fallback "Outra"/brand_other já usado em product-list.tsx.
-  const brandLabel = product.brand === "Outra" && product.brand_other ? product.brand_other : product.brand;
   // A2 (05-RESEARCH.md): sole ausente vira string vazia, nunca "null"/"undefined"
   // literal na mensagem.
   const solado = product.sole ?? "";
@@ -211,7 +206,7 @@ export function ProductOrderPanel({
 
   return (
     <div className="flex flex-col gap-6">
-      <Link href={`/loja/${slug}`} className="flex w-fit items-center gap-1 text-sm text-muted">
+      <Link href={`/loja/${slug}`} className="flex w-fit items-center gap-1 text-sm text-[#6B6B6B]">
         <ChevronLeft className="h-4 w-4" aria-hidden="true" />
         Voltar
       </Link>
@@ -225,27 +220,26 @@ export function ProductOrderPanel({
           {photosToRender.map((url, index) => (
             <div
               key={url ?? index}
-              className="relative aspect-square w-full shrink-0 snap-center overflow-hidden rounded-xl bg-surface"
+              className="relative aspect-square w-full shrink-0 snap-center overflow-hidden rounded-xl bg-[#E7F2FD]"
             >
               <ImageWithFallback src={url} alt={product.name} />
             </div>
           ))}
         </div>
         {photosToRender.length > 1 && (
-          <span className="text-center text-xs text-muted">
+          <span className="text-center text-xs text-[#6B6B6B]">
             Foto {activePhotoIndex + 1} de {photosToRender.length}
           </span>
         )}
       </div>
 
       <div className="flex flex-col gap-1">
-        {brandLabel && <span className="text-sm text-muted">{brandLabel}</span>}
-        <h1 className="text-xl font-bold text-ink">{product.name}</h1>
-        <span className="text-2xl font-bold text-ink">{formatBRLPrice(product.price)}</span>
+        <h1 className="text-2xl font-bold text-[#111111]">{product.name}</h1>
+        <span className="text-sm font-medium text-[#111111]">{formatBRLPrice(product.price)}</span>
       </div>
 
       <div className="flex flex-col gap-4">
-        <h2 className="text-xl font-medium text-ink">Escolha o tamanho</h2>
+        <h2 className="text-xl font-medium text-[#111111]">Escolha o tamanho</h2>
         <div className="grid grid-cols-5 gap-2">
           {sizes.map(({ size, available }) => (
             <button
@@ -256,11 +250,10 @@ export function ProductOrderPanel({
               tabIndex={available ? 0 : -1}
               className={cn(
                 "flex min-h-11 min-w-11 items-center justify-center rounded-lg border text-base transition",
-                available && selectedSize !== size && "border-brand bg-white text-brand",
-                available &&
-                  selectedSize === size &&
-                  "border-brand bg-brand font-semibold text-white ring-2 ring-brand/30",
-                !available && "pointer-events-none border-surface bg-surface text-muted line-through"
+                available && selectedSize !== size && "border-[#E7F2FD] bg-white text-[#111111]",
+                available && selectedSize === size && "border-[#0D21A1] bg-[#0D21A1] text-white",
+                !available &&
+                  "pointer-events-none border-[#E7F2FD] bg-[#E7F2FD] text-[#6B6B6B] line-through opacity-60"
               )}
             >
               {size}
@@ -272,7 +265,7 @@ export function ProductOrderPanel({
       <div className="flex flex-col gap-2">
         <div className="relative">
           {tooltipTarget === "order" && (
-            <div className="absolute -top-10 left-0 rounded-lg bg-ink px-3 py-1.5 text-xs text-white">
+            <div className="absolute -top-10 left-0 rounded-lg bg-[#111111] px-3 py-1.5 text-xs text-white">
               Selecione um tamanho
             </div>
           )}
@@ -283,7 +276,7 @@ export function ProductOrderPanel({
             rel="noopener noreferrer"
             onClick={handleOrderClick}
             className={cn(
-              "block min-h-11 w-full rounded-xl bg-brand px-4 py-3 text-center text-base font-semibold text-white transition",
+              "block min-h-11 w-full rounded-lg bg-[#0D21A1] px-4 py-2 text-center text-sm font-medium text-white transition",
               orderShakeKey > 0 && "animate-shake"
             )}
           >
@@ -293,7 +286,7 @@ export function ProductOrderPanel({
 
         <div className="relative">
           {tooltipTarget === "copy" && (
-            <div className="absolute -top-10 left-0 rounded-lg bg-ink px-3 py-1.5 text-xs text-white">
+            <div className="absolute -top-10 left-0 rounded-lg bg-[#111111] px-3 py-1.5 text-xs text-white">
               Selecione um tamanho
             </div>
           )}
@@ -303,7 +296,7 @@ export function ProductOrderPanel({
             onClick={handleCopy}
             disabled={isPending}
             className={cn(
-              "flex min-h-11 w-full items-center justify-center gap-1 rounded-lg border border-muted px-4 py-2 text-center text-sm font-medium text-muted transition disabled:opacity-60",
+              "flex min-h-11 w-full items-center justify-center gap-1 rounded-lg border border-[#6B6B6B] px-4 py-2 text-center text-sm font-medium text-[#6B6B6B] transition disabled:opacity-60",
               copyShakeKey > 0 && "animate-shake"
             )}
           >

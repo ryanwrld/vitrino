@@ -240,8 +240,8 @@ export function PhotoUploader({ productId, initialPhotos, onPendingFilesChange }
 
   return (
     <div className="flex flex-col gap-4">
-      <h2 className="text-xl font-medium text-ink">Fotos</h2>
-      <p className="text-xs text-muted">Até 5 fotos. A primeira é a capa da sua vitrine.</p>
+      <h2 className="text-xl font-medium text-[#111111]">Fotos</h2>
+      <p className="text-xs text-[#6B6B6B]">Até 5 fotos. A primeira é a capa da sua vitrine.</p>
 
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <SortableContext items={slots.map(slotKey)} strategy={horizontalListSortingStrategy}>
@@ -253,9 +253,9 @@ export function PhotoUploader({ productId, initialPhotos, onPendingFilesChange }
             {Array.from({ length: processingCount }).map((_, index) => (
               <div
                 key={`processing-${index}`}
-                className="flex aspect-square items-center justify-center rounded-lg border border-surface bg-surface"
+                className="flex aspect-square items-center justify-center rounded-lg border border-[#E7F2FD] bg-[#E7F2FD]"
               >
-                <div className="flex flex-col items-center gap-1 text-muted">
+                <div className="flex flex-col items-center gap-1 text-[#6B6B6B]">
                   <Loader2 className="h-5 w-5 animate-spin" aria-hidden="true" />
                   <span className="text-xs">Enviando…</span>
                 </div>
@@ -265,7 +265,7 @@ export function PhotoUploader({ productId, initialPhotos, onPendingFilesChange }
             {Array.from({ length: emptySlotCount }).map((_, index) => (
               <label
                 key={`empty-${index}`}
-                className="flex aspect-square cursor-pointer flex-col items-center justify-center gap-1 rounded-lg border border-dashed border-surface text-muted"
+                className="flex aspect-square cursor-pointer flex-col items-center justify-center gap-1 rounded-lg border border-dashed border-[#E7F2FD] text-[#6B6B6B]"
               >
                 <Plus className="h-5 w-5" aria-hidden="true" />
                 <span className="text-xs">Adicionar foto</span>
@@ -302,7 +302,7 @@ function PhotoSlotItem({ slot, isCover, onRemove }: PhotoSlotItemProps) {
     <div
       ref={setNodeRef}
       style={style}
-      className={`relative aspect-square overflow-hidden rounded-lg border border-surface ${isDragging ? "opacity-50" : ""}`}
+      className={`relative aspect-square overflow-hidden rounded-lg border border-[#E7F2FD] ${isDragging ? "opacity-50" : ""}`}
     >
       {slot.kind === "saved" ? (
         <Image src={slot.url} alt="" fill sizes="20vw" className="object-cover" />
@@ -312,7 +312,7 @@ function PhotoSlotItem({ slot, isCover, onRemove }: PhotoSlotItemProps) {
       )}
 
       {isCover && (
-        <span className="absolute left-1 top-1 rounded-full bg-brand px-2 py-0.5 text-xs text-white">Capa</span>
+        <span className="absolute left-1 top-1 rounded-full bg-[#0D21A1] px-2 py-0.5 text-xs text-white">Capa</span>
       )}
 
       {/*
@@ -328,7 +328,7 @@ function PhotoSlotItem({ slot, isCover, onRemove }: PhotoSlotItemProps) {
         aria-label="Reordenar foto"
         className="group absolute bottom-0 left-0 flex h-11 w-11 items-center justify-center"
       >
-        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/85 text-ink shadow-sm transition group-hover:scale-110 group-hover:bg-white">
+        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/85 text-[#111111] shadow-sm transition group-hover:scale-110 group-hover:bg-white">
           <GripVertical className="h-3 w-3" aria-hidden="true" />
         </span>
       </button>
@@ -339,7 +339,7 @@ function PhotoSlotItem({ slot, isCover, onRemove }: PhotoSlotItemProps) {
         aria-label="Remover foto"
         className="group absolute right-0 top-0 flex h-11 w-11 items-center justify-center"
       >
-        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/85 text-danger shadow-sm transition group-hover:scale-110 group-hover:bg-white">
+        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/85 text-[#FF4D4D] shadow-sm transition group-hover:scale-110 group-hover:bg-white">
           <X className="h-3 w-3" aria-hidden="true" />
         </span>
       </button>

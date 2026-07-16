@@ -68,14 +68,14 @@ export function ProductFilters({ slug, currentParams }: ProductFiltersProps) {
   function chipClassName(active: boolean): string {
     return clsx(
       "rounded-full border px-3 py-1.5 text-sm transition",
-      active ? "border-brand bg-brand text-white" : "border-surface bg-white text-ink"
+      active ? "border-[#0D21A1] bg-[#0D21A1] text-white" : "border-[#E7F2FD] bg-white text-[#111111]"
     );
   }
 
   return (
     <div className="sticky top-0 z-10 flex flex-col gap-3 bg-white py-2">
-      <div className="flex items-center gap-2 rounded-lg border border-surface bg-white px-3 py-2 focus-within:border-brand">
-        <Search className="h-4 w-4 shrink-0 text-muted" aria-hidden="true" />
+      <div className="flex items-center gap-2 rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 focus-within:border-[#0D21A1]">
+        <Search className="h-4 w-4 shrink-0 text-[#6B6B6B]" aria-hidden="true" />
         <input
           type="text"
           value={searchInput}

@@ -20,8 +20,8 @@ export function ImageWithFallback({ src, alt }: { src: string | null; alt: strin
 
   if (errored || !src) {
     return (
-      <div className="flex h-full w-full items-center justify-center rounded-xl bg-surface">
-        <ImageOff className="h-8 w-8 text-muted" aria-hidden="true" />
+      <div className="flex h-full w-full items-center justify-center rounded-xl bg-[#E7F2FD]">
+        <ImageOff className="h-8 w-8 text-[#6B6B6B]" aria-hidden="true" />
       </div>
     );
   }

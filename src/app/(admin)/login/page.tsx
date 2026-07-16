@@ -1,13 +1,11 @@
 "use client";
 
 import { useTransition } from "react";
-import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { signInSchema, type SignInInput } from "@/lib/validation/auth";
 import { signInAction } from "@/lib/auth/actions";
-import { VitrinoWordmark } from "@/components/vitrino-wordmark";
 
 /**
  * Login (AUTH-02). Mesma convenção de validação/feedback do cadastro. Esta
@@ -37,57 +35,54 @@ export default function LoginPage() {
 
   return (
     <main className="bg-white mx-auto flex min-h-dvh w-full max-w-sm flex-col justify-center gap-6 px-4 py-10">
-      <VitrinoWordmark />
       <div>
-        <h1 className="text-2xl font-bold text-black">Entrar</h1>
-        <p className="mt-1 text-sm text-muted">Acesse o painel da sua vitrine.</p>
+        <h1 className="text-2xl font-bold text-[#000000]">Entrar</h1>
+        <p className="mt-1 text-sm text-[#6B6B6B]">Acesse o painel da sua vitrine.</p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">
         <div className="flex flex-col gap-1">
-          <label htmlFor="email" className="text-sm font-medium text-ink">
+          <label htmlFor="email" className="text-sm font-medium text-[#111111]">
             Email
           </label>
           <input
             id="email"
             type="email"
             autoComplete="email"
-            aria-invalid={errors.email ? true : undefined}
             {...register("email")}
-            className="rounded-lg border border-surface bg-white px-3 py-2 text-base outline-none focus:border-brand aria-invalid:border-danger"
+            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
           />
-          {errors.email && <span className="text-sm text-danger">{errors.email.message}</span>}
+          {errors.email && <span className="text-sm text-[#FF4D4D]">{errors.email.message}</span>}
         </div>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="password" className="text-sm font-medium text-ink">
+          <label htmlFor="password" className="text-sm font-medium text-[#111111]">
             Senha
           </label>
           <input
             id="password"
             type="password"
             autoComplete="current-password"
-            aria-invalid={errors.password ? true : undefined}
             {...register("password")}
-            className="rounded-lg border border-surface bg-white px-3 py-2 text-base outline-none focus:border-brand aria-invalid:border-danger"
+            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
           />
-          {errors.password && <span className="text-sm text-danger">{errors.password.message}</span>}
+          {errors.password && <span className="text-sm text-[#FF4D4D]">{errors.password.message}</span>}
         </div>
 
         <button
           type="submit"
           disabled={isPending}
-          className="rounded-lg bg-brand px-4 py-2 font-medium text-white transition disabled:opacity-60"
+          className="rounded-lg bg-[#0D21A1] px-4 py-2 font-medium text-white transition disabled:opacity-60"
         >
           {isPending ? "Entrando…" : "Entrar"}
         </button>
       </form>
 
-      <p className="text-center text-sm text-muted">
+      <p className="text-center text-sm text-[#6B6B6B]">
         Ainda não tem conta?{" "}
-        <Link href="/cadastro" className="font-medium text-black underline">
+        <a href="/cadastro" className="font-medium text-[#000000] underline">
           Criar minha vitrine grátis
-        </Link>
+        </a>
       </p>
     </main>
   );

@@ -7,7 +7,6 @@ import { toast } from "sonner";
 import { AsYouType } from "libphonenumber-js";
 import { onboardingSchema, type OnboardingInput } from "@/lib/validation/onboarding";
 import { saveStoreSettings } from "@/lib/settings/actions";
-import { StoreIdentityFields } from "@/components/store-identity-fields";
 
 /**
  * Formulário de edição pós-onboarding (Loja + WhatsApp), escrito do zero
@@ -40,7 +39,6 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
     register,
     handleSubmit,
     watch,
-    setValue,
     formState: { errors },
   } = useForm<OnboardingInput>({
     resolver: zodResolver(onboardingSchema),
@@ -82,24 +80,72 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-6">
       <div className="flex flex-col gap-4">
-        <h2 className="text-xl font-medium text-ink">Loja</h2>
-
-        <StoreIdentityFields
-          register={register}
-          errors={errors}
-          watch={watch}
-          setValue={setValue}
-          onLogoFileChange={setLogoFile}
-        />
+        <h2 className="text-xl font-medium text-[#111111]">Loja</h2>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="hideSoldOutDefault" className="text-sm font-medium text-ink">
+          <label htmlFor="name" className="text-sm font-medium text-[#111111]">
+            Nome da loja
+          </label>
+          <input
+            id="name"
+            type="text"
+            autoComplete="organization"
+            {...register("name")}
+            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
+          />
+          {errors.name && <span className="text-sm text-[#FF4D4D]">{errors.name.message}</span>}
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <label htmlFor="logo" className="text-sm font-medium text-[#111111]">
+            Logo (opcional)
+          </label>
+          <input
+            id="logo"
+            type="file"
+            accept="image/png,image/jpeg,image/webp"
+            onChange={(event) => setLogoFile(event.target.files?.[0] ?? null)}
+            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-sm outline-none focus:border-[#0D21A1]"
+          />
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <label htmlFor="accentColor" className="text-sm font-medium text-[#111111]">
+            Cor de destaque
+          </label>
+          <input
+            id="accentColor"
+            type="color"
+            {...register("accentColor")}
+            className="h-10 w-20 rounded-lg border border-[#E7F2FD] bg-white p-1"
+          />
+          {errors.accentColor && (
+            <span className="text-sm text-[#FF4D4D]">{errors.accentColor.message}</span>
+          )}
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <label htmlFor="tagline" className="text-sm font-medium text-[#111111]">
+            Frase de apresentação (opcional, até 100 caracteres)
+          </label>
+          <input
+            id="tagline"
+            type="text"
+            maxLength={100}
+            {...register("tagline")}
+            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
+          />
+          {errors.tagline && <span className="text-sm text-[#FF4D4D]">{errors.tagline.message}</span>}
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <label htmlFor="hideSoldOutDefault" className="text-sm font-medium text-[#111111]">
             Ocultar produtos esgotados por padrão
           </label>
           <select
             id="hideSoldOutDefault"
             {...register("hideSoldOutDefault")}
-            className="select-chevron rounded-lg border border-surface bg-white px-3 py-2 text-base outline-none focus:border-brand"
+            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
           >
             <option value="false">Não — mostrar esmaecido (padrão)</option>
             <option value="true">Sim — ocultar da vitrine</option>
@@ -108,39 +154,37 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
       </div>
 
       <div className="flex flex-col gap-4">
-        <h2 className="text-xl font-medium text-ink">WhatsApp</h2>
+        <h2 className="text-xl font-medium text-[#111111]">WhatsApp</h2>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="whatsapp" className="text-sm font-medium text-ink">
+          <label htmlFor="whatsapp" className="text-sm font-medium text-[#111111]">
             WhatsApp
           </label>
           <input
             id="whatsapp"
             type="tel"
             placeholder="(11) 99999-9999"
-            aria-invalid={errors.whatsapp ? true : undefined}
             {...register("whatsapp")}
-            className="rounded-lg border border-surface bg-white px-3 py-2 text-base outline-none focus:border-brand aria-invalid:border-danger"
+            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
           />
           {formattedPreview && (
-            <span className="text-xs text-muted">Prévia: {formattedPreview}</span>
+            <span className="text-xs text-[#6B6B6B]">Prévia: {formattedPreview}</span>
           )}
-          {errors.whatsapp && <span className="text-sm text-danger">{errors.whatsapp.message}</span>}
+          {errors.whatsapp && <span className="text-sm text-[#FF4D4D]">{errors.whatsapp.message}</span>}
         </div>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="messageTemplate" className="text-sm font-medium text-ink">
+          <label htmlFor="messageTemplate" className="text-sm font-medium text-[#111111]">
             Template da mensagem de pedido
           </label>
           <textarea
             id="messageTemplate"
             rows={6}
-            aria-invalid={errors.messageTemplate ? true : undefined}
             {...register("messageTemplate")}
-            className="rounded-lg border border-surface bg-white px-3 py-2 text-sm outline-none focus:border-brand aria-invalid:border-danger"
+            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-sm outline-none focus:border-[#0D21A1]"
           />
           {errors.messageTemplate && (
-            <span className="text-sm text-danger">{errors.messageTemplate.message}</span>
+            <span className="text-sm text-[#FF4D4D]">{errors.messageTemplate.message}</span>
           )}
         </div>
       </div>
@@ -148,7 +192,7 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
       <button
         type="submit"
         disabled={isPending}
-        className="w-full rounded-lg bg-brand px-4 py-2 font-medium text-white transition disabled:opacity-60"
+        className="rounded-lg bg-[#0D21A1] px-4 py-2 font-medium text-white transition disabled:opacity-60"
       >
         {isPending ? "Salvando…" : "Salvar alterações"}
       </button>

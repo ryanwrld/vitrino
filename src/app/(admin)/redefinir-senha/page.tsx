@@ -7,7 +7,6 @@ import { z } from "zod";
 import { toast } from "sonner";
 import { signUpSchema } from "@/lib/validation/auth";
 import { updatePassword } from "@/lib/auth/reset-actions";
-import { VitrinoWordmark } from "@/components/vitrino-wordmark";
 
 const redefinirSenhaSchema = z
   .object({
@@ -51,15 +50,14 @@ export default function RedefinirSenhaPage() {
 
   return (
     <main className="bg-white mx-auto flex min-h-dvh w-full max-w-sm flex-col justify-center gap-6 px-4 py-10">
-      <VitrinoWordmark />
       <div>
-        <h1 className="text-2xl font-bold text-black">Definir nova senha</h1>
-        <p className="mt-1 text-sm text-muted">Escolha uma nova senha para sua conta.</p>
+        <h1 className="text-2xl font-bold text-[#000000]">Definir nova senha</h1>
+        <p className="mt-1 text-sm text-[#6B6B6B]">Escolha uma nova senha para sua conta.</p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">
         <div className="flex flex-col gap-1">
-          <label htmlFor="password" className="text-sm font-medium text-ink">
+          <label htmlFor="password" className="text-sm font-medium text-[#111111]">
             Nova senha
           </label>
           <input
@@ -67,13 +65,13 @@ export default function RedefinirSenhaPage() {
             type="password"
             autoComplete="new-password"
             {...register("password")}
-            className="rounded-lg border border-surface bg-white px-3 py-2 text-base outline-none focus:border-brand"
+            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
           />
-          {errors.password && <span className="text-sm text-danger">{errors.password.message}</span>}
+          {errors.password && <span className="text-sm text-[#FF4D4D]">{errors.password.message}</span>}
         </div>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="confirmPassword" className="text-sm font-medium text-ink">
+          <label htmlFor="confirmPassword" className="text-sm font-medium text-[#111111]">
             Confirme a nova senha
           </label>
           <input
@@ -81,17 +79,17 @@ export default function RedefinirSenhaPage() {
             type="password"
             autoComplete="new-password"
             {...register("confirmPassword")}
-            className="rounded-lg border border-surface bg-white px-3 py-2 text-base outline-none focus:border-brand"
+            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
           />
           {errors.confirmPassword && (
-            <span className="text-sm text-danger">{errors.confirmPassword.message}</span>
+            <span className="text-sm text-[#FF4D4D]">{errors.confirmPassword.message}</span>
           )}
         </div>
 
         <button
           type="submit"
           disabled={isPending}
-          className="rounded-lg bg-brand px-4 py-2 font-medium text-white transition disabled:opacity-60"
+          className="rounded-lg bg-[#0D21A1] px-4 py-2 font-medium text-white transition disabled:opacity-60"
         >
           {isPending ? "Salvando…" : "Salvar nova senha"}
         </button>
