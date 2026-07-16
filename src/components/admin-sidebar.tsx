@@ -34,8 +34,8 @@ function NavLinks({ pathname }: { pathname: string }) {
             href={item.href}
             className={
               isActive
-                ? "flex min-h-11 items-center border-l-2 border-[#0D21A1] pl-3 -ml-3 font-medium text-[#0D21A1]"
-                : "flex min-h-11 items-center pl-3 -ml-3 text-[#6B6B6B]"
+                ? "flex min-h-11 items-center border-l-2 border-primary pl-3 -ml-3 font-medium text-primary transition-colors duration-150"
+                : "flex min-h-11 items-center pl-3 -ml-3 text-gray-500 hover:text-gray-900 transition-colors duration-150"
             }
           >
             {item.label}
@@ -79,19 +79,19 @@ export function AdminSidebar() {
   return (
     <>
       {/* Desktop: sidebar fixa, sempre no DOM, só visível >= md */}
-      <aside className="hidden w-56 shrink-0 flex-col gap-6 border-r border-[#E7F2FD] bg-white p-4 md:flex">
+      <aside className="hidden w-56 shrink-0 flex-col gap-6 border-r border-gray-200 bg-white p-4 md:flex">
         <nav className="flex flex-col gap-3">
           <NavLinks pathname={pathname} />
         </nav>
-        <form action={signOutAction} className="mt-auto border-t border-[#E7F2FD] pt-4">
-          <button type="submit" className="min-h-11 text-sm text-[#6B6B6B]">
+        <form action={signOutAction} className="mt-auto border-t border-gray-200 pt-4">
+          <button type="submit" className="min-h-11 text-sm text-gray-500 hover:text-gray-900 transition-colors duration-150">
             Sair da conta
           </button>
         </form>
       </aside>
 
       {/* Mobile: barra de topo com o hambúrguer, acima de {children} (D-06 / UI-SPEC linha 132) — só visível < md */}
-      <div className="flex h-14 shrink-0 items-center border-b border-[#E7F2FD] bg-white px-4 md:hidden">
+      <div className="flex h-14 shrink-0 items-center border-b border-gray-200 bg-white px-4 md:hidden">
         <button
           type="button"
           onClick={() => dialogRef.current?.showModal()}
@@ -104,10 +104,10 @@ export function AdminSidebar() {
       <dialog
         ref={dialogRef}
         aria-label="Menu de navegação"
-        className="m-0 h-dvh max-h-none w-64 max-w-none bg-white p-4 backdrop:bg-black/50"
+        className="m-0 h-dvh max-h-none w-64 max-w-none bg-white p-4 backdrop:bg-black/45 backdrop:backdrop-blur-[2px]"
         onCancel={closeDrawer}
       >
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-6 animate-scale-in">
           <button
             type="button"
             onClick={closeDrawer}
@@ -123,8 +123,8 @@ export function AdminSidebar() {
           }}>
             <NavLinks pathname={pathname} />
           </nav>
-          <form action={signOutAction} className="mt-auto border-t border-[#E7F2FD] pt-4">
-            <button type="submit" className="min-h-11 text-sm text-[#6B6B6B]">
+          <form action={signOutAction} className="mt-auto border-t border-gray-200 pt-4">
+            <button type="submit" className="min-h-11 text-sm text-gray-500 hover:text-gray-900 transition-colors duration-150">
               Sair da conta
             </button>
           </form>
