@@ -152,7 +152,7 @@ export function ProductList({ products }: ProductListProps) {
         })}
       </ul>
 
-      <dialog ref={dialogRef} className="rounded-lg p-6 backdrop:bg-black/40">
+      <dialog ref={dialogRef} className="rounded-xl p-6 backdrop:bg-black/40">
         <h2 className="text-xl font-medium text-[#111111]">Excluir {deleteTarget?.name}?</h2>
         <p className="mt-2 max-w-sm text-sm text-[#6B6B6B]">
           Isso vai remover o produto e todas as fotos da sua vitrine. Essa ação não pode ser desfeita.

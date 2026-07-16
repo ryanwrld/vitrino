@@ -32,8 +32,8 @@ Este documento consolida duas auditorias independentes de UI/UX feitas em **2026
 - [ ] Hero da vitrine pública usa preto puro (`#000000`) como fallback (`store-hero.tsx:25`), desconectado do azul (`#0D21A1`) usado como cor de ação em todo o resto do app — duas "cores de marca" diferentes na mesma tela quando a loja não configura `accent_color`.
 - [x] Seletor de "cor de destaque" é o color picker nativo do SO, sem curadoria, sem swatches sugeridos, sem preview de como a cor vai ficar no hero da vitrine (`onboarding-wizard.tsx:109-118`, `settings-form.tsx`) — revendedor escolhe às cegas. — corrigido (quick-260716-0z2, Task 2), 2026-07-16
 - [ ] Paleta 100% em hex cru repetido centenas de vezes (`text-[#111111]`, `text-[#6B6B6B]`, `border-[#E7F2FD]`, `bg-[#0D21A1]`, `text-[#FF4D4D]`), nunca um token Tailwind — nenhuma fonte única de verdade, cada arquivo redefine as mesmas strings.
-- [ ] Animação praticamente inexistente — só o "shake" de erro em `globals.css`. Troca de filtro/página é corte seco; `<dialog>` nativo (menu mobile, confirmações) abre/fecha sem fade/slide/scale; transições de cor/opacidade existem na classe CSS mas não produzem movimento perceptível em nenhum outro lugar.
-- [ ] Componentes nativos não estilizados quebram a coerência entre plataformas: todo `<select>` (marca, solado, categoria, status, ordenação) é o dropdown nativo do navegador sem seta customizada; `<dialog>` tem estilização mínima (sombra/foco variam por navegador).
+- [x] Animação praticamente inexistente — só o "shake" de erro em `globals.css`. Troca de filtro/página é corte seco; `<dialog>` nativo (menu mobile, confirmações) abre/fecha sem fade/slide/scale; transições de cor/opacidade existem na classe CSS mas não produzem movimento perceptível em nenhum outro lugar. — corrigido (quick-260716-0z2, Task 3), 2026-07-16
+- [x] Componentes nativos não estilizados quebram a coerência entre plataformas: todo `<select>` (marca, solado, categoria, status, ordenação) é o dropdown nativo do navegador sem seta customizada; `<dialog>` tem estilização mínima (sombra/foco variam por navegador). — corrigido (quick-260716-0z2, Task 3), 2026-07-16
 
 ## 3. Acessibilidade
 

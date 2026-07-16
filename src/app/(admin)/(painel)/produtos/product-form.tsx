@@ -164,7 +164,7 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
             id="brand"
             aria-invalid={errors.brand ? true : undefined}
             {...register("brand")}
-            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1] aria-invalid:border-[#FF4D4D]"
+            className="select-chevron rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1] aria-invalid:border-[#FF4D4D]"
           >
             <option value="">Selecione a marca</option>
             {BRANDS.map((brand) => (
@@ -220,7 +220,7 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
           <select
             id="sole"
             {...register("sole")}
-            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
+            className="select-chevron rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
           >
             <option value="">—</option>
             {SOLES.map((sole) => (
@@ -238,7 +238,7 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
           <select
             id="category"
             {...register("category")}
-            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
+            className="select-chevron rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
           >
             <option value="">—</option>
             {CATEGORIES.map((category) => (
@@ -256,7 +256,7 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
           <select
             id="fulfillment"
             {...register("fulfillment")}
-            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
+            className="select-chevron rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
           >
             <option value="">—</option>
             {FULFILLMENTS.map((fulfillment) => (
@@ -305,7 +305,7 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
           <select
             id="hideWhenSoldOut"
             {...register("hideWhenSoldOut")}
-            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
+            className="select-chevron rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
           >
             <option value="">Usar padrão da loja</option>
             <option value="false">Sempre mostrar (esmaecido)</option>

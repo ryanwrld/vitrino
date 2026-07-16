@@ -151,7 +151,7 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
           <select
             id="hideSoldOutDefault"
             {...register("hideSoldOutDefault")}
-            className="rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
+            className="select-chevron rounded-lg border border-[#E7F2FD] bg-white px-3 py-2 text-base outline-none focus:border-[#0D21A1]"
           >
             <option value="false">Não — mostrar esmaecido (padrão)</option>
             <option value="true">Sim — ocultar da vitrine</option>
