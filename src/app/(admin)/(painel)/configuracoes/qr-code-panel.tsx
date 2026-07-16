@@ -68,10 +68,10 @@ export function QrCodePanel({ publicUrl }: QrCodePanelProps) {
 
   return (
     <div className="flex flex-col gap-4">
-      <h2 className="text-xl font-medium text-[#111111]">Seu QR Code</h2>
+      <h2 className="font-display text-xl font-medium text-gray-900">Seu QR Code</h2>
 
       <div className="flex flex-col items-start gap-3">
-        <div className="rounded-lg bg-[#E7F2FD] p-4">
+        <div className="rounded-lg bg-gray-100 p-4">
           <canvas ref={canvasRef} width={240} height={240} />
         </div>
 
@@ -79,7 +79,7 @@ export function QrCodePanel({ publicUrl }: QrCodePanelProps) {
           type="button"
           onClick={handleDownload}
           disabled={!qrReady}
-          className="flex items-center gap-2 rounded-lg border border-[#000000] p-3 font-medium text-[#000000] transition hover:bg-[#000000] hover:text-white disabled:opacity-60"
+          className="flex items-center gap-2 rounded-md border border-gray-300 bg-white p-3 text-sm font-semibold text-gray-900 transition-all duration-150 hover:bg-gray-100 active:bg-gray-200 active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 disabled:opacity-60"
         >
           <Download className="h-4 w-4" aria-hidden="true" />
           Baixar PNG
@@ -87,7 +87,7 @@ export function QrCodePanel({ publicUrl }: QrCodePanelProps) {
       </div>
 
       <div className="flex flex-col gap-1">
-        <label htmlFor="publicUrl" className="text-sm font-medium text-[#111111]">
+        <label htmlFor="publicUrl" className="text-sm font-medium text-gray-700">
           URL pública
         </label>
         <div className="flex items-center gap-2">
@@ -96,14 +96,14 @@ export function QrCodePanel({ publicUrl }: QrCodePanelProps) {
             type="text"
             value={publicUrl}
             readOnly
-            className="flex-1 rounded-lg border border-[#E7F2FD] bg-[#E7F2FD] px-3 py-2 text-base text-[#111111] outline-none"
+            className="flex-1 rounded-md border border-gray-200 bg-gray-50 px-3 h-11 text-base text-gray-900 outline-none"
           />
           <button
             type="button"
             onClick={handleCopy}
             disabled={isCopying}
             aria-label="Copiar"
-            className="flex items-center gap-2 rounded-lg bg-[#0D21A1] p-3 font-medium text-white transition disabled:opacity-60"
+            className="flex items-center gap-2 rounded-md bg-primary p-3 text-sm font-semibold text-white transition-all duration-150 hover:bg-primary-hover active:bg-primary-active active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 disabled:bg-gray-100 disabled:text-gray-400 disabled:pointer-events-none"
           >
             <Copy className="h-4 w-4" aria-hidden="true" />
             Copiar
