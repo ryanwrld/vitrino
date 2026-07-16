@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { VitrinoLogo } from "@/components/vitrino-logo";
 
 /**
  * Layout compartilhado das 4 telas de auth (login/cadastro/esqueci-senha/
@@ -23,7 +24,7 @@ export function AuthLayout({
       <div className="flex flex-1 items-center justify-center p-8">
         <div className="flex w-full max-w-sm flex-col gap-6">
           <div className="flex items-center gap-2">
-            <div className="h-[30px] w-[30px] rounded-md bg-primary" aria-hidden="true" />
+            <VitrinoLogo size={30} className="text-primary" />
             <span className="font-display text-lg font-extrabold text-gray-900">Vitrino</span>
           </div>
 

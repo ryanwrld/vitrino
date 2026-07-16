@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, Home, List, Settings } from "lucide-react";
 import { signOutAction } from "@/lib/auth/actions";
+import { VitrinoLogo } from "@/components/vitrino-logo";
 
 /**
  * Itens de navegação do painel (D-07, copy verbatim): Dashboard, Produtos,
@@ -58,7 +59,7 @@ function NavLinks({ pathname }: { pathname: string }) {
 function LogoMark() {
   return (
     <div className="flex items-center gap-2 px-3">
-      <div className="h-7 w-7 rounded-md bg-primary" aria-hidden="true" />
+      <VitrinoLogo size={28} className="text-primary" />
       <span className="font-display text-lg font-extrabold text-gray-900">Vitrino</span>
     </div>
   );
