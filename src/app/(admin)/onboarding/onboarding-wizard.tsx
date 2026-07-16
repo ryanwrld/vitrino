@@ -11,6 +11,8 @@ import {
   type OnboardingInput,
 } from "@/lib/validation/onboarding";
 import { saveOnboarding } from "@/lib/onboarding/actions";
+import { VitrinoWordmark } from "@/components/vitrino-wordmark";
+import { AccentColorField } from "@/components/accent-color-field";
 
 /**
  * Wizard de onboarding em tela única (decisão de UI a critério do executor,
@@ -31,6 +33,7 @@ export function OnboardingWizard() {
     register,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<OnboardingInput>({
     resolver: zodResolver(onboardingSchema),
@@ -45,6 +48,8 @@ export function OnboardingWizard() {
 
   const whatsappValue = watch("whatsapp");
   const formattedPreview = whatsappValue ? new AsYouType("BR").input(whatsappValue) : "";
+  const nameValue = watch("name");
+  const accentColorValue = watch("accentColor");
 
   const onSubmit = (values: OnboardingInput) => {
     const formData = new FormData();
@@ -67,6 +72,7 @@ export function OnboardingWizard() {
 
   return (
     <main className="bg-white mx-auto flex min-h-dvh w-full max-w-md flex-col justify-center gap-6 px-4 py-10">
+      <VitrinoWordmark />
       <div>
         <h1 className="text-2xl font-bold text-[#000000]">Configure sua vitrine</h1>
         <p className="mt-1 text-sm text-[#6B6B6B]">
@@ -107,11 +113,11 @@ export function OnboardingWizard() {
           <label htmlFor="accentColor" className="text-sm font-medium text-[#111111]">
             Cor de destaque
           </label>
-          <input
+          <AccentColorField
             id="accentColor"
-            type="color"
-            {...register("accentColor")}
-            className="h-10 w-20 rounded-lg border border-[#E7F2FD] bg-white p-1"
+            value={accentColorValue ?? "#0D21A1"}
+            onChange={(color) => setValue("accentColor", color)}
+            storeNamePreview={nameValue}
           />
           {errors.accentColor && (
             <span className="text-sm text-[#FF4D4D]">{errors.accentColor.message}</span>

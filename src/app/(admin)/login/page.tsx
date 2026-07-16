@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { signInSchema, type SignInInput } from "@/lib/validation/auth";
 import { signInAction } from "@/lib/auth/actions";
+import { VitrinoWordmark } from "@/components/vitrino-wordmark";
 
 /**
  * Login (AUTH-02). Mesma convenção de validação/feedback do cadastro. Esta
@@ -35,6 +36,7 @@ export default function LoginPage() {
 
   return (
     <main className="bg-white mx-auto flex min-h-dvh w-full max-w-sm flex-col justify-center gap-6 px-4 py-10">
+      <VitrinoWordmark />
       <div>
         <h1 className="text-2xl font-bold text-[#000000]">Entrar</h1>
         <p className="mt-1 text-sm text-[#6B6B6B]">Acesse o painel da sua vitrine.</p>

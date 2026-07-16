@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { AsYouType } from "libphonenumber-js";
 import { onboardingSchema, type OnboardingInput } from "@/lib/validation/onboarding";
 import { saveStoreSettings } from "@/lib/settings/actions";
+import { AccentColorField } from "@/components/accent-color-field";
 
 /**
  * Formulário de edição pós-onboarding (Loja + WhatsApp), escrito do zero
@@ -39,6 +40,7 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
     register,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<OnboardingInput>({
     resolver: zodResolver(onboardingSchema),
@@ -54,6 +56,8 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
 
   const whatsappValue = watch("whatsapp");
   const formattedPreview = whatsappValue ? new AsYouType("BR").input(whatsappValue) : "";
+  const nameValue = watch("name");
+  const accentColorValue = watch("accentColor");
 
   const onSubmit = (values: OnboardingInput) => {
     const formData = new FormData();
@@ -114,11 +118,11 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
           <label htmlFor="accentColor" className="text-sm font-medium text-[#111111]">
             Cor de destaque
           </label>
-          <input
+          <AccentColorField
             id="accentColor"
-            type="color"
-            {...register("accentColor")}
-            className="h-10 w-20 rounded-lg border border-[#E7F2FD] bg-white p-1"
+            value={accentColorValue ?? "#0D21A1"}
+            onChange={(color) => setValue("accentColor", color)}
+            storeNamePreview={nameValue}
           />
           {errors.accentColor && (
             <span className="text-sm text-[#FF4D4D]">{errors.accentColor.message}</span>

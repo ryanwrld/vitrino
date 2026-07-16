@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { signUpSchema, type SignUpInput } from "@/lib/validation/auth";
 import { signUpAction } from "@/lib/auth/actions";
+import { VitrinoWordmark } from "@/components/vitrino-wordmark";
 
 /**
  * Cadastro (AUTH-01). Validação client-side com react-hook-form + Zod
@@ -37,6 +38,7 @@ export default function CadastroPage() {
 
   return (
     <main className="bg-white mx-auto flex min-h-dvh w-full max-w-sm flex-col justify-center gap-6 px-4 py-10">
+      <VitrinoWordmark />
       <div>
         <h1 className="text-2xl font-bold text-[#000000]">Criar minha vitrine grátis</h1>
         <p className="mt-1 text-sm text-[#6B6B6B]">
