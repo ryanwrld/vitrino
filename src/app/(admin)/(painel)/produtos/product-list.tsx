@@ -125,7 +125,13 @@ export function ProductList({ products }: ProductListProps) {
 
               <div className="flex shrink-0 flex-col items-end gap-1">
                 <span className="text-sm font-medium text-[#111111]">{formatBRLPrice(product.price)}</span>
-                <span className="rounded-full bg-[#E7F2FD] px-2 py-0.5 text-xs text-[#6B6B6B]">
+                <span
+                  className={`rounded-full px-2 py-0.5 text-xs ${
+                    product.status === "published"
+                      ? "bg-[#0D21A1]/10 text-[#0D21A1]"
+                      : "bg-[#E7F2FD] text-[#6B6B6B]"
+                  }`}
+                >
                   {product.status === "published" ? "Publicado" : "Rascunho"}
                 </span>
               </div>

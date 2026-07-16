@@ -82,7 +82,7 @@ export default async function DashboardPage() {
               <card.Icon className={`h-5 w-5 ${card.iconClass}`} aria-hidden="true" />
               <span className="text-sm font-medium text-[#6B6B6B]">{card.label}</span>
             </div>
-            <span className={`text-[28px] font-bold ${card.numberClass}`}>{card.value}</span>
+            <span className={`text-3xl font-bold ${card.numberClass}`}>{card.value}</span>
           </div>
         ))}
       </div>

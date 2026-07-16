@@ -200,7 +200,7 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
       <button
         type="submit"
         disabled={isPending}
-        className="rounded-lg bg-[#0D21A1] px-4 py-2 font-medium text-white transition disabled:opacity-60"
+        className="w-full rounded-lg bg-[#0D21A1] px-4 py-2 font-medium text-white transition disabled:opacity-60"
       >
         {isPending ? "Salvando…" : "Salvar alterações"}
       </button>

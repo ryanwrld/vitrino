@@ -1,10 +1,28 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useFormStatus } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { signOutAction } from "@/lib/auth/actions";
+
+/**
+ * Botão de submit de `<form action={signOutAction}>` (Seção 6, item 1) —
+ * usa `useFormStatus()` para desabilitar e trocar o rótulo para "Saindo…"
+ * durante o pending, evitando clique duplo disparando duas submissões. Único
+ * componente usado nos dois lugares (sidebar desktop + drawer mobile) —
+ * nunca duas implementações divergentes.
+ */
+function LogoutButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <button type="submit" disabled={pending} className="min-h-11 text-sm text-[#6B6B6B] disabled:opacity-60">
+      {pending ? "Saindo…" : "Sair da conta"}
+    </button>
+  );
+}
 
 /**
  * Itens de navegação do painel (D-07, copy verbatim): Dashboard, Produtos,
@@ -84,9 +102,7 @@ export function AdminSidebar() {
           <NavLinks pathname={pathname} />
         </nav>
         <form action={signOutAction} className="mt-auto border-t border-[#E7F2FD] pt-4">
-          <button type="submit" className="min-h-11 text-sm text-[#6B6B6B]">
-            Sair da conta
-          </button>
+          <LogoutButton />
         </form>
       </aside>
 

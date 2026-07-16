@@ -26,6 +26,8 @@ function cn(...inputs: ClassValue[]): string {
 export type ProductOrderPanelProps = {
   product: {
     name: string;
+    brand: string;
+    brand_other: string | null;
     line: string | null;
     sole: string | null;
     price: number;
@@ -116,6 +118,9 @@ export function ProductOrderPanel({
   // "folded in" quando presente — o template não tem placeholder próprio
   // para line.
   const modelo = product.line ? `${product.name} - ${product.line}` : product.name;
+  // Rótulo de marca exibido na página de detalhe (Seção 6, item 11) — mesmo
+  // fallback "Outra"/brand_other já usado em product-list.tsx.
+  const brandLabel = product.brand === "Outra" && product.brand_other ? product.brand_other : product.brand;
   // A2 (05-RESEARCH.md): sole ausente vira string vazia, nunca "null"/"undefined"
   // literal na mensagem.
   const solado = product.sole ?? "";
@@ -234,6 +239,7 @@ export function ProductOrderPanel({
       </div>
 
       <div className="flex flex-col gap-1">
+        {brandLabel && <span className="text-sm text-[#6B6B6B]">{brandLabel}</span>}
         <h1 className="text-xl font-bold text-[#111111]">{product.name}</h1>
         <span className="text-2xl font-bold text-[#111111]">{formatBRLPrice(product.price)}</span>
       </div>

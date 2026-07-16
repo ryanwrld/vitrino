@@ -79,7 +79,7 @@ export function QrCodePanel({ publicUrl }: QrCodePanelProps) {
           type="button"
           onClick={handleDownload}
           disabled={!qrReady}
-          className="flex items-center gap-2 rounded-lg border border-[#000000] p-3 font-medium text-[#000000] transition hover:bg-[#000000] hover:text-white disabled:opacity-60"
+          className="flex items-center gap-2 rounded-lg bg-[#0D21A1] p-3 font-medium text-white transition disabled:opacity-60"
         >
           <Download className="h-4 w-4" aria-hidden="true" />
           Baixar PNG
