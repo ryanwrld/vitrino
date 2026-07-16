@@ -7,6 +7,7 @@ import { z } from "zod";
 import { toast } from "sonner";
 import { signUpSchema } from "@/lib/validation/auth";
 import { requestPasswordReset } from "@/lib/auth/reset-actions";
+import { AuthLayout, RequiredMark } from "@/components/auth-layout";
 
 const requestResetSchema = z.object({
   email: signUpSchema.shape.email,
@@ -41,18 +42,23 @@ export default function EsqueciSenhaPage() {
   };
 
   return (
-    <main className="bg-white mx-auto flex min-h-dvh w-full max-w-sm flex-col justify-center gap-6 px-4 py-10">
-      <div>
-        <h1 className="font-display text-2xl font-bold text-gray-900">Esqueci minha senha</h1>
-        <p className="mt-1 text-sm text-gray-500">
-          Informe o email da sua conta e enviaremos um link para redefinir sua senha.
+    <AuthLayout
+      title="Esqueci minha senha"
+      subtitle="Informe o email da sua conta e enviaremos um link para redefinir sua senha."
+      footer={
+        <p className="text-center text-sm text-gray-500">
+          Lembrou a senha?{" "}
+          <a href="/login" className="font-medium text-primary hover:text-primary-hover">
+            Entrar
+          </a>
         </p>
-      </div>
-
+      }
+    >
       <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">
         <div className="flex flex-col gap-1">
           <label htmlFor="email" className="text-sm font-medium text-gray-700">
-            Email
+            E-mail
+            <RequiredMark />
           </label>
           <input
             id="email"
@@ -67,18 +73,11 @@ export default function EsqueciSenhaPage() {
         <button
           type="submit"
           disabled={isPending}
-          className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white transition-all duration-150 hover:bg-primary-hover active:bg-primary-active active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 disabled:bg-gray-100 disabled:text-gray-400 disabled:pointer-events-none"
+          className="w-full rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white transition-all duration-150 hover:bg-primary-hover active:bg-primary-active active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 disabled:bg-gray-100 disabled:text-gray-400 disabled:pointer-events-none"
         >
           {isPending ? "Enviando…" : "Enviar link de recuperação"}
         </button>
       </form>
-
-      <p className="text-center text-sm text-gray-500">
-        Lembrou a senha?{" "}
-        <a href="/login" className="font-medium text-primary hover:text-primary-hover">
-          Entrar
-        </a>
-      </p>
-    </main>
+    </AuthLayout>
   );
 }

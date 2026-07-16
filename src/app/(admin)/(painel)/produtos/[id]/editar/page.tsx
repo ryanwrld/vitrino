@@ -87,9 +87,21 @@ export default async function EditarProdutoPage({ params }: PageProps) {
   };
 
   return (
-    <div className="bg-white mx-auto flex min-h-dvh w-full max-w-md flex-col gap-6 px-4 py-10">
-      <div>
-        <h1 className="font-display text-2xl font-bold text-gray-900">Editar produto</h1>
+    <div className="bg-white mx-auto flex min-h-dvh w-full max-w-2xl flex-col gap-6 px-4 py-10">
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <Link href="/produtos" className="text-sm text-gray-500 transition-colors duration-150 hover:text-gray-900">
+            ← Voltar
+          </Link>
+          <h1 className="mt-2 font-display text-2xl font-extrabold text-gray-900">Editar produto</h1>
+        </div>
+        <span
+          className={`mt-1 inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold ${
+            product.status === "published" ? "bg-success-bg text-success-fg" : "bg-gray-100 text-gray-600"
+          }`}
+        >
+          {product.status === "published" ? "Publicado" : "Rascunho"}
+        </span>
       </div>
 
       <ProductForm
@@ -98,13 +110,6 @@ export default async function EditarProdutoPage({ params }: PageProps) {
         initialPhotos={photos}
         defaultValues={defaultValues}
       />
-
-      <Link
-        href="/produtos"
-        className="rounded-md border border-gray-300 bg-white px-4 py-2 text-center text-sm font-semibold text-gray-900 transition-all duration-150 hover:bg-gray-100 active:bg-gray-200 active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2"
-      >
-        Voltar
-      </Link>
     </div>
   );
 }

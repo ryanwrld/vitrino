@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { queryPublicProducts } from "@/lib/products/public-list";
+import { EmptyState } from "@/components/empty-state";
 import { StoreHero } from "./store-hero";
 import { ProductGrid } from "./product-grid";
 import { ProductFilters } from "./product-filters";
@@ -109,7 +110,7 @@ export default async function LojaPublicaPage({ params, searchParams }: PageProp
   const searchParamsString = filterSearchParams.toString();
 
   return (
-    <main className="mx-auto flex min-h-dvh w-full max-w-5xl flex-col gap-6 bg-white px-4 py-6">
+    <main className="flex min-h-dvh w-full flex-col bg-white">
       <StoreHero
         store={{
           name: store.name,
@@ -119,28 +120,34 @@ export default async function LojaPublicaPage({ params, searchParams }: PageProp
         }}
       />
 
-      {hasAnyPublished && <ProductFilters slug={slug} currentParams={filters} />}
+      <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-4 py-6">
+        {hasAnyPublished && <ProductFilters slug={slug} currentParams={filters} />}
 
-      {hasFilteredResults ? (
-        <>
-          <ProductGrid products={productsWithCoverUrl} slug={slug} />
+        {hasFilteredResults ? (
+          <>
+            <ProductGrid products={productsWithCoverUrl} slug={slug} />
 
-          <div className="hidden md:flex md:justify-center">
-            <PaginationNumbered slug={slug} currentPage={page} hasMore={hasMore} searchParamsString={searchParamsString} />
-          </div>
-          <div className="flex md:hidden">
-            <LoadMoreButton slug={slug} initialPage={page} initialHasMore={hasMore} filters={filters} />
-          </div>
-        </>
-      ) : hasAnyPublished ? (
-        <div className="flex flex-col gap-1 rounded-lg border border-dashed border-gray-300 px-4 py-8 text-center">
-          <span className="font-medium text-gray-900">Nenhum produto encontrado com esse filtro.</span>
-        </div>
-      ) : (
-        <div className="flex flex-col gap-1 rounded-lg border border-dashed border-gray-300 px-4 py-8 text-center">
-          <span className="font-medium text-gray-900">Esta loja ainda não tem produtos disponíveis.</span>
-        </div>
-      )}
+            <div className="hidden md:flex md:justify-center">
+              <PaginationNumbered slug={slug} currentPage={page} hasMore={hasMore} searchParamsString={searchParamsString} />
+            </div>
+            <div className="flex md:hidden">
+              <LoadMoreButton slug={slug} initialPage={page} initialHasMore={hasMore} filters={filters} />
+            </div>
+          </>
+        ) : hasAnyPublished ? (
+          <EmptyState
+            icon="search"
+            title="Nada encontrado"
+            description="Tente outro termo ou remova os filtros aplicados."
+          />
+        ) : (
+          <EmptyState
+            icon="box"
+            title="Essa loja ainda não tem produtos"
+            description="Volte em breve — o vendedor está preparando a vitrine."
+          />
+        )}
+      </div>
     </main>
   );
 }

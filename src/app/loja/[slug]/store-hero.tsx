@@ -1,3 +1,4 @@
+import { getContrastTextColor } from "@/lib/color/contrast";
 import { ImageWithFallback } from "./image-with-fallback";
 
 export type StoreHeroData = {
@@ -17,18 +18,36 @@ export type StoreHeroData = {
  * escuro de marca (#000000) quando a loja não configurou uma cor própria.
  * A frase de apresentação SÓ renderiza quando preenchida (D-13) — sem
  * elemento/espaço vazio quando ausente.
+ *
+ * `getContrastTextColor` escolhe texto claro/escuro conforme a luminância da
+ * própria `accentColor` — sem isso, uma loja com cor de destaque clara (ex.:
+ * branco, escolhida livremente no color picker de Configurações) deixa
+ * nome/tagline ilegíveis (texto branco sobre fundo branco).
  */
 export function StoreHero({ store }: { store: StoreHeroData }) {
+  const backgroundColor = store.accentColor ?? "#000000";
+  const isDarkText = getContrastTextColor(backgroundColor) === "dark";
+
   return (
     <div
-      className="flex flex-col items-center gap-3 rounded-2xl px-6 py-8 text-center text-white"
-      style={{ backgroundColor: store.accentColor ?? "#000000" }}
+      className={`flex w-full flex-col items-center gap-3 px-5 py-10 text-center ${
+        isDarkText ? "text-gray-900" : "text-white"
+      }`}
+      style={{ backgroundColor }}
     >
-      <div className="relative h-16 w-16 overflow-hidden rounded-full bg-white/20">
+      <div
+        className={`relative h-16 w-16 overflow-hidden rounded-full ${
+          isDarkText ? "bg-black/10" : "bg-white/20"
+        }`}
+      >
         <ImageWithFallback src={store.logoUrl} alt={store.name} />
       </div>
-      <h1 className="font-display text-2xl font-bold">{store.name}</h1>
-      {store.tagline && <p className="max-w-sm text-sm text-white/90">{store.tagline}</p>}
+      <h1 className="font-display text-2xl font-extrabold tracking-tight">{store.name}</h1>
+      {store.tagline && (
+        <p className={`max-w-sm text-base ${isDarkText ? "text-gray-900/85" : "text-white/85"}`}>
+          {store.tagline}
+        </p>
+      )}
     </div>
   );
 }

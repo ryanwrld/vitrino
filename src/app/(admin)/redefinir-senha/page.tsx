@@ -7,6 +7,7 @@ import { z } from "zod";
 import { toast } from "sonner";
 import { signUpSchema } from "@/lib/validation/auth";
 import { updatePassword } from "@/lib/auth/reset-actions";
+import { AuthLayout, RequiredMark } from "@/components/auth-layout";
 
 const redefinirSenhaSchema = z
   .object({
@@ -49,16 +50,12 @@ export default function RedefinirSenhaPage() {
   };
 
   return (
-    <main className="bg-white mx-auto flex min-h-dvh w-full max-w-sm flex-col justify-center gap-6 px-4 py-10">
-      <div>
-        <h1 className="font-display text-2xl font-bold text-gray-900">Definir nova senha</h1>
-        <p className="mt-1 text-sm text-gray-500">Escolha uma nova senha para sua conta.</p>
-      </div>
-
+    <AuthLayout title="Definir nova senha" subtitle="Escolha uma nova senha para sua conta.">
       <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">
         <div className="flex flex-col gap-1">
           <label htmlFor="password" className="text-sm font-medium text-gray-700">
             Nova senha
+            <RequiredMark />
           </label>
           <input
             id="password"
@@ -73,6 +70,7 @@ export default function RedefinirSenhaPage() {
         <div className="flex flex-col gap-1">
           <label htmlFor="confirmPassword" className="text-sm font-medium text-gray-700">
             Confirme a nova senha
+            <RequiredMark />
           </label>
           <input
             id="confirmPassword"
@@ -89,11 +87,11 @@ export default function RedefinirSenhaPage() {
         <button
           type="submit"
           disabled={isPending}
-          className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white transition-all duration-150 hover:bg-primary-hover active:bg-primary-active active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 disabled:bg-gray-100 disabled:text-gray-400 disabled:pointer-events-none"
+          className="w-full rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white transition-all duration-150 hover:bg-primary-hover active:bg-primary-active active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 disabled:bg-gray-100 disabled:text-gray-400 disabled:pointer-events-none"
         >
           {isPending ? "Salvando…" : "Salvar nova senha"}
         </button>
       </form>
-    </main>
+    </AuthLayout>
   );
 }

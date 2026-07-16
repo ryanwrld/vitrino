@@ -93,8 +93,8 @@ export function SizeGrid({ control, productId }: SizeGridProps) {
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      <h2 className="font-display text-xl font-medium text-gray-900">Tamanhos</h2>
+    <div className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-5">
+      <h2 className="font-display font-bold text-gray-900">Tamanhos</h2>
       <p className="text-xs text-gray-500">
         Toque em um tamanho para adicioná-lo. Toque de novo para marcar disponível.
       </p>

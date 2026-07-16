@@ -80,8 +80,8 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-6">
-      <div className="flex flex-col gap-4">
-        <h2 className="font-display text-xl font-medium text-gray-900">Loja</h2>
+      <div className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-5">
+        <h2 className="font-display font-bold text-gray-900">Identidade visual</h2>
 
         <div className="flex flex-col gap-1">
           <label htmlFor="name" className="text-sm font-medium text-gray-700">
@@ -157,8 +157,8 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
         </div>
       </div>
 
-      <div className="flex flex-col gap-4">
-        <h2 className="font-display text-xl font-medium text-gray-900">WhatsApp</h2>
+      <div className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-5">
+        <h2 className="font-display font-bold text-gray-900">WhatsApp e mensagem de pedido</h2>
 
         <div className="flex flex-col gap-1">
           <label htmlFor="whatsapp" className="text-sm font-medium text-gray-700">

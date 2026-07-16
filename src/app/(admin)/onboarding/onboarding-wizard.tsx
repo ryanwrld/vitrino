@@ -66,15 +66,16 @@ export function OnboardingWizard() {
   };
 
   return (
-    <main className="bg-white mx-auto flex min-h-dvh w-full max-w-md flex-col justify-center gap-6 px-4 py-10">
-      <div>
-        <h1 className="font-display text-2xl font-bold text-gray-900">Configure sua vitrine</h1>
-        <p className="mt-1 text-sm text-gray-500">
-          Só o essencial para começar — você pode ajustar tudo depois no painel.
-        </p>
-      </div>
+    <main className="flex min-h-dvh items-center justify-center bg-gray-50 p-6">
+      <div className="flex w-full max-w-lg flex-col gap-6 rounded-xl bg-white p-8 shadow-lg">
+        <div>
+          <h1 className="font-display text-2xl font-extrabold text-gray-900">Configure sua vitrine</h1>
+          <p className="mt-1 text-sm text-gray-500">
+            Só o essencial para começar — você pode ajustar tudo depois no painel.
+          </p>
+        </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">
         <div className="flex flex-col gap-1">
           <label htmlFor="name" className="text-sm font-medium text-gray-700">
             Nome da loja
@@ -163,14 +164,15 @@ export function OnboardingWizard() {
           )}
         </div>
 
-        <button
-          type="submit"
-          disabled={isPending}
-          className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white transition-all duration-150 hover:bg-primary-hover active:bg-primary-active active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 disabled:bg-gray-100 disabled:text-gray-400 disabled:pointer-events-none"
-        >
-          {isPending ? "Salvando…" : "Concluir e ver minha vitrine"}
-        </button>
-      </form>
+          <button
+            type="submit"
+            disabled={isPending}
+            className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white transition-all duration-150 hover:bg-primary-hover active:bg-primary-active active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 disabled:bg-gray-100 disabled:text-gray-400 disabled:pointer-events-none"
+          >
+            {isPending ? "Salvando…" : "Concluir e ver minha vitrine"}
+          </button>
+        </form>
+      </div>
     </main>
   );
 }

@@ -67,8 +67,8 @@ export function QrCodePanel({ publicUrl }: QrCodePanelProps) {
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      <h2 className="font-display text-xl font-medium text-gray-900">Seu QR Code</h2>
+    <div className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-5">
+      <h2 className="font-display font-bold text-gray-900">QR code</h2>
 
       <div className="flex flex-col items-start gap-3">
         <div className="rounded-lg bg-gray-100 p-4">

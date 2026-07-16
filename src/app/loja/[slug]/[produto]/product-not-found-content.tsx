@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { EmptyState } from "@/components/empty-state";
 
 /**
  * Conteúdo do 404 escopado à rota de detalhe do produto (PED-01/PED-02,
@@ -13,12 +14,17 @@ import Link from "next/link";
  */
 export function ProductNotFoundContent({ backHref }: { backHref: string }) {
   return (
-    <main className="mx-auto flex min-h-dvh w-full max-w-2xl flex-col items-center justify-center gap-3 bg-white px-4 py-6 text-center">
-      <h1 className="font-display text-2xl font-bold text-gray-900">Produto não encontrado</h1>
-      <p className="text-gray-500">Este produto não está mais disponível ou o link mudou.</p>
-      <Link href={backHref} className="text-sm font-medium text-primary hover:text-primary-hover">
-        Voltar para a loja
-      </Link>
+    <main className="mx-auto flex min-h-dvh w-full max-w-2xl flex-col items-center justify-center bg-white px-4 py-6">
+      <EmptyState
+        icon="lost"
+        title="Produto não encontrado"
+        description="Este produto não está mais disponível ou o link mudou."
+        action={
+          <Link href={backHref} className="text-sm font-medium text-primary hover:text-primary-hover">
+            Voltar para a loja
+          </Link>
+        }
+      />
     </main>
   );
 }

@@ -102,10 +102,12 @@ export function SlugEditor({ currentSlug }: SlugEditorProps) {
   }
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-5">
+      <h2 className="font-display font-bold text-gray-900">Link da vitrine</h2>
+
       <div className="flex flex-col gap-1">
         <label htmlFor="slug" className="text-sm font-medium text-gray-700">
-          Link da vitrine
+          Slug
         </label>
         <input
           id="slug"

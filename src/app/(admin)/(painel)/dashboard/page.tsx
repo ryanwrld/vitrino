@@ -72,23 +72,26 @@ export default async function DashboardPage() {
   ];
 
   return (
-    <div className="bg-white mx-auto flex min-h-dvh w-full max-w-2xl flex-col gap-8 px-4 py-10">
-      <h1 className="font-display text-2xl font-bold text-gray-900">Dashboard</h1>
+    <div className="bg-white mx-auto flex min-h-dvh w-full max-w-4xl flex-col gap-6 px-4 py-10">
+      <div>
+        <h1 className="font-display text-2xl font-extrabold text-gray-900">Dashboard</h1>
+        <p className="mt-1 text-sm text-gray-500">Visão geral da sua vitrine.</p>
+      </div>
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
         {statCards.map((card) => (
-          <div key={card.label} className="flex flex-col gap-1 rounded-lg border border-gray-200 p-5 shadow-sm">
-            <div className="flex items-center gap-1">
+          <div key={card.label} className="flex flex-col gap-1.5 rounded-lg border border-gray-200 p-5">
+            <div className="flex items-center gap-1.5">
               <card.Icon className="h-5 w-5 text-gray-400" aria-hidden="true" />
-              <span className="text-sm font-medium text-gray-500">{card.label}</span>
+              <span className="text-sm text-gray-500">{card.label}</span>
             </div>
             <span className="font-display text-3xl font-extrabold text-gray-900">{card.value}</span>
           </div>
         ))}
       </div>
 
-      <section className="flex flex-col gap-3">
-        <h2 className="font-display text-xl font-medium text-gray-900">Produtos recentes</h2>
+      <section className="flex flex-col gap-3 rounded-lg border border-gray-200 bg-white p-5">
+        <h2 className="font-display font-bold text-gray-900">Produtos recentes</h2>
         {recentes.length > 0 ? (
           <ul className="flex flex-col gap-3">
             {recentes.map((product) => {
@@ -151,71 +154,73 @@ export default async function DashboardPage() {
         )}
       </section>
 
-      <section className="flex flex-col gap-3">
-        <h2 className="font-display text-xl font-medium text-gray-900">Mais visualizados</h2>
-        {maisVisualizados.length > 0 ? (
-          <ul className="flex flex-col gap-2">
-            {maisVisualizados.map((item, index) => (
-              <li key={item.productId}>
-                <Link
-                  href={`/produtos/${item.productId}/editar`}
-                  className="flex min-h-11 items-center gap-3 rounded-lg border border-gray-200 bg-white p-3 shadow-sm"
-                >
-                  <span className="w-5 text-sm font-medium text-gray-500">{index + 1}</span>
-                  <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-                    <span className="truncate font-display text-base text-gray-900">{item.name}</span>
-                    {item.secondary && <span className="truncate text-xs text-gray-500">{item.secondary}</span>}
-                  </div>
-                  <span className="flex shrink-0 items-center gap-1 text-sm font-medium text-gray-500">
-                    <Eye className="h-4 w-4" aria-hidden="true" />
-                    {item.views}
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <div className="flex flex-col gap-1 rounded-lg border border-dashed border-gray-300 px-4 py-8 text-center">
-            <span className="font-medium text-gray-900">Ainda sem visualizações</span>
-            <span className="text-sm text-gray-500">
-              Assim que sua vitrine receber acessos, os produtos mais vistos aparecem aqui.
-            </span>
-          </div>
-        )}
-      </section>
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <section className="flex flex-col gap-3 rounded-lg border border-gray-200 bg-white p-5">
+          <h2 className="font-display font-bold text-gray-900">Mais visualizados</h2>
+          {maisVisualizados.length > 0 ? (
+            <ul className="flex flex-col gap-2">
+              {maisVisualizados.map((item, index) => (
+                <li key={item.productId}>
+                  <Link
+                    href={`/produtos/${item.productId}/editar`}
+                    className="flex min-h-11 items-center gap-3 rounded-lg border border-gray-200 bg-white p-3"
+                  >
+                    <span className="w-5 text-sm font-medium text-gray-500">{index + 1}</span>
+                    <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+                      <span className="truncate font-display text-base text-gray-900">{item.name}</span>
+                      {item.secondary && <span className="truncate text-xs text-gray-500">{item.secondary}</span>}
+                    </div>
+                    <span className="flex shrink-0 items-center gap-1 text-sm font-medium text-gray-500">
+                      <Eye className="h-4 w-4" aria-hidden="true" />
+                      {item.views}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="flex flex-col gap-1 rounded-lg border border-dashed border-gray-300 px-4 py-8 text-center">
+              <span className="font-medium text-gray-900">Ainda sem visualizações</span>
+              <span className="text-sm text-gray-500">
+                Assim que sua vitrine receber acessos, os produtos mais vistos aparecem aqui.
+              </span>
+            </div>
+          )}
+        </section>
 
-      <section className="flex flex-col gap-3">
-        <h2 className="font-display text-xl font-medium text-gray-900">Cliques no WhatsApp</h2>
-        {cliquesWhatsapp.length > 0 ? (
-          <ul className="flex flex-col gap-2">
-            {cliquesWhatsapp.map((item, index) => (
-              <li key={item.productId}>
-                <Link
-                  href={`/produtos/${item.productId}/editar`}
-                  className="flex min-h-11 items-center gap-3 rounded-lg border border-gray-200 bg-white p-3 shadow-sm"
-                >
-                  <span className="w-5 text-sm font-medium text-gray-500">{index + 1}</span>
-                  <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-                    <span className="truncate font-display text-base text-gray-900">{item.name}</span>
-                    {item.secondary && <span className="truncate text-xs text-gray-500">{item.secondary}</span>}
-                  </div>
-                  <span className="flex shrink-0 items-center gap-1 text-sm font-medium text-gray-500">
-                    <MessageCircle className="h-4 w-4" aria-hidden="true" />
-                    {item.clicks}
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <div className="flex flex-col gap-1 rounded-lg border border-dashed border-gray-300 px-4 py-8 text-center">
-            <span className="font-medium text-gray-900">Ainda sem cliques</span>
-            <span className="text-sm text-gray-500">
-              Assim que clientes clicarem em &quot;Pedir agora&quot;, os produtos mais pedidos aparecem aqui.
-            </span>
-          </div>
-        )}
-      </section>
+        <section className="flex flex-col gap-3 rounded-lg border border-gray-200 bg-white p-5">
+          <h2 className="font-display font-bold text-gray-900">Cliques no WhatsApp</h2>
+          {cliquesWhatsapp.length > 0 ? (
+            <ul className="flex flex-col gap-2">
+              {cliquesWhatsapp.map((item, index) => (
+                <li key={item.productId}>
+                  <Link
+                    href={`/produtos/${item.productId}/editar`}
+                    className="flex min-h-11 items-center gap-3 rounded-lg border border-gray-200 bg-white p-3"
+                  >
+                    <span className="w-5 text-sm font-medium text-gray-500">{index + 1}</span>
+                    <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+                      <span className="truncate font-display text-base text-gray-900">{item.name}</span>
+                      {item.secondary && <span className="truncate text-xs text-gray-500">{item.secondary}</span>}
+                    </div>
+                    <span className="flex shrink-0 items-center gap-1 text-sm font-medium text-gray-500">
+                      <MessageCircle className="h-4 w-4" aria-hidden="true" />
+                      {item.clicks}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="flex flex-col gap-1 rounded-lg border border-dashed border-gray-300 px-4 py-8 text-center">
+              <span className="font-medium text-gray-900">Ainda sem cliques</span>
+              <span className="text-sm text-gray-500">
+                Assim que clientes clicarem em &quot;Pedir agora&quot;, os produtos mais pedidos aparecem aqui.
+              </span>
+            </div>
+          )}
+        </section>
+      </div>
     </div>
   );
 }

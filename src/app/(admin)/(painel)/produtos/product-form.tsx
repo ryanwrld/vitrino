@@ -140,8 +140,8 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-6">
-      <div className="flex flex-col gap-4">
-        <h2 className="font-display text-xl font-medium text-gray-900">Identificação</h2>
+      <div className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-5">
+        <h2 className="font-display font-bold text-gray-900">Identificação</h2>
 
         <div className="flex flex-col gap-1">
           <label htmlFor="name" className="text-sm font-medium text-gray-700">
@@ -210,8 +210,8 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
         </div>
       </div>
 
-      <div className="flex flex-col gap-4">
-        <h2 className="font-display text-xl font-medium text-gray-900">Solado &amp; Categoria</h2>
+      <div className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-5">
+        <h2 className="font-display font-bold text-gray-900">Solado &amp; Categoria</h2>
 
         <div className="flex flex-col gap-1">
           <label htmlFor="sole" className="text-sm font-medium text-gray-700">
@@ -277,8 +277,8 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
         </div>
       </div>
 
-      <div className="flex flex-col gap-4">
-        <h2 className="font-display text-xl font-medium text-gray-900">Preço</h2>
+      <div className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-5">
+        <h2 className="font-display font-bold text-gray-900">Preço</h2>
 
         <div className="flex flex-col gap-1">
           <label htmlFor="price" className="text-sm font-medium text-gray-700">
@@ -299,8 +299,8 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
         </div>
       </div>
 
-      <div className="flex flex-col gap-4">
-        <h2 className="font-display text-xl font-medium text-gray-900">Visibilidade</h2>
+      <div className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-5">
+        <h2 className="font-display font-bold text-gray-900">Visibilidade</h2>
 
         <div className="flex flex-col gap-1">
           <label htmlFor="hideWhenSoldOut" className="text-sm font-medium text-gray-700">
@@ -325,8 +325,8 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
 
       <PhotoUploader productId={productId} initialPhotos={initialPhotos} onPendingFilesChange={setPendingPhotoFiles} />
 
-      <div className="flex flex-col gap-4">
-        <h2 className="font-display text-xl font-medium text-gray-900">Descrição</h2>
+      <div className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-5">
+        <h2 className="font-display font-bold text-gray-900">Descrição</h2>
 
         <div className="flex flex-col gap-1">
           <label htmlFor="description" className="text-sm font-medium text-gray-700">

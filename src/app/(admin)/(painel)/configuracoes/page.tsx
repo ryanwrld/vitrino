@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { requireCompletedOnboarding } from "@/lib/auth/onboarding-guard";
 import { createClient } from "@/lib/supabase/server";
@@ -47,9 +46,10 @@ export default async function ConfiguracoesPage() {
   const publicUrl = buildStoreUrl(store.slug);
 
   return (
-    <div className="bg-white mx-auto flex min-h-dvh w-full max-w-md flex-col gap-6 px-4 py-10">
+    <div className="bg-white mx-auto flex min-h-dvh w-full max-w-2xl flex-col gap-6 px-4 py-10">
       <div>
-        <h1 className="font-display text-2xl font-bold text-gray-900">Configurações</h1>
+        <h1 className="font-display text-2xl font-extrabold text-gray-900">Configurações da loja</h1>
+        <p className="mt-1 text-sm text-gray-500">Identidade visual, link público e QR code da sua vitrine.</p>
       </div>
 
       <SettingsForm
@@ -65,18 +65,8 @@ export default async function ConfiguracoesPage() {
         }}
       />
 
-      <div className="flex flex-col gap-4">
-        <h2 className="font-display text-xl font-medium text-gray-900">Link e QR Code</h2>
-        <SlugEditor currentSlug={store.slug} />
-        <QrCodePanel publicUrl={publicUrl} />
-      </div>
-
-      <Link
-        href="/dashboard"
-        className="rounded-md border border-gray-300 bg-white px-4 py-2 text-center text-sm font-semibold text-gray-900 transition-all duration-150 hover:bg-gray-100 active:bg-gray-200 active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2"
-      >
-        Voltar ao painel
-      </Link>
+      <SlugEditor currentSlug={store.slug} />
+      <QrCodePanel publicUrl={publicUrl} />
     </div>
   );
 }

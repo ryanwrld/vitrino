@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { signUpSchema, type SignUpInput } from "@/lib/validation/auth";
 import { signUpAction } from "@/lib/auth/actions";
+import { AuthLayout, RequiredMark } from "@/components/auth-layout";
 
 /**
  * Cadastro (AUTH-01). Validação client-side com react-hook-form + Zod
@@ -36,18 +37,23 @@ export default function CadastroPage() {
   };
 
   return (
-    <main className="bg-white mx-auto flex min-h-dvh w-full max-w-sm flex-col justify-center gap-6 px-4 py-10">
-      <div>
-        <h1 className="font-display text-2xl font-bold text-gray-900">Criar minha vitrine grátis</h1>
-        <p className="mt-1 text-sm text-gray-500">
-          Pare de mandar foto por foto. Cadastre-se com email e senha para começar.
+    <AuthLayout
+      title="Criar minha vitrine grátis"
+      subtitle="Pare de mandar foto por foto. Cadastre-se com email e senha para começar."
+      footer={
+        <p className="text-center text-sm text-gray-500">
+          Já tem conta?{" "}
+          <a href="/login" className="font-medium text-primary hover:text-primary-hover">
+            Entrar
+          </a>
         </p>
-      </div>
-
+      }
+    >
       <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">
         <div className="flex flex-col gap-1">
           <label htmlFor="email" className="text-sm font-medium text-gray-700">
-            Email
+            E-mail
+            <RequiredMark />
           </label>
           <input
             id="email"
@@ -62,6 +68,7 @@ export default function CadastroPage() {
         <div className="flex flex-col gap-1">
           <label htmlFor="password" className="text-sm font-medium text-gray-700">
             Senha
+            <RequiredMark />
           </label>
           <input
             id="password"
@@ -76,18 +83,11 @@ export default function CadastroPage() {
         <button
           type="submit"
           disabled={isPending}
-          className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white transition-all duration-150 hover:bg-primary-hover active:bg-primary-active active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 disabled:bg-gray-100 disabled:text-gray-400 disabled:pointer-events-none"
+          className="w-full rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white transition-all duration-150 hover:bg-primary-hover active:bg-primary-active active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 disabled:bg-gray-100 disabled:text-gray-400 disabled:pointer-events-none"
         >
           {isPending ? "Criando conta…" : "Criar minha vitrine grátis"}
         </button>
       </form>
-
-      <p className="text-center text-sm text-gray-500">
-        Já tem conta?{" "}
-        <a href="/login" className="font-medium text-primary hover:text-primary-hover">
-          Entrar
-        </a>
-      </p>
-    </main>
+    </AuthLayout>
   );
 }

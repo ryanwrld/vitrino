@@ -205,7 +205,7 @@ export function ProductOrderPanel({
   const photosToRender = galleryUrls.length > 0 ? galleryUrls : [coverUrl];
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 pb-24">
       <Link href={`/loja/${slug}`} className="flex w-fit items-center gap-1 text-sm text-gray-500">
         <ChevronLeft className="h-4 w-4" aria-hidden="true" />
         Voltar
@@ -233,13 +233,13 @@ export function ProductOrderPanel({
         )}
       </div>
 
-      <div className="flex flex-col gap-1">
-        <h1 className="font-display text-2xl font-bold text-gray-900">{product.name}</h1>
-        <span className="font-display text-sm font-bold text-primary">{formatBRLPrice(product.price)}</span>
+      <div className="flex flex-col gap-1.5">
+        <h1 className="font-display text-xl font-extrabold text-gray-900">{product.name}</h1>
+        <span className="font-display text-2xl font-extrabold text-primary">{formatBRLPrice(product.price)}</span>
       </div>
 
-      <div className="flex flex-col gap-4">
-        <h2 className="font-display text-xl font-medium text-gray-900">Escolha o tamanho</h2>
+      <div className="flex flex-col gap-2">
+        <h2 className="text-sm font-semibold text-gray-900">Escolha o tamanho</h2>
         <div className="grid grid-cols-5 gap-2">
           {sizes.map(({ size, available }) => (
             <button
@@ -262,47 +262,50 @@ export function ProductOrderPanel({
         </div>
       </div>
 
-      <div className="flex flex-col gap-2">
-        <div className="relative">
-          {tooltipTarget === "order" && (
-            <div className="absolute -top-10 left-0 rounded-md bg-gray-900 px-3 py-1.5 text-xs text-white">
-              Selecione um tamanho
-            </div>
-          )}
-          <a
-            key={`order-${orderShakeKey}`}
-            href={href}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={handleOrderClick}
-            className={cn(
-              "block min-h-11 w-full rounded-md bg-whatsapp px-4 py-2 text-center text-sm font-semibold text-white transition-all duration-150 hover:bg-whatsapp-hover active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2",
-              orderShakeKey > 0 && "animate-shake"
+      <div className="fixed inset-x-0 bottom-0 z-10 border-t border-gray-200 bg-white p-4 shadow-lg">
+        <div className="mx-auto flex w-full max-w-2xl gap-3">
+          <div className="relative shrink-0">
+            {tooltipTarget === "copy" && (
+              <div className="absolute -top-10 left-0 whitespace-nowrap rounded-md bg-gray-900 px-3 py-1.5 text-xs text-white">
+                Selecione um tamanho
+              </div>
             )}
-          >
-            Pedir agora
-          </a>
-        </div>
+            <button
+              key={`copy-${copyShakeKey}`}
+              type="button"
+              onClick={handleCopy}
+              disabled={isPending}
+              aria-label="Copiar pedido"
+              className={cn(
+                "flex h-full min-h-11 items-center justify-center gap-1 rounded-md border border-gray-300 bg-white px-4 py-2 text-center text-sm font-semibold text-gray-900 transition-all duration-150 hover:bg-gray-100 active:bg-gray-200 active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 disabled:opacity-60",
+                copyShakeKey > 0 && "animate-shake"
+              )}
+            >
+              <Copy className="h-4 w-4" aria-hidden="true" />
+              Copiar pedido
+            </button>
+          </div>
 
-        <div className="relative">
-          {tooltipTarget === "copy" && (
-            <div className="absolute -top-10 left-0 rounded-md bg-gray-900 px-3 py-1.5 text-xs text-white">
-              Selecione um tamanho
-            </div>
-          )}
-          <button
-            key={`copy-${copyShakeKey}`}
-            type="button"
-            onClick={handleCopy}
-            disabled={isPending}
-            className={cn(
-              "flex min-h-11 w-full items-center justify-center gap-1 rounded-md border border-gray-300 bg-white px-4 py-2 text-center text-sm font-semibold text-gray-900 transition-all duration-150 hover:bg-gray-100 active:bg-gray-200 active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 disabled:opacity-60",
-              copyShakeKey > 0 && "animate-shake"
+          <div className="relative flex-1">
+            {tooltipTarget === "order" && (
+              <div className="absolute -top-10 left-0 whitespace-nowrap rounded-md bg-gray-900 px-3 py-1.5 text-xs text-white">
+                Selecione um tamanho
+              </div>
             )}
-          >
-            <Copy className="h-4 w-4" aria-hidden="true" />
-            Copiar pedido
-          </button>
+            <a
+              key={`order-${orderShakeKey}`}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={handleOrderClick}
+              className={cn(
+                "block min-h-11 w-full rounded-md bg-whatsapp px-4 py-2 text-center text-sm font-semibold text-white transition-all duration-150 hover:bg-whatsapp-hover active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2",
+                orderShakeKey > 0 && "animate-shake"
+              )}
+            >
+              Pedir agora
+            </a>
+          </div>
         </div>
       </div>
     </div>

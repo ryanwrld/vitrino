@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { requireCompletedOnboarding } from "@/lib/auth/onboarding-guard";
 import { createClient } from "@/lib/supabase/server";
 import { queryProducts, type QueryProductsParams } from "@/lib/products/list";
+import { EmptyState } from "@/components/empty-state";
 import { ProductList } from "./product-list";
 import { ProductToolbar } from "./product-toolbar";
 
@@ -83,12 +84,17 @@ export default async function ProdutosPage({
   }));
 
   return (
-    <div className="bg-white mx-auto flex min-h-dvh w-full max-w-md flex-col gap-8 px-4 py-10">
-      <div className="flex flex-col gap-4">
-        <h1 className="font-display text-2xl font-bold text-gray-900">Produtos</h1>
+    <div className="bg-white mx-auto flex min-h-dvh w-full max-w-4xl flex-col gap-6 px-4 py-10">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <h1 className="font-display text-2xl font-extrabold text-gray-900">Produtos</h1>
+          <p className="mt-1 text-sm text-gray-500">
+            {totalCount ?? 0} {(totalCount ?? 0) === 1 ? "produto cadastrado" : "produtos cadastrados"}
+          </p>
+        </div>
         <Link
           href="/produtos/novo"
-          className="w-full rounded-md bg-primary px-4 py-2 text-center text-sm font-semibold text-white transition-all duration-150 hover:bg-primary-hover active:bg-primary-active active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2"
+          className="w-full shrink-0 rounded-md bg-primary px-4 py-2 text-center text-sm font-semibold text-white transition-all duration-150 hover:bg-primary-hover active:bg-primary-active active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 sm:w-auto"
         >
           Novo produto
         </Link>
@@ -106,25 +112,26 @@ export default async function ProdutosPage({
       {hasFilteredResults ? (
         <ProductList products={productsWithCoverUrl} />
       ) : hasAnyProduct ? (
-        <div className="flex flex-col gap-1 rounded-lg border border-dashed border-gray-300 px-4 py-8 text-center">
-          <span className="font-medium text-gray-900">Nenhum produto encontrado</span>
-          <span className="text-sm text-gray-500">Tente ajustar os filtros ou buscar por outro termo.</span>
-        </div>
+        <EmptyState
+          icon="search"
+          title="Nenhum produto encontrado"
+          description="Tente ajustar os filtros ou buscar por outro termo."
+        />
       ) : (
-        <div className="flex flex-col gap-1 rounded-lg border border-dashed border-gray-300 px-4 py-8 text-center">
-          <span className="font-medium text-gray-900">Nenhum produto cadastrado ainda</span>
-          <span className="text-sm text-gray-500">
-            Cadastre seu primeiro produto para começar a vender pelo WhatsApp.
-          </span>
-        </div>
+        <EmptyState
+          icon="box"
+          title="Nenhum produto ainda"
+          description="Cadastre seu primeiro produto para começar a vender pelo WhatsApp."
+          action={
+            <Link
+              href="/produtos/novo"
+              className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white transition-all duration-150 hover:bg-primary-hover active:bg-primary-active active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2"
+            >
+              Cadastrar produto
+            </Link>
+          }
+        />
       )}
-
-      <Link
-        href="/dashboard"
-        className="rounded-md border border-gray-300 bg-white px-4 py-2 text-center text-sm font-semibold text-gray-900 transition-all duration-150 hover:bg-gray-100 active:bg-gray-200 active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2"
-      >
-        Voltar ao painel
-      </Link>
     </div>
   );
 }

@@ -239,8 +239,8 @@ export function PhotoUploader({ productId, initialPhotos, onPendingFilesChange }
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      <h2 className="font-display text-xl font-medium text-gray-900">Fotos</h2>
+    <div className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-5">
+      <h2 className="font-display font-bold text-gray-900">Fotos</h2>
       <p className="text-xs text-gray-500">Até 5 fotos. A primeira é a capa da sua vitrine.</p>
 
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
