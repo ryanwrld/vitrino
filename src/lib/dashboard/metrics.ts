@@ -25,6 +25,7 @@ export type TopViewedProduct = {
   name: string;
   secondary: string;
   views: number;
+  coverPath: string | null;
 };
 
 export type TopOrderClickProduct = {
@@ -32,6 +33,7 @@ export type TopOrderClickProduct = {
   name: string;
   secondary: string;
   clicks: number;
+  coverPath: string | null;
 };
 
 /**
@@ -92,6 +94,20 @@ export async function queryTopViewedProducts(
     .select("id, name, brand, brand_other, line")
     .in("id", productIds);
 
+  // Busca a foto de capa de cada produto (position asc, primeira = capa)
+  const { data: photoRows } = await supabase
+    .from("product_photos")
+    .select("product_id, storage_path, position")
+    .in("product_id", productIds)
+    .order("position", { ascending: true });
+
+  const coverPathByProductId = new Map<string, string>();
+  for (const photo of photoRows ?? []) {
+    if (!coverPathByProductId.has(photo.product_id)) {
+      coverPathByProductId.set(photo.product_id, photo.storage_path);
+    }
+  }
+
   const productById = new Map((products ?? []).map((product) => [product.id, product]));
 
   return rankedRows.flatMap((row) => {
@@ -103,6 +119,7 @@ export async function queryTopViewedProducts(
         name: product.name,
         secondary: buildSecondaryLine(product),
         views: row.views,
+        coverPath: coverPathByProductId.get(row.product_id) ?? null,
       },
     ];
   });
@@ -138,6 +155,20 @@ export async function queryTopOrderClickProducts(
     .select("id, name, brand, brand_other, line")
     .in("id", productIds);
 
+  // Busca a foto de capa de cada produto (position asc, primeira = capa)
+  const { data: photoRows } = await supabase
+    .from("product_photos")
+    .select("product_id, storage_path, position")
+    .in("product_id", productIds)
+    .order("position", { ascending: true });
+
+  const coverPathByProductId = new Map<string, string>();
+  for (const photo of photoRows ?? []) {
+    if (!coverPathByProductId.has(photo.product_id)) {
+      coverPathByProductId.set(photo.product_id, photo.storage_path);
+    }
+  }
+
   const productById = new Map((products ?? []).map((product) => [product.id, product]));
 
   return rankedRows.flatMap((row) => {
@@ -149,6 +180,7 @@ export async function queryTopOrderClickProducts(
         name: product.name,
         secondary: buildSecondaryLine(product),
         clicks: row.clicks,
+        coverPath: coverPathByProductId.get(row.product_id) ?? null,
       },
     ];
   });

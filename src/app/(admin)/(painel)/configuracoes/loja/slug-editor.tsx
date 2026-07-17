@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Loader2, Check, X } from "lucide-react";
+import { Loader2, Check, X, Link as LinkIcon } from "lucide-react";
 import { slugify } from "@/lib/slug/slugify";
 import { slugSchema } from "@/lib/slug/validation";
 import { useDebouncedValue } from "@/lib/hooks/use-debounce";
@@ -103,7 +103,10 @@ export function SlugEditor({ currentSlug }: SlugEditorProps) {
 
   return (
     <div className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-5">
-      <h2 className="font-display font-bold text-gray-900">Link da vitrine</h2>
+      <div className="flex items-center gap-2 text-gray-900">
+        <LinkIcon className="h-5 w-5" />
+        <h2 className="font-display font-bold">Link da vitrine</h2>
+      </div>
 
       <div className="flex flex-col gap-1">
         <label htmlFor="slug" className="text-sm font-medium text-gray-700">
@@ -128,7 +131,7 @@ export function SlugEditor({ currentSlug }: SlugEditorProps) {
         type="button"
         disabled={!canSave}
         onClick={openConfirmDialog}
-        className="self-start rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white transition-all duration-150 hover:bg-primary-hover active:bg-primary-active active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 disabled:bg-gray-100 disabled:text-gray-400 disabled:pointer-events-none"
+        className="w-full sm:w-auto sm:self-end rounded-md bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:bg-primary-hover hover:shadow active:translate-y-0 active:bg-primary-active focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:bg-gray-100 disabled:text-gray-400 disabled:shadow-none"
       >
         Salvar novo link
       </button>

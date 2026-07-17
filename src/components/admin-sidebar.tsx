@@ -3,8 +3,9 @@
 import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, Home, List, Settings } from "lucide-react";
+import { Menu, X, Home, List, Settings, LogOut, ExternalLink } from "lucide-react";
 import { signOutAction } from "@/lib/auth/actions";
+import { LogoMark } from "@/components/logo-mark";
 
 /**
  * Itens de navegação do painel (D-07, copy verbatim): Dashboard, Produtos,
@@ -31,7 +32,10 @@ function NavLinks({ pathname }: { pathname: string }) {
   return (
     <>
       {NAV_ITEMS.map((item) => {
-        const isActive = pathname.startsWith(item.href);
+        const isActive =
+          item.href === "/configuracoes"
+            ? pathname === "/configuracoes"
+            : pathname.startsWith(item.href);
         return (
           <Link
             key={item.href}
@@ -52,13 +56,12 @@ function NavLinks({ pathname }: { pathname: string }) {
 }
 
 /**
- * Cabeçalho de logo ("swatch" azul + wordmark "Vitrino"), replicado no topo
- * da sidebar desktop e do drawer mobile (`ui_kits/admin/AdminShell.jsx`).
+ * Cabeçalho de logo — usa o SVG real do LogoMark + wordmark "Vitrino".
  */
-function LogoMark() {
+function LogoHeader() {
   return (
     <div className="flex items-center gap-2 px-3">
-      <div className="h-7 w-7 rounded-md bg-primary" aria-hidden="true" />
+      <LogoMark size={28} />
       <span className="font-display text-lg font-extrabold text-gray-900">Vitrino</span>
     </div>
   );
@@ -69,29 +72,35 @@ function LogoMark() {
  * "revendedor"), conforme `AdminShell.jsx`. `storeName` vem de uma query já
  * existente no layout do painel — puramente exibição, sem mutação nova.
  */
-function AccountBlock({ storeName }: { storeName: string | null }) {
-  const initials = storeName
-    ? storeName
-        .trim()
-        .split(/\s+/)
-        .slice(0, 2)
-        .map((word) => word[0]?.toUpperCase())
-        .join("")
-    : "?";
-
+function AccountBlock({
+  storeName,
+  storeSlug,
+}: {
+  storeName: string | null;
+  storeSlug?: string | null;
+}) {
   return (
-    <div className="flex flex-col gap-3 border-t border-gray-200 px-3 pt-4">
-      <div className="flex items-center gap-2.5">
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gray-100 text-xs font-bold text-gray-500">
-          {initials}
-        </div>
-        <div className="flex min-w-0 flex-col leading-tight">
-          <span className="truncate text-sm font-semibold text-gray-900">{storeName ?? "Sua loja"}</span>
-          <span className="text-xs text-gray-500">revendedor</span>
-        </div>
-      </div>
+    <div className="flex flex-col gap-1 border-t border-gray-200 px-3 pt-4">
+      {/* Ver vitrine pública — link de acesso rápido */}
+      {storeSlug && (
+        <a
+          href={`/loja/${storeSlug}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex min-h-10 items-center gap-2.5 rounded-md px-2 text-sm font-medium text-gray-500 transition-colors duration-150 hover:bg-gray-100 hover:text-gray-900 mb-1"
+        >
+          <ExternalLink className="h-4 w-4 shrink-0" aria-hidden="true" />
+          Ver minha vitrine
+        </a>
+      )}
+
+      {/* Sair da conta */}
       <form action={signOutAction}>
-        <button type="submit" className="min-h-11 text-sm text-gray-500 transition-colors duration-150 hover:text-gray-900">
+        <button
+          type="submit"
+          className="flex min-h-10 w-full items-center gap-2.5 rounded-md px-2 text-sm font-medium text-gray-500 transition-colors duration-150 hover:bg-error-bg hover:text-error-fg"
+        >
+          <LogOut className="h-4 w-4 shrink-0" aria-hidden="true" />
           Sair da conta
         </button>
       </form>
@@ -105,9 +114,24 @@ function AccountBlock({ storeName }: { storeName: string | null }) {
  * (`<button md:hidden>` + `.showModal()`). Ambos sempre no DOM — CSS decide
  * a visibilidade (mesma técnica de `loja/[slug]/page.tsx`).
  */
-export function AdminSidebar({ storeName }: { storeName: string | null }) {
+export function AdminSidebar({
+  storeName,
+  storeSlug,
+}: {
+  storeName: string | null;
+  storeSlug?: string | null;
+}) {
   const pathname = usePathname();
   const dialogRef = useRef<HTMLDialogElement>(null);
+
+  const initials = storeName
+    ? storeName
+        .trim()
+        .split(/\s+/)
+        .slice(0, 2)
+        .map((word) => word[0]?.toUpperCase())
+        .join("")
+    : "?";
 
   function closeDrawer() {
     dialogRef.current?.close();
@@ -132,36 +156,52 @@ export function AdminSidebar({ storeName }: { storeName: string | null }) {
   return (
     <>
       {/* Desktop: sidebar fixa, sempre no DOM, só visível >= md */}
-      <aside className="hidden w-[232px] shrink-0 flex-col gap-6 border-r border-gray-200 bg-white p-3 py-5 md:flex">
-        <LogoMark />
+      <aside className="sticky top-0 hidden h-dvh w-[232px] shrink-0 flex-col gap-6 border-r border-gray-200 bg-gray-50 p-3 py-5 md:flex">
+        <LogoHeader />
         <nav className="flex flex-col gap-0.5">
           <NavLinks pathname={pathname} />
         </nav>
         <div className="mt-auto">
-          <AccountBlock storeName={storeName} />
+          <AccountBlock storeName={storeName} storeSlug={storeSlug} />
         </div>
       </aside>
 
-      {/* Mobile: barra de topo com o hambúrguer, acima de {children} (D-06 / UI-SPEC linha 132) — só visível < md */}
-      <div className="flex h-14 shrink-0 items-center border-b border-gray-200 bg-white px-4 md:hidden">
+      {/* Mobile: barra de topo com o hambúrguer e perfil (D-06 / UI-SPEC linha 132) — só visível < md */}
+      <div className="flex h-14 shrink-0 items-center justify-between border-b border-gray-200 bg-gray-50 px-4 md:hidden">
         <button
           type="button"
           onClick={() => dialogRef.current?.showModal()}
-          className="flex min-h-11 min-w-11 items-center justify-center"
+          className="flex min-h-11 min-w-11 items-center justify-center -ml-2"
           aria-label="Abrir menu"
         >
           <Menu className="h-6 w-6" aria-hidden="true" />
         </button>
+
+        <Link
+          href="/configuracoes/loja"
+          className={`flex items-center gap-2.5 rounded-md transition-colors duration-150`}
+        >
+          <div className="flex min-w-0 flex-col leading-tight text-right">
+            <span className="truncate text-sm font-semibold text-gray-900">{storeName ?? "Sua loja"}</span>
+            <span className="text-xs text-gray-500">revendedor</span>
+          </div>
+          <div
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white"
+            style={{ backgroundColor: "#0D21A1" }}
+          >
+            {initials}
+          </div>
+        </Link>
       </div>
       <dialog
         ref={dialogRef}
         aria-label="Menu de navegação"
-        className="m-0 h-dvh max-h-none w-64 max-w-none bg-white p-4 backdrop:bg-black/45 backdrop:backdrop-blur-[2px]"
+        className="m-0 h-dvh max-h-none w-64 max-w-none bg-gray-50 p-4 backdrop:bg-black/45 backdrop:backdrop-blur-[2px]"
         onCancel={closeDrawer}
       >
         <div className="flex h-full flex-col gap-6 animate-scale-in">
           <div className="flex items-center justify-between">
-            <LogoMark />
+            <LogoHeader />
             <button
               type="button"
               onClick={closeDrawer}
@@ -179,7 +219,7 @@ export function AdminSidebar({ storeName }: { storeName: string | null }) {
             <NavLinks pathname={pathname} />
           </nav>
           <div className="mt-auto">
-            <AccountBlock storeName={storeName} />
+            <AccountBlock storeName={storeName} storeSlug={storeSlug} />
           </div>
         </div>
       </dialog>

@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { AsYouType } from "libphonenumber-js";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Paintbrush, MessageCircle } from "lucide-react";
 import { onboardingSchema, type OnboardingInput } from "@/lib/validation/onboarding";
 import { saveStoreSettings } from "@/lib/settings/actions";
 
@@ -81,7 +81,10 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-6">
       <div className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-5">
-        <h2 className="font-display font-bold text-gray-900">Identidade visual</h2>
+        <div className="flex items-center gap-2 text-gray-900">
+          <Paintbrush className="h-5 w-5" />
+          <h2 className="font-display font-bold">Identidade visual</h2>
+        </div>
 
         <div className="flex flex-col gap-1">
           <label htmlFor="name" className="text-sm font-medium text-gray-700">
@@ -158,7 +161,10 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
       </div>
 
       <div className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-5">
-        <h2 className="font-display font-bold text-gray-900">WhatsApp e mensagem de pedido</h2>
+        <div className="flex items-center gap-2 text-gray-900">
+          <MessageCircle className="h-5 w-5" />
+          <h2 className="font-display font-bold">WhatsApp e mensagem de pedido</h2>
+        </div>
 
         <div className="flex flex-col gap-1">
           <label htmlFor="whatsapp" className="text-sm font-medium text-gray-700">
@@ -196,7 +202,7 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
       <button
         type="submit"
         disabled={isPending}
-        className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white transition-all duration-150 hover:bg-primary-hover active:bg-primary-active active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 disabled:bg-gray-100 disabled:text-gray-400 disabled:pointer-events-none"
+        className="w-full sm:w-auto sm:self-end rounded-md bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:bg-primary-hover hover:shadow active:translate-y-0 active:bg-primary-active focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:bg-gray-100 disabled:text-gray-400 disabled:shadow-none"
       >
         {isPending ? "Salvando…" : "Salvar alterações"}
       </button>

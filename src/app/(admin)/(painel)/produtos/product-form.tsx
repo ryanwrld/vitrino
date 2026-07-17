@@ -57,6 +57,7 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
   // como File[] local, notificadas aqui via onPendingFilesChange, para
   // serem anexadas ao mesmo FormData de saveProduct (Task 3, 03-04-PLAN.md).
   const [pendingPhotoFiles, setPendingPhotoFiles] = useState<File[]>([]);
+
   const {
     register,
     handleSubmit,
@@ -134,20 +135,25 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
         return;
       }
       setCurrentStatus(willPublish ? "published" : "draft");
-      toast.success(willPublish ? "Produto publicado!" : "Produto movido para rascunho.");
+      if (willPublish) {
+        toast.success("Produto publicado na sua vitrine!");
+      } else {
+        toast.success("Produto voltou para rascunho.");
+      }
     });
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-6">
-      <div className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-5">
-        <h2 className="font-display font-bold text-gray-900">Identificação</h2>
+    <>
+      <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex w-full flex-col gap-6">
+        <div className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-5">
+          <h2 className="font-display font-bold text-gray-900">Identificação</h2>
 
-        <div className="flex flex-col gap-1">
-          <label htmlFor="name" className="text-sm font-medium text-gray-700">
-            Nome
-          </label>
-          <input
+          <div className="flex flex-col gap-1">
+            <label htmlFor="name" className="text-sm font-medium text-gray-700">
+              Nome
+            </label>
+            <input
             id="name"
             type="text"
             {...register("name")}
@@ -323,7 +329,11 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
 
       <SizeGrid control={control} productId={productId} />
 
-      <PhotoUploader productId={productId} initialPhotos={initialPhotos} onPendingFilesChange={setPendingPhotoFiles} />
+      <PhotoUploader
+        productId={productId}
+        initialPhotos={initialPhotos}
+        onPendingFilesChange={setPendingPhotoFiles}
+      />
 
       <div className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-5">
         <h2 className="font-display font-bold text-gray-900">Descrição</h2>
@@ -371,5 +381,6 @@ export function ProductForm({ defaultValues, productId, status, initialPhotos }:
         )}
       </div>
     </form>
+    </>
   );
 }

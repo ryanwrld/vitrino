@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { AdminSidebar } from "@/components/admin-sidebar";
+import { AdminHeader } from "@/components/admin-header";
 import { createClient } from "@/lib/supabase/server";
 
 /**
@@ -20,19 +21,24 @@ export default async function PainelLayout({ children }: { children: ReactNode }
   const { data: userData } = await supabase.auth.getUser();
 
   let storeName: string | null = null;
+  let storeSlug: string | null = null;
   if (userData.user) {
     const { data: store } = await supabase
       .from("stores")
-      .select("name")
+      .select("name, slug")
       .eq("owner_id", userData.user.id)
       .single();
     storeName = store?.name ?? null;
+    storeSlug = store?.slug ?? null;
   }
 
   return (
     <div className="flex min-h-dvh flex-col md:flex-row">
-      <AdminSidebar storeName={storeName} />
-      <main className="min-h-dvh flex-1 bg-white">{children}</main>
+      <AdminSidebar storeName={storeName} storeSlug={storeSlug} />
+      <main className="flex min-h-dvh flex-1 flex-col bg-gray-50">
+        <AdminHeader storeName={storeName} />
+        {children}
+      </main>
     </div>
   );
 }

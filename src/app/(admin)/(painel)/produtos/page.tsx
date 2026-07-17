@@ -84,7 +84,7 @@ export default async function ProdutosPage({
   }));
 
   return (
-    <div className="bg-white mx-auto flex min-h-dvh w-full max-w-4xl flex-col gap-6 px-4 py-10">
+    <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 px-4 py-8 md:py-10">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h1 className="font-display text-2xl font-extrabold text-gray-900">Produtos</h1>
@@ -94,7 +94,7 @@ export default async function ProdutosPage({
         </div>
         <Link
           href="/produtos/novo"
-          className="w-full shrink-0 rounded-md bg-primary px-4 py-2 text-center text-sm font-semibold text-white transition-all duration-150 hover:bg-primary-hover active:bg-primary-active active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 sm:w-auto"
+          className="w-full shrink-0 rounded-md bg-primary px-5 py-2.5 text-center text-sm font-semibold text-white shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:bg-primary-hover hover:shadow active:translate-y-0 active:bg-primary-active focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 sm:w-auto"
         >
           Novo produto
         </Link>

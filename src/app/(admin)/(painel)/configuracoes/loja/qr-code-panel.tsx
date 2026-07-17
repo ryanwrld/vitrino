@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
-import { Copy, Download } from "lucide-react";
+import { Copy, Download, QrCode } from "lucide-react";
 import QRCode from "qrcode";
 import { copyText } from "@/lib/clipboard";
 
@@ -68,11 +68,14 @@ export function QrCodePanel({ publicUrl }: QrCodePanelProps) {
 
   return (
     <div className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-5">
-      <h2 className="font-display font-bold text-gray-900">QR code</h2>
+      <div className="flex items-center gap-2 text-gray-900">
+        <QrCode className="h-5 w-5" />
+        <h2 className="font-display font-bold">QR code</h2>
+      </div>
 
-      <div className="flex flex-col items-start gap-3">
-        <div className="rounded-lg bg-gray-100 p-4">
-          <canvas ref={canvasRef} width={240} height={240} />
+      <div className="flex flex-col items-start gap-4 mt-2">
+        <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50/50 p-6 flex items-center justify-center">
+          <canvas ref={canvasRef} width={240} height={240} className="rounded-md shadow-sm" />
         </div>
 
         <button

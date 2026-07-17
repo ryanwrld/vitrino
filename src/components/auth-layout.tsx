@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { LogoMark } from "@/components/logo-mark";
 
 /**
  * Layout compartilhado das 4 telas de auth (login/cadastro/esqueci-senha/
@@ -20,10 +21,12 @@ export function AuthLayout({
 }) {
   return (
     <main className="flex min-h-dvh">
+      {/* Painel esquerdo — formulário */}
       <div className="flex flex-1 items-center justify-center p-8">
         <div className="flex w-full max-w-sm flex-col gap-6">
+          {/* Logo */}
           <div className="flex items-center gap-2">
-            <div className="h-[30px] w-[30px] rounded-md bg-primary" aria-hidden="true" />
+            <LogoMark size={30} />
             <span className="font-display text-lg font-extrabold text-gray-900">Vitrino</span>
           </div>
 
@@ -37,23 +40,60 @@ export function AuthLayout({
         </div>
       </div>
 
+      {/* Painel direito — identidade de marca, oculto em mobile */}
       <div className="relative hidden flex-1 items-center justify-center overflow-hidden bg-primary md:flex">
+        {/* Gradientes de profundidade */}
         <div
           className="absolute inset-0"
           style={{
             backgroundImage:
-              "radial-gradient(circle at 20% 20%, rgba(255,255,255,0.08) 0, transparent 45%), radial-gradient(circle at 80% 70%, rgba(255,255,255,0.06) 0, transparent 40%)",
+              "radial-gradient(ellipse at 15% 15%, rgba(255,255,255,0.10) 0, transparent 50%), radial-gradient(ellipse at 85% 80%, rgba(13,33,161,0.7) 0, transparent 50%)",
           }}
           aria-hidden="true"
         />
-        <div className="relative flex max-w-sm flex-col gap-3.5 p-8 text-white">
-          <span className="font-display text-2xl font-extrabold leading-tight">
-            Do WhatsApp para uma vitrine profissional.
-          </span>
-          <span className="text-base leading-normal text-white/85">
-            Cadastre seus produtos uma vez e compartilhe um único link. Seus clientes escolhem o
-            tamanho e o pedido cai pronto no seu WhatsApp.
-          </span>
+
+        {/* Grade de pontos — textura sutil */}
+        <div
+          className="absolute inset-0 opacity-[0.07]"
+          style={{
+            backgroundImage: "radial-gradient(circle, white 1px, transparent 1px)",
+            backgroundSize: "24px 24px",
+          }}
+          aria-hidden="true"
+        />
+
+        {/* Conteúdo */}
+        <div className="relative flex max-w-sm flex-col gap-8 p-10 text-white">
+          {/* Headline */}
+          <div className="flex flex-col gap-3">
+            <span className="font-display text-2xl font-extrabold leading-tight">
+              Do WhatsApp para uma vitrine profissional.
+            </span>
+            <span className="text-base leading-relaxed text-white/80">
+              Cadastre seus produtos uma vez e compartilhe um único link. Seus clientes
+              escolhem o tamanho e o pedido cai pronto no seu WhatsApp.
+            </span>
+          </div>
+
+          {/* Feature highlights */}
+          <ul className="flex flex-col gap-3">
+            {[
+              { icon: "📦", text: "Catálogo completo com fotos e tamanhos" },
+              { icon: "🔗", text: "Vitrine pública com link único e QR Code" },
+              { icon: "💬", text: "Pedido automático via WhatsApp em 1 toque" },
+            ].map(({ icon, text }) => (
+              <li key={text} className="flex items-center gap-3">
+                <span
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-base"
+                  style={{ backgroundColor: "rgba(255,255,255,0.12)" }}
+                  aria-hidden="true"
+                >
+                  {icon}
+                </span>
+                <span className="text-sm font-medium text-white/90">{text}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </main>

@@ -11,6 +11,7 @@ import {
   type OnboardingInput,
 } from "@/lib/validation/onboarding";
 import { saveOnboarding } from "@/lib/onboarding/actions";
+import { LogoMark } from "@/components/logo-mark";
 
 /**
  * Wizard de onboarding em tela única (decisão de UI a critério do executor,
@@ -66,8 +67,14 @@ export function OnboardingWizard() {
   };
 
   return (
-    <main className="flex min-h-dvh items-center justify-center bg-gray-50 p-6">
+    <main className="flex min-h-dvh items-center justify-center bg-dot-pattern p-6">
       <div className="flex w-full max-w-lg flex-col gap-6 rounded-xl bg-white p-8 shadow-lg">
+        {/* Logo no topo do card */}
+        <div className="flex items-center gap-2">
+          <LogoMark size={28} />
+          <span className="font-display text-lg font-extrabold text-gray-900">Vitrino</span>
+        </div>
+
         <div>
           <h1 className="font-display text-2xl font-extrabold text-gray-900">Configure sua vitrine</h1>
           <p className="mt-1 text-sm text-gray-500">

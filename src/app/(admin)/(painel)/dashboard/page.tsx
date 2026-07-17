@@ -64,15 +64,58 @@ export default async function DashboardPage() {
       : null,
   }));
 
+  // Resolve URLs públicas para as thumbnails dos rankings
+  const maisVisualizadosWithCover = maisVisualizados.map((item) => ({
+    ...item,
+    coverUrl: item.coverPath
+      ? supabase.storage.from("product-images").getPublicUrl(item.coverPath).data.publicUrl
+      : null,
+  }));
+
+  const cliquesWhatsappWithCover = cliquesWhatsapp.map((item) => ({
+    ...item,
+    coverUrl: item.coverPath
+      ? supabase.storage.from("product-images").getPublicUrl(item.coverPath).data.publicUrl
+      : null,
+  }));
+
   const statCards = [
-    { label: "Total de produtos", value: totalProdutos, Icon: Package },
-    { label: "Disponíveis", value: disponiveis, Icon: CheckCircle2 },
-    { label: "Esgotados", value: esgotados, Icon: XCircle },
-    { label: "Acessos", value: acessos, Icon: Eye },
+    {
+      label: "Total de produtos",
+      value: totalProdutos,
+      Icon: Package,
+      iconBg: "bg-primary-subtle",
+      iconColor: "text-primary",
+      valueCls: "text-gray-900",
+    },
+    {
+      label: "Disponíveis",
+      value: disponiveis,
+      Icon: CheckCircle2,
+      iconBg: "bg-success-bg",
+      iconColor: "text-success-fg",
+      valueCls: "text-gray-900",
+    },
+    {
+      label: "Esgotados",
+      value: esgotados,
+      Icon: XCircle,
+      iconBg: "bg-error-bg",
+      iconColor: "text-error-fg",
+      valueCls: esgotados > 0 ? "text-error-fg" : "text-gray-900",
+    },
+    {
+      label: "Acessos",
+      value: acessos,
+      Icon: Eye,
+      iconBg: "bg-warning-bg",
+      iconColor: "text-warning-fg",
+      valueCls: "text-gray-900",
+    },
   ];
 
   return (
-    <div className="bg-white mx-auto flex min-h-dvh w-full max-w-4xl flex-col gap-6 px-4 py-10">
+    <div className="mx-auto flex min-h-dvh w-full max-w-4xl flex-col gap-6 px-4 py-10">
       <div>
         <h1 className="font-display text-2xl font-extrabold text-gray-900">Dashboard</h1>
         <p className="mt-1 text-sm text-gray-500">Visão geral da sua vitrine.</p>
@@ -80,12 +123,14 @@ export default async function DashboardPage() {
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
         {statCards.map((card) => (
-          <div key={card.label} className="flex flex-col gap-1.5 rounded-lg border border-gray-200 p-5">
-            <div className="flex items-center gap-1.5">
-              <card.Icon className="h-5 w-5 text-gray-400" aria-hidden="true" />
-              <span className="text-sm text-gray-500">{card.label}</span>
+          <div key={card.label} className="flex flex-col gap-2 rounded-lg border border-gray-200 bg-white p-5">
+            <div className={`flex h-9 w-9 items-center justify-center rounded-lg ${card.iconBg}`}>
+              <card.Icon className={`h-5 w-5 ${card.iconColor}`} aria-hidden="true" />
             </div>
-            <span className="font-display text-3xl font-extrabold text-gray-900">{card.value}</span>
+            <div className="flex flex-col gap-0.5">
+              <span className={`font-display text-2xl font-extrabold ${card.valueCls}`}>{card.value}</span>
+              <span className="text-xs text-gray-500">{card.label}</span>
+            </div>
           </div>
         ))}
       </div>
@@ -159,15 +204,23 @@ export default async function DashboardPage() {
           <h2 className="font-display font-bold text-gray-900">Mais visualizados</h2>
           {maisVisualizados.length > 0 ? (
             <ul className="flex flex-col gap-2">
-              {maisVisualizados.map((item, index) => (
+              {maisVisualizadosWithCover.map((item) => (
                 <li key={item.productId}>
                   <Link
                     href={`/produtos/${item.productId}/editar`}
-                    className="flex min-h-11 items-center gap-3 rounded-lg border border-gray-200 bg-white p-3"
+                    className="flex min-h-11 items-center gap-3 rounded-lg border border-gray-200 bg-white p-3 transition-colors duration-150 hover:border-gray-300"
                   >
-                    <span className="w-5 text-sm font-medium text-gray-500">{index + 1}</span>
+                    <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-gray-100">
+                      {item.coverUrl ? (
+                        <Image src={item.coverUrl} alt={item.name} fill sizes="48px" className="object-cover" />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center">
+                          <ImageOff className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                        </div>
+                      )}
+                    </div>
                     <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-                      <span className="truncate font-display text-base text-gray-900">{item.name}</span>
+                      <span className="truncate font-display text-sm font-medium text-gray-900">{item.name}</span>
                       {item.secondary && <span className="truncate text-xs text-gray-500">{item.secondary}</span>}
                     </div>
                     <span className="flex shrink-0 items-center gap-1 text-sm font-medium text-gray-500">
@@ -192,15 +245,23 @@ export default async function DashboardPage() {
           <h2 className="font-display font-bold text-gray-900">Cliques no WhatsApp</h2>
           {cliquesWhatsapp.length > 0 ? (
             <ul className="flex flex-col gap-2">
-              {cliquesWhatsapp.map((item, index) => (
+              {cliquesWhatsappWithCover.map((item) => (
                 <li key={item.productId}>
                   <Link
                     href={`/produtos/${item.productId}/editar`}
-                    className="flex min-h-11 items-center gap-3 rounded-lg border border-gray-200 bg-white p-3"
+                    className="flex min-h-11 items-center gap-3 rounded-lg border border-gray-200 bg-white p-3 transition-colors duration-150 hover:border-gray-300"
                   >
-                    <span className="w-5 text-sm font-medium text-gray-500">{index + 1}</span>
+                    <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-gray-100">
+                      {item.coverUrl ? (
+                        <Image src={item.coverUrl} alt={item.name} fill sizes="48px" className="object-cover" />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center">
+                          <ImageOff className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                        </div>
+                      )}
+                    </div>
                     <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-                      <span className="truncate font-display text-base text-gray-900">{item.name}</span>
+                      <span className="truncate font-display text-sm font-medium text-gray-900">{item.name}</span>
                       {item.secondary && <span className="truncate text-xs text-gray-500">{item.secondary}</span>}
                     </div>
                     <span className="flex shrink-0 items-center gap-1 text-sm font-medium text-gray-500">

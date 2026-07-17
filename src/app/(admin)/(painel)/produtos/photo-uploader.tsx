@@ -20,6 +20,7 @@ import {
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { PhotoPreview } from "./photo-preview";
 import { Plus, X, GripVertical, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
@@ -55,6 +56,7 @@ export type PhotoUploaderProps = {
   productId?: string;
   initialPhotos?: SavedPhoto[];
   onPendingFilesChange?: (files: File[]) => void;
+  onClickPhoto?: (url: string | null) => void;
 };
 
 function slotKey(slot: Slot): string {
@@ -108,6 +110,7 @@ export function PhotoUploader({ productId, initialPhotos, onPendingFilesChange }
   const [slots, setSlots] = useState<Slot[]>(() =>
     (initialPhotos ?? []).map((photo) => ({ kind: "saved" as const, id: photo.id, url: photo.url }))
   );
+  const [activePhotoIndex, setActivePhotoIndex] = useState<number | null>(null);
   const [processingCount, setProcessingCount] = useState(0);
   const [, startBackgroundTransition] = useTransition();
 
@@ -245,9 +248,15 @@ export function PhotoUploader({ productId, initialPhotos, onPendingFilesChange }
 
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <SortableContext items={slots.map(slotKey)} strategy={horizontalListSortingStrategy}>
-          <div className="grid grid-cols-5 gap-2">
+          <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
             {slots.map((slot, index) => (
-              <PhotoSlotItem key={slotKey(slot)} slot={slot} isCover={index === 0} onRemove={() => handleRemove(slot)} />
+              <PhotoSlotItem
+                key={slotKey(slot)}
+                slot={slot}
+                isCover={index === 0}
+                onRemove={() => handleRemove(slot)}
+                onClickPhoto={() => setActivePhotoIndex(index)}
+              />
             ))}
 
             {Array.from({ length: processingCount }).map((_, index) => (
@@ -275,6 +284,13 @@ export function PhotoUploader({ productId, initialPhotos, onPendingFilesChange }
           </div>
         </SortableContext>
       </DndContext>
+
+      <PhotoPreview
+        urls={slots.map((s) => (s.kind === "saved" ? s.url : s.previewUrl))}
+        activeIndex={activePhotoIndex}
+        onChange={setActivePhotoIndex}
+        onClose={() => setActivePhotoIndex(null)}
+      />
     </div>
   );
 }
@@ -283,6 +299,7 @@ type PhotoSlotItemProps = {
   slot: Slot;
   isCover: boolean;
   onRemove: () => void;
+  onClickPhoto?: () => void;
 };
 
 /**
@@ -290,7 +307,7 @@ type PhotoSlotItemProps = {
  * `useSortable` só participa da grade quando o slot está preenchido — slots
  * vazios não são drop targets (03-UI-SPEC.md §Photo uploader).
  */
-function PhotoSlotItem({ slot, isCover, onRemove }: PhotoSlotItemProps) {
+function PhotoSlotItem({ slot, isCover, onRemove, onClickPhoto }: PhotoSlotItemProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: slotKey(slot) });
 
   const style = {
@@ -302,7 +319,8 @@ function PhotoSlotItem({ slot, isCover, onRemove }: PhotoSlotItemProps) {
     <div
       ref={setNodeRef}
       style={style}
-      className={`relative aspect-square overflow-hidden rounded-lg border border-gray-200 ${isDragging ? "opacity-50" : ""}`}
+      onClick={onClickPhoto}
+      className={`relative aspect-square cursor-pointer overflow-hidden rounded-lg border border-gray-200 ${isDragging ? "opacity-50" : ""}`}
     >
       {slot.kind === "saved" ? (
         <Image src={slot.url} alt="" fill sizes="20vw" className="object-cover" />
