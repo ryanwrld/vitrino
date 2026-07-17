@@ -64,12 +64,21 @@ export default async function DashboardPage() {
       : null,
   }));
 
+  // Linguagem semantica por card (D-08): a cor mora no fundo do icone, na
+  // borda do card E no numero — nunca so no icone, nunca side-stripe.
   const statCards = [
-    { label: "Total de produtos", value: totalProdutos, Icon: Package },
-    { label: "Disponíveis", value: disponiveis, Icon: CheckCircle2 },
-    { label: "Esgotados", value: esgotados, Icon: XCircle },
-    { label: "Acessos", value: acessos, Icon: Eye },
+    { label: "Total de produtos", value: totalProdutos, Icon: Package, tone: "primary" as const },
+    { label: "Disponíveis", value: disponiveis, Icon: CheckCircle2, tone: "success" as const },
+    { label: "Esgotados", value: esgotados, Icon: XCircle, tone: "orange" as const },
+    { label: "Acessos", value: acessos, Icon: Eye, tone: "violet" as const },
   ];
+
+  const STAT_TONE_CLASSES = {
+    primary: { border: "border-primary-border", iconWrap: "bg-primary-subtle", icon: "text-primary", number: "text-primary" },
+    success: { border: "border-success-border", iconWrap: "bg-success-bg", icon: "text-success-solid", number: "text-success-fg" },
+    orange: { border: "border-orange-border", iconWrap: "bg-orange-bg", icon: "text-orange-solid", number: "text-orange-fg" },
+    violet: { border: "border-violet-border", iconWrap: "bg-violet-bg", icon: "text-violet-solid", number: "text-violet-fg" },
+  } as const;
 
   return (
     <div className="bg-white mx-auto flex min-h-dvh w-full max-w-4xl flex-col gap-6 px-4 py-10">
@@ -79,15 +88,20 @@ export default async function DashboardPage() {
       </div>
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
-        {statCards.map((card) => (
-          <div key={card.label} className="flex flex-col gap-1.5 rounded-lg border border-gray-200 p-5">
-            <div className="flex items-center gap-1.5">
-              <card.Icon className="h-5 w-5 text-gray-400" aria-hidden="true" />
-              <span className="text-sm text-gray-500">{card.label}</span>
+        {statCards.map((card) => {
+          const tone = STAT_TONE_CLASSES[card.tone];
+          return (
+            <div key={card.label} className={`flex flex-col gap-1.5 rounded-lg border ${tone.border} p-5`}>
+              <div className="flex items-center gap-2">
+                <span className={`flex h-9 w-9 items-center justify-center rounded-md ${tone.iconWrap}`}>
+                  <card.Icon className={`h-5 w-5 ${tone.icon}`} aria-hidden="true" />
+                </span>
+                <span className="text-sm text-gray-500">{card.label}</span>
+              </div>
+              <span className={`font-display text-3xl font-extrabold ${tone.number}`}>{card.value}</span>
             </div>
-            <span className="font-display text-3xl font-extrabold text-gray-900">{card.value}</span>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <section className="flex flex-col gap-3 rounded-lg border border-gray-200 bg-white p-5">
