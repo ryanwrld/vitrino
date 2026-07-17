@@ -5,7 +5,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, Home, List, Settings } from "lucide-react";
 import { signOutAction } from "@/lib/auth/actions";
-import { VitrinoLogo } from "@/components/vitrino-logo";
 
 /**
  * Itens de navegação do painel (D-07, copy verbatim): Dashboard, Produtos,
@@ -39,8 +38,8 @@ function NavLinks({ pathname }: { pathname: string }) {
             href={item.href}
             className={
               isActive
-                ? "flex min-h-11 items-center gap-3 rounded-md bg-white/15 px-3 font-semibold text-white transition-colors duration-150"
-                : "flex min-h-11 items-center gap-3 rounded-md px-3 font-medium text-white/70 transition-colors duration-150 hover:bg-white/10 hover:text-white"
+                ? "flex min-h-11 items-center gap-3 rounded-md bg-primary-subtle px-3 font-semibold text-primary transition-colors duration-150"
+                : "flex min-h-11 items-center gap-3 rounded-md px-3 font-medium text-gray-500 transition-colors duration-150 hover:bg-gray-100 hover:text-gray-900"
             }
           >
             <item.Icon className="h-5 w-5 shrink-0" aria-hidden="true" />
@@ -59,8 +58,8 @@ function NavLinks({ pathname }: { pathname: string }) {
 function LogoMark() {
   return (
     <div className="flex items-center gap-2 px-3">
-      <VitrinoLogo size={28} className="text-white" />
-      <span className="font-display text-lg font-extrabold text-white">Vitrino</span>
+      <div className="h-7 w-7 rounded-md bg-primary" aria-hidden="true" />
+      <span className="font-display text-lg font-extrabold text-gray-900">Vitrino</span>
     </div>
   );
 }
@@ -81,18 +80,18 @@ function AccountBlock({ storeName }: { storeName: string | null }) {
     : "?";
 
   return (
-    <div className="flex flex-col gap-3 border-t border-white/15 px-3 pt-4">
+    <div className="flex flex-col gap-3 border-t border-gray-200 px-3 pt-4">
       <div className="flex items-center gap-2.5">
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/10 text-xs font-bold text-white">
+        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gray-100 text-xs font-bold text-gray-500">
           {initials}
         </div>
         <div className="flex min-w-0 flex-col leading-tight">
-          <span className="truncate text-sm font-semibold text-white">{storeName ?? "Sua loja"}</span>
-          <span className="text-xs text-white/60">revendedor</span>
+          <span className="truncate text-sm font-semibold text-gray-900">{storeName ?? "Sua loja"}</span>
+          <span className="text-xs text-gray-500">revendedor</span>
         </div>
       </div>
       <form action={signOutAction}>
-        <button type="submit" className="min-h-11 text-sm text-white/70 transition-colors duration-150 hover:text-white">
+        <button type="submit" className="min-h-11 text-sm text-gray-500 transition-colors duration-150 hover:text-gray-900">
           Sair da conta
         </button>
       </form>
@@ -133,7 +132,7 @@ export function AdminSidebar({ storeName }: { storeName: string | null }) {
   return (
     <>
       {/* Desktop: sidebar fixa, sempre no DOM, só visível >= md */}
-      <aside className="hidden w-[232px] shrink-0 flex-col gap-6 border-r border-white/10 bg-sidebar p-3 py-5 md:flex">
+      <aside className="hidden w-[232px] shrink-0 flex-col gap-6 border-r border-gray-200 bg-white p-3 py-5 md:flex">
         <LogoMark />
         <nav className="flex flex-col gap-0.5">
           <NavLinks pathname={pathname} />
@@ -144,11 +143,11 @@ export function AdminSidebar({ storeName }: { storeName: string | null }) {
       </aside>
 
       {/* Mobile: barra de topo com o hambúrguer, acima de {children} (D-06 / UI-SPEC linha 132) — só visível < md */}
-      <div className="flex h-14 shrink-0 items-center border-b border-divider bg-white px-4 md:hidden">
+      <div className="flex h-14 shrink-0 items-center border-b border-gray-200 bg-white px-4 md:hidden">
         <button
           type="button"
           onClick={() => dialogRef.current?.showModal()}
-          className="flex min-h-11 min-w-11 items-center justify-center text-gray-900"
+          className="flex min-h-11 min-w-11 items-center justify-center"
           aria-label="Abrir menu"
         >
           <Menu className="h-6 w-6" aria-hidden="true" />
@@ -157,7 +156,7 @@ export function AdminSidebar({ storeName }: { storeName: string | null }) {
       <dialog
         ref={dialogRef}
         aria-label="Menu de navegação"
-        className="m-0 h-dvh max-h-none w-64 max-w-none bg-sidebar p-4 backdrop:bg-black/45 backdrop:backdrop-blur-[2px]"
+        className="m-0 h-dvh max-h-none w-64 max-w-none bg-white p-4 backdrop:bg-black/45 backdrop:backdrop-blur-[2px]"
         onCancel={closeDrawer}
       >
         <div className="flex h-full flex-col gap-6 animate-scale-in">
@@ -166,7 +165,7 @@ export function AdminSidebar({ storeName }: { storeName: string | null }) {
             <button
               type="button"
               onClick={closeDrawer}
-              className="flex min-h-11 min-w-11 items-center justify-center text-white/70 transition-colors duration-150 hover:text-white"
+              className="flex min-h-11 min-w-11 items-center justify-center"
               aria-label="Fechar menu"
             >
               <X className="h-6 w-6" aria-hidden="true" />

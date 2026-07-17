@@ -77,32 +77,6 @@
   --leading-tight: 1.15;
   --leading-snug: 1.35;
   --leading-normal: 1.55;
-
-  /* === Round 2: paleta viva (derivada da marca, nunca a substitui) === */
-  --color-primary-bright: #2D4BF0; /* azul vibrante p/ hover/realce/acento */
-
-  /* Superficies azuladas (formularios que respiram, sidebar escura) */
-  --color-surface-subtle: #F7F9FF; /* fundo de secao de formulario ("respiro") */
-  --color-surface-panel: #F1F4FF; /* realce claro alternativo */
-  --color-divider: #E4E9FB; /* divisor/borda azul muito claro */
-  --color-field-border: #D3DCF5; /* borda de input azulada em repouso */
-  --color-ink-navy: #2A356B; /* label azul-marinho sutil */
-  --color-sidebar: #0A1680; /* sidebar escura (texto/icone branco por cima) */
-
-  /* Acento violeta — analytics/trafego ("Acessos") */
-  --color-violet-bg: #EFECFD;
-  --color-violet-fg: #4B2E9E;
-  --color-violet-solid: #6D3EE8;
-  --color-violet-border: #D8CEF7;
-
-  /* Laranja — urgencia/atencao ("Esgotados") */
-  --color-orange-bg: #FDECE0;
-  --color-orange-fg: #9A4410;
-  --color-orange-solid: #E56A1C;
-  --color-orange-border: #F7D2B8;
-
-  /* Borda tonal clara p/ o stat card verde (Disponiveis) */
-  --color-success-border: #BCE9CE;
 }
 
 @theme inline {
