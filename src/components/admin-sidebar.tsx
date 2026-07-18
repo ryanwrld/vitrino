@@ -42,8 +42,8 @@ function NavLinks({ pathname }: { pathname: string }) {
             href={item.href}
             className={
               isActive
-                ? "flex min-h-11 items-center gap-3 rounded-md bg-primary-subtle px-3 font-semibold text-primary transition-colors duration-150"
-                : "flex min-h-11 items-center gap-3 rounded-md px-3 font-medium text-gray-500 transition-colors duration-150 hover:bg-gray-100 hover:text-gray-900"
+                ? "flex min-h-11 items-center gap-3 rounded-md bg-primary-subtle px-3 font-semibold text-primary transition-colors duration-150 dark:bg-blue-400/15 dark:text-blue-300"
+                : "flex min-h-11 items-center gap-3 rounded-md px-3 font-medium text-gray-500 transition-colors duration-150 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-50"
             }
           >
             <item.Icon className="h-5 w-5 shrink-0" aria-hidden="true" />
@@ -62,7 +62,7 @@ function LogoHeader() {
   return (
     <div className="flex items-center gap-2 px-3">
       <LogoMark size={28} />
-      <span className="font-display text-lg font-extrabold text-gray-900">Vitrino</span>
+      <span className="font-display text-lg font-extrabold text-gray-900 dark:text-gray-50">Vitrino</span>
     </div>
   );
 }
@@ -80,14 +80,14 @@ function AccountBlock({
   storeSlug?: string | null;
 }) {
   return (
-    <div className="flex flex-col gap-1 border-t border-gray-200 px-3 pt-4">
+    <div className="flex flex-col gap-1 border-t border-gray-200 px-3 pt-4 dark:border-gray-800">
       {/* Ver vitrine pública — link de acesso rápido */}
       {storeSlug && (
         <a
           href={`/loja/${storeSlug}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex min-h-10 items-center gap-2.5 rounded-md px-2 text-sm font-medium text-gray-500 transition-colors duration-150 hover:bg-gray-100 hover:text-gray-900 mb-1"
+          className="mb-1 flex min-h-10 items-center gap-2.5 rounded-md px-2 text-sm font-medium text-gray-500 transition-colors duration-150 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-50"
         >
           <ExternalLink className="h-4 w-4 shrink-0" aria-hidden="true" />
           Ver minha vitrine
@@ -98,7 +98,7 @@ function AccountBlock({
       <form action={signOutAction}>
         <button
           type="submit"
-          className="flex min-h-10 w-full items-center gap-2.5 rounded-md px-2 text-sm font-medium text-gray-500 transition-colors duration-150 hover:bg-error-bg hover:text-error-fg"
+          className="flex min-h-10 w-full items-center gap-2.5 rounded-md px-2 text-sm font-medium text-gray-500 transition-colors duration-150 hover:bg-error-bg hover:text-error-fg dark:text-gray-400 dark:hover:bg-error-solid/15"
         >
           <LogOut className="h-4 w-4 shrink-0" aria-hidden="true" />
           Sair da conta
@@ -156,7 +156,7 @@ export function AdminSidebar({
   return (
     <>
       {/* Desktop: sidebar fixa, sempre no DOM, só visível >= md */}
-      <aside className="sticky top-0 hidden h-dvh w-[232px] shrink-0 flex-col gap-6 border-r border-gray-200 bg-gray-50 p-3 py-5 md:flex">
+      <aside className="sticky top-0 hidden h-dvh w-[232px] shrink-0 flex-col gap-6 border-r border-gray-200 bg-gray-50 p-3 py-5 md:flex dark:border-gray-800 dark:bg-gray-925">
         <LogoHeader />
         <nav className="flex flex-col gap-0.5">
           <NavLinks pathname={pathname} />
@@ -167,11 +167,11 @@ export function AdminSidebar({
       </aside>
 
       {/* Mobile: barra de topo com o hambúrguer e perfil (D-06 / UI-SPEC linha 132) — só visível < md */}
-      <div className="flex h-14 shrink-0 items-center justify-between border-b border-gray-200 bg-gray-50 px-4 md:hidden">
+      <div className="flex h-14 shrink-0 items-center justify-between border-b border-gray-200 bg-gray-50 px-4 md:hidden dark:border-gray-800 dark:bg-gray-925">
         <button
           type="button"
           onClick={() => dialogRef.current?.showModal()}
-          className="flex min-h-11 min-w-11 items-center justify-center -ml-2"
+          className="-ml-2 flex min-h-11 min-w-11 items-center justify-center text-gray-900 dark:text-gray-50"
           aria-label="Abrir menu"
         >
           <Menu className="h-6 w-6" aria-hidden="true" />
@@ -182,8 +182,8 @@ export function AdminSidebar({
           className={`flex items-center gap-2.5 rounded-md transition-colors duration-150`}
         >
           <div className="flex min-w-0 flex-col leading-tight text-right">
-            <span className="truncate text-sm font-semibold text-gray-900">{storeName ?? "Sua loja"}</span>
-            <span className="text-xs text-gray-500">revendedor</span>
+            <span className="truncate text-sm font-semibold text-gray-900 dark:text-gray-50">{storeName ?? "Sua loja"}</span>
+            <span className="text-xs text-gray-500 dark:text-gray-400">revendedor</span>
           </div>
           <div
             className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white"
@@ -196,7 +196,7 @@ export function AdminSidebar({
       <dialog
         ref={dialogRef}
         aria-label="Menu de navegação"
-        className="m-0 h-dvh max-h-none w-64 max-w-none bg-gray-50 p-4 backdrop:bg-black/45 backdrop:backdrop-blur-[2px]"
+        className="m-0 h-dvh max-h-none w-64 max-w-none bg-gray-50 p-4 backdrop:bg-black/45 backdrop:backdrop-blur-[2px] dark:bg-gray-925"
         onCancel={closeDrawer}
       >
         <div className="flex h-full flex-col gap-6 animate-scale-in">

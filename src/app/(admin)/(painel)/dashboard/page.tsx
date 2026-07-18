@@ -84,59 +84,59 @@ export default async function DashboardPage() {
       label: "Total de produtos",
       value: totalProdutos,
       Icon: Package,
-      iconBg: "bg-primary-subtle",
-      iconColor: "text-primary",
-      valueCls: "text-gray-900",
+      iconBg: "bg-primary-subtle dark:bg-blue-400/15",
+      iconColor: "text-primary dark:text-blue-300",
+      valueCls: "text-gray-900 dark:text-gray-50",
     },
     {
       label: "Disponíveis",
       value: disponiveis,
       Icon: CheckCircle2,
-      iconBg: "bg-success-bg",
+      iconBg: "bg-success-bg dark:bg-success-solid/15",
       iconColor: "text-success-fg",
-      valueCls: "text-gray-900",
+      valueCls: "text-gray-900 dark:text-gray-50",
     },
     {
       label: "Esgotados",
       value: esgotados,
       Icon: XCircle,
-      iconBg: "bg-error-bg",
+      iconBg: "bg-error-bg dark:bg-error-solid/15",
       iconColor: "text-error-fg",
-      valueCls: esgotados > 0 ? "text-error-fg" : "text-gray-900",
+      valueCls: esgotados > 0 ? "text-error-fg" : "text-gray-900 dark:text-gray-50",
     },
     {
       label: "Acessos",
       value: acessos,
       Icon: Eye,
-      iconBg: "bg-warning-bg",
+      iconBg: "bg-warning-bg dark:bg-warning-solid/15",
       iconColor: "text-warning-fg",
-      valueCls: "text-gray-900",
+      valueCls: "text-gray-900 dark:text-gray-50",
     },
   ];
 
   return (
     <div className="mx-auto flex min-h-dvh w-full max-w-4xl flex-col gap-6 px-4 py-10">
       <div>
-        <h1 className="font-display text-2xl font-extrabold text-gray-900">Dashboard</h1>
-        <p className="mt-1 text-sm text-gray-500">Visão geral da sua vitrine.</p>
+        <h1 className="font-display text-2xl font-extrabold text-gray-900 dark:text-gray-50">Dashboard</h1>
+        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Visão geral da sua vitrine.</p>
       </div>
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
         {statCards.map((card) => (
-          <div key={card.label} className="flex flex-col gap-2 rounded-lg border border-gray-200 bg-white p-5">
+          <div key={card.label} className="flex flex-col gap-2 rounded-lg border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-gray-900">
             <div className={`flex h-9 w-9 items-center justify-center rounded-lg ${card.iconBg}`}>
               <card.Icon className={`h-5 w-5 ${card.iconColor}`} aria-hidden="true" />
             </div>
             <div className="flex flex-col gap-0.5">
               <span className={`font-display text-2xl font-extrabold ${card.valueCls}`}>{card.value}</span>
-              <span className="text-xs text-gray-500">{card.label}</span>
+              <span className="text-xs text-gray-500 dark:text-gray-400">{card.label}</span>
             </div>
           </div>
         ))}
       </div>
 
-      <section className="flex flex-col gap-3 rounded-lg border border-gray-200 bg-white p-5">
-        <h2 className="font-display font-bold text-gray-900">Produtos recentes</h2>
+      <section className="flex flex-col gap-3 rounded-lg border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-gray-900">
+        <h2 className="font-display font-bold text-gray-900 dark:text-gray-50">Produtos recentes</h2>
         {recentes.length > 0 ? (
           <ul className="flex flex-col gap-3">
             {recentes.map((product) => {
@@ -147,24 +147,24 @@ export default async function DashboardPage() {
                 <li key={product.id}>
                   <Link
                     href={`/produtos/${product.id}/editar`}
-                    className="flex min-h-11 items-center gap-3 rounded-lg border border-gray-200 bg-white p-3 shadow-sm"
+                    className="flex min-h-11 items-center gap-3 rounded-lg border border-gray-200 bg-white p-3 shadow-sm dark:border-gray-800 dark:bg-gray-900"
                   >
-                    <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-gray-100">
+                    <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
                       {product.coverUrl ? (
                         <Image src={product.coverUrl} alt={product.name} fill sizes="64px" className="object-cover" />
                       ) : (
                         <div className="flex h-full w-full items-center justify-center">
-                          <ImageOff className="h-6 w-6 text-gray-400" aria-hidden="true" />
+                          <ImageOff className="h-6 w-6 text-gray-400 dark:text-gray-500" aria-hidden="true" />
                         </div>
                       )}
                     </div>
 
                     <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-                      <span className="truncate font-display font-medium text-gray-900">{product.name}</span>
-                      {secondaryLine && <span className="truncate text-xs text-gray-500">{secondaryLine}</span>}
+                      <span className="truncate font-display font-medium text-gray-900 dark:text-gray-50">{product.name}</span>
+                      {secondaryLine && <span className="truncate text-xs text-gray-500 dark:text-gray-400">{secondaryLine}</span>}
                       <span
                         className={`flex items-center gap-1 text-xs transition-colors duration-150 ${
-                          product.disponivel ? "text-success-fg" : "text-gray-500"
+                          product.disponivel ? "text-success-fg" : "text-gray-500 dark:text-gray-400"
                         }`}
                       >
                         <span
@@ -175,17 +175,17 @@ export default async function DashboardPage() {
                       </span>
                     </div>
 
-                    <span className="shrink-0 text-sm font-medium text-gray-900">{formatBRLPrice(product.price)}</span>
+                    <span className="shrink-0 text-sm font-medium text-gray-900 dark:text-gray-50">{formatBRLPrice(product.price)}</span>
                   </Link>
                 </li>
               );
             })}
           </ul>
         ) : (
-          <div className="flex flex-col items-center gap-3 rounded-lg border border-dashed border-gray-300 px-4 py-8 text-center">
+          <div className="flex flex-col items-center gap-3 rounded-lg border border-dashed border-gray-300 px-4 py-8 text-center dark:border-gray-700">
             <div className="flex flex-col gap-1">
-              <span className="font-medium text-gray-900">Nenhum produto cadastrado ainda</span>
-              <span className="text-sm text-gray-500">
+              <span className="font-medium text-gray-900 dark:text-gray-50">Nenhum produto cadastrado ainda</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">
                 Cadastre seu primeiro produto para começar a vender pelo WhatsApp.
               </span>
             </div>
@@ -200,30 +200,30 @@ export default async function DashboardPage() {
       </section>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <section className="flex flex-col gap-3 rounded-lg border border-gray-200 bg-white p-5">
-          <h2 className="font-display font-bold text-gray-900">Mais visualizados</h2>
+        <section className="flex flex-col gap-3 rounded-lg border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-gray-900">
+          <h2 className="font-display font-bold text-gray-900 dark:text-gray-50">Mais visualizados</h2>
           {maisVisualizados.length > 0 ? (
             <ul className="flex flex-col gap-2">
               {maisVisualizadosWithCover.map((item) => (
                 <li key={item.productId}>
                   <Link
                     href={`/produtos/${item.productId}/editar`}
-                    className="flex min-h-11 items-center gap-3 rounded-lg border border-gray-200 bg-white p-3 transition-colors duration-150 hover:border-gray-300"
+                    className="flex min-h-11 items-center gap-3 rounded-lg border border-gray-200 bg-white p-3 transition-colors duration-150 hover:border-gray-300 dark:border-gray-800 dark:bg-gray-900 dark:hover:border-gray-700"
                   >
-                    <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-gray-100">
+                    <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
                       {item.coverUrl ? (
                         <Image src={item.coverUrl} alt={item.name} fill sizes="48px" className="object-cover" />
                       ) : (
                         <div className="flex h-full w-full items-center justify-center">
-                          <ImageOff className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                          <ImageOff className="h-5 w-5 text-gray-400 dark:text-gray-500" aria-hidden="true" />
                         </div>
                       )}
                     </div>
                     <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-                      <span className="truncate font-display text-sm font-medium text-gray-900">{item.name}</span>
-                      {item.secondary && <span className="truncate text-xs text-gray-500">{item.secondary}</span>}
+                      <span className="truncate font-display text-sm font-medium text-gray-900 dark:text-gray-50">{item.name}</span>
+                      {item.secondary && <span className="truncate text-xs text-gray-500 dark:text-gray-400">{item.secondary}</span>}
                     </div>
-                    <span className="flex shrink-0 items-center gap-1 text-sm font-medium text-gray-500">
+                    <span className="flex shrink-0 items-center gap-1 text-sm font-medium text-gray-500 dark:text-gray-400">
                       <Eye className="h-4 w-4" aria-hidden="true" />
                       {item.views}
                     </span>
@@ -232,39 +232,39 @@ export default async function DashboardPage() {
               ))}
             </ul>
           ) : (
-            <div className="flex flex-col gap-1 rounded-lg border border-dashed border-gray-300 px-4 py-8 text-center">
-              <span className="font-medium text-gray-900">Ainda sem visualizações</span>
-              <span className="text-sm text-gray-500">
+            <div className="flex flex-col gap-1 rounded-lg border border-dashed border-gray-300 px-4 py-8 text-center dark:border-gray-700">
+              <span className="font-medium text-gray-900 dark:text-gray-50">Ainda sem visualizações</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">
                 Assim que sua vitrine receber acessos, os produtos mais vistos aparecem aqui.
               </span>
             </div>
           )}
         </section>
 
-        <section className="flex flex-col gap-3 rounded-lg border border-gray-200 bg-white p-5">
-          <h2 className="font-display font-bold text-gray-900">Cliques no WhatsApp</h2>
+        <section className="flex flex-col gap-3 rounded-lg border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-gray-900">
+          <h2 className="font-display font-bold text-gray-900 dark:text-gray-50">Cliques no WhatsApp</h2>
           {cliquesWhatsapp.length > 0 ? (
             <ul className="flex flex-col gap-2">
               {cliquesWhatsappWithCover.map((item) => (
                 <li key={item.productId}>
                   <Link
                     href={`/produtos/${item.productId}/editar`}
-                    className="flex min-h-11 items-center gap-3 rounded-lg border border-gray-200 bg-white p-3 transition-colors duration-150 hover:border-gray-300"
+                    className="flex min-h-11 items-center gap-3 rounded-lg border border-gray-200 bg-white p-3 transition-colors duration-150 hover:border-gray-300 dark:border-gray-800 dark:bg-gray-900 dark:hover:border-gray-700"
                   >
-                    <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-gray-100">
+                    <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
                       {item.coverUrl ? (
                         <Image src={item.coverUrl} alt={item.name} fill sizes="48px" className="object-cover" />
                       ) : (
                         <div className="flex h-full w-full items-center justify-center">
-                          <ImageOff className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                          <ImageOff className="h-5 w-5 text-gray-400 dark:text-gray-500" aria-hidden="true" />
                         </div>
                       )}
                     </div>
                     <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-                      <span className="truncate font-display text-sm font-medium text-gray-900">{item.name}</span>
-                      {item.secondary && <span className="truncate text-xs text-gray-500">{item.secondary}</span>}
+                      <span className="truncate font-display text-sm font-medium text-gray-900 dark:text-gray-50">{item.name}</span>
+                      {item.secondary && <span className="truncate text-xs text-gray-500 dark:text-gray-400">{item.secondary}</span>}
                     </div>
-                    <span className="flex shrink-0 items-center gap-1 text-sm font-medium text-gray-500">
+                    <span className="flex shrink-0 items-center gap-1 text-sm font-medium text-gray-500 dark:text-gray-400">
                       <MessageCircle className="h-4 w-4" aria-hidden="true" />
                       {item.clicks}
                     </span>
@@ -273,9 +273,9 @@ export default async function DashboardPage() {
               ))}
             </ul>
           ) : (
-            <div className="flex flex-col gap-1 rounded-lg border border-dashed border-gray-300 px-4 py-8 text-center">
-              <span className="font-medium text-gray-900">Ainda sem cliques</span>
-              <span className="text-sm text-gray-500">
+            <div className="flex flex-col gap-1 rounded-lg border border-dashed border-gray-300 px-4 py-8 text-center dark:border-gray-700">
+              <span className="font-medium text-gray-900 dark:text-gray-50">Ainda sem cliques</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">
                 Assim que clientes clicarem em &quot;Pedir agora&quot;, os produtos mais pedidos aparecem aqui.
               </span>
             </div>

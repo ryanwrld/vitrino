@@ -1,7 +1,8 @@
 import { requireCompletedOnboarding } from "@/lib/auth/onboarding-guard";
 import { createClient } from "@/lib/supabase/server";
-import { UserCircle, Monitor, Sun, Moon, Shield, Paintbrush } from "lucide-react";
+import { UserCircle, Shield, Paintbrush } from "lucide-react";
 import { ProfileForm } from "./profile-form";
+import { ThemeToggle } from "./theme-toggle";
 
 /**
  * Rota `/configuracoes` principal.
@@ -21,62 +22,48 @@ export default async function ConfiguracoesContaPage() {
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-6 px-4 py-8 md:py-10">
       <div>
-        <h1 className="font-display text-2xl font-extrabold text-gray-900">Configurações da conta</h1>
-        <p className="mt-1 text-sm text-gray-500">Gerencie suas preferências de interface e segurança da sua conta.</p>
+        <h1 className="font-display text-2xl font-extrabold text-gray-900 dark:text-gray-50">Configurações da conta</h1>
+        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Gerencie suas preferências de interface e segurança da sua conta.</p>
       </div>
 
-      <section className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-5">
-        <div className="flex items-center gap-2 text-gray-900">
+      <section className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-gray-900">
+        <div className="flex items-center gap-2 text-gray-900 dark:text-gray-50">
           <UserCircle className="h-5 w-5" />
           <h2 className="font-display font-bold">Seu perfil</h2>
         </div>
         <ProfileForm email={user?.email ?? ""} />
       </section>
 
-      <section className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-5">
-        <div className="flex items-center gap-2 text-gray-900">
+      <section className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-gray-900">
+        <div className="flex items-center gap-2 text-gray-900 dark:text-gray-50">
           <Paintbrush className="h-5 w-5" />
           <h2 className="font-display font-bold">Interface</h2>
         </div>
-        
-        <div className="flex flex-col gap-2 border border-gray-100 rounded-lg p-4 bg-gray-50/50">
+
+        <div className="flex flex-col gap-2 rounded-lg border border-gray-100 bg-gray-50/50 p-4 dark:border-gray-800 dark:bg-gray-925/40">
           <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <span className="font-medium text-gray-900 block">Tema (Em breve)</span>
-              <span className="text-sm text-gray-500">Escolha como a plataforma Vitrino será exibida.</span>
+              <span className="block font-medium text-gray-900 dark:text-gray-50">Tema</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">Escolha como a plataforma Vitrino será exibida.</span>
             </div>
-            
-            <div className="flex w-full sm:w-auto bg-gray-100/80 p-1 rounded-lg border border-gray-200/60 shadow-sm pointer-events-none opacity-60">
-              <button className="flex flex-1 sm:flex-none justify-center items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium text-gray-500">
-                <Sun className="h-4 w-4" />
-                Claro
-              </button>
-              <button className="flex flex-1 sm:flex-none justify-center items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium bg-white text-gray-900 shadow-sm">
-                <Monitor className="h-4 w-4" />
-                Auto
-              </button>
-              <button className="flex flex-1 sm:flex-none justify-center items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium text-gray-500">
-                <Moon className="h-4 w-4" />
-                Escuro
-              </button>
-            </div>
+            <ThemeToggle />
           </div>
         </div>
       </section>
 
-      <section className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-5">
-        <div className="flex items-center gap-2 text-gray-900">
+      <section className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-gray-900">
+        <div className="flex items-center gap-2 text-gray-900 dark:text-gray-50">
           <Shield className="h-5 w-5" />
           <h2 className="font-display font-bold">Segurança</h2>
         </div>
-        
-        <div className="flex flex-col gap-2 border border-gray-100 rounded-lg p-4 bg-gray-50/50">
+
+        <div className="flex flex-col gap-2 rounded-lg border border-gray-100 bg-gray-50/50 p-4 dark:border-gray-800 dark:bg-gray-925/40">
           <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <span className="font-medium text-gray-900 block">Senha</span>
-              <span className="text-sm text-gray-500">Alterar a senha de acesso da sua conta.</span>
+              <span className="block font-medium text-gray-900 dark:text-gray-50">Senha</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">Alterar a senha de acesso da sua conta.</span>
             </div>
-            <button disabled className="text-sm font-medium text-gray-400 cursor-not-allowed">
+            <button disabled className="cursor-not-allowed text-sm font-medium text-gray-400 dark:text-gray-600">
               Alterar
             </button>
           </div>

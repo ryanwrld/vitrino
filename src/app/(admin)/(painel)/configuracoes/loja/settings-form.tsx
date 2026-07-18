@@ -80,14 +80,14 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-6">
-      <div className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-5">
-        <div className="flex items-center gap-2 text-gray-900">
+      <div className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-gray-900">
+        <div className="flex items-center gap-2 text-gray-900 dark:text-gray-50">
           <Paintbrush className="h-5 w-5" />
           <h2 className="font-display font-bold">Identidade visual</h2>
         </div>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="name" className="text-sm font-medium text-gray-700">
+          <label htmlFor="name" className="text-sm font-medium text-gray-700 dark:text-gray-300">
             Nome da loja
           </label>
           <input
@@ -95,13 +95,13 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
             type="text"
             autoComplete="organization"
             {...register("name")}
-            className="rounded-md border border-gray-300 bg-white px-3 h-11 text-base text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle placeholder:text-gray-400"
+            className="rounded-md border border-gray-300 bg-white px-3 h-11 text-base text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle placeholder:text-gray-400 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-50 dark:placeholder:text-gray-600 dark:focus:ring-blue-400/20"
           />
-          {errors.name && <span className="text-sm text-error-solid">{errors.name.message}</span>}
+          {errors.name && <span className="text-sm text-error-fg">{errors.name.message}</span>}
         </div>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="logo" className="text-sm font-medium text-gray-700">
+          <label htmlFor="logo" className="text-sm font-medium text-gray-700 dark:text-gray-300">
             Logo (opcional)
           </label>
           <input
@@ -109,27 +109,27 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
             type="file"
             accept="image/png,image/jpeg,image/webp"
             onChange={(event) => setLogoFile(event.target.files?.[0] ?? null)}
-            className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle"
+            className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle dark:border-gray-700 dark:bg-gray-900 dark:text-gray-50 dark:focus:ring-blue-400/20"
           />
         </div>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="accentColor" className="text-sm font-medium text-gray-700">
+          <label htmlFor="accentColor" className="text-sm font-medium text-gray-700 dark:text-gray-300">
             Cor de destaque
           </label>
           <input
             id="accentColor"
             type="color"
             {...register("accentColor")}
-            className="h-10 w-20 rounded-md border border-gray-300 bg-white p-1"
+            className="h-10 w-20 rounded-md border border-gray-300 bg-white p-1 dark:border-gray-700 dark:bg-gray-900"
           />
           {errors.accentColor && (
-            <span className="text-sm text-error-solid">{errors.accentColor.message}</span>
+            <span className="text-sm text-error-fg">{errors.accentColor.message}</span>
           )}
         </div>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="tagline" className="text-sm font-medium text-gray-700">
+          <label htmlFor="tagline" className="text-sm font-medium text-gray-700 dark:text-gray-300">
             Frase de apresentação (opcional, até 100 caracteres)
           </label>
           <input
@@ -137,37 +137,37 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
             type="text"
             maxLength={100}
             {...register("tagline")}
-            className="rounded-md border border-gray-300 bg-white px-3 h-11 text-base text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle placeholder:text-gray-400"
+            className="rounded-md border border-gray-300 bg-white px-3 h-11 text-base text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle placeholder:text-gray-400 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-50 dark:placeholder:text-gray-600 dark:focus:ring-blue-400/20"
           />
-          {errors.tagline && <span className="text-sm text-error-solid">{errors.tagline.message}</span>}
+          {errors.tagline && <span className="text-sm text-error-fg">{errors.tagline.message}</span>}
         </div>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="hideSoldOutDefault" className="text-sm font-medium text-gray-700">
+          <label htmlFor="hideSoldOutDefault" className="text-sm font-medium text-gray-700 dark:text-gray-300">
             Ocultar produtos esgotados por padrão
           </label>
           <div className="relative">
             <select
               id="hideSoldOutDefault"
               {...register("hideSoldOutDefault")}
-              className="w-full min-h-11 appearance-none rounded-md border border-gray-300 bg-white px-3 pr-9 h-11 text-base text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle"
+              className="w-full min-h-11 appearance-none rounded-md border border-gray-300 bg-white px-3 pr-9 h-11 text-base text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle dark:border-gray-700 dark:bg-gray-900 dark:text-gray-50 dark:focus:ring-blue-400/20"
             >
               <option value="false">Não — mostrar esmaecido (padrão)</option>
               <option value="true">Sim — ocultar da vitrine</option>
             </select>
-            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" aria-hidden="true" />
+            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400 dark:text-gray-500" aria-hidden="true" />
           </div>
         </div>
       </div>
 
-      <div className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-5">
-        <div className="flex items-center gap-2 text-gray-900">
+      <div className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-gray-900">
+        <div className="flex items-center gap-2 text-gray-900 dark:text-gray-50">
           <MessageCircle className="h-5 w-5" />
           <h2 className="font-display font-bold">WhatsApp e mensagem de pedido</h2>
         </div>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="whatsapp" className="text-sm font-medium text-gray-700">
+          <label htmlFor="whatsapp" className="text-sm font-medium text-gray-700 dark:text-gray-300">
             WhatsApp
           </label>
           <input
@@ -175,26 +175,26 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
             type="tel"
             placeholder="(11) 99999-9999"
             {...register("whatsapp")}
-            className="rounded-md border border-gray-300 bg-white px-3 h-11 text-base text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle placeholder:text-gray-400"
+            className="rounded-md border border-gray-300 bg-white px-3 h-11 text-base text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle placeholder:text-gray-400 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-50 dark:placeholder:text-gray-600 dark:focus:ring-blue-400/20"
           />
           {formattedPreview && (
-            <span className="text-xs text-gray-500">Prévia: {formattedPreview}</span>
+            <span className="text-xs text-gray-500 dark:text-gray-400">Prévia: {formattedPreview}</span>
           )}
-          {errors.whatsapp && <span className="text-sm text-error-solid">{errors.whatsapp.message}</span>}
+          {errors.whatsapp && <span className="text-sm text-error-fg">{errors.whatsapp.message}</span>}
         </div>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="messageTemplate" className="text-sm font-medium text-gray-700">
+          <label htmlFor="messageTemplate" className="text-sm font-medium text-gray-700 dark:text-gray-300">
             Template da mensagem de pedido
           </label>
           <textarea
             id="messageTemplate"
             rows={6}
             {...register("messageTemplate")}
-            className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle placeholder:text-gray-400"
+            className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none transition-colors duration-150 focus:border-primary focus:ring-2 focus:ring-primary-subtle placeholder:text-gray-400 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-50 dark:placeholder:text-gray-600 dark:focus:ring-blue-400/20"
           />
           {errors.messageTemplate && (
-            <span className="text-sm text-error-solid">{errors.messageTemplate.message}</span>
+            <span className="text-sm text-error-fg">{errors.messageTemplate.message}</span>
           )}
         </div>
       </div>
@@ -202,7 +202,7 @@ export function SettingsForm({ store, settings }: SettingsFormProps) {
       <button
         type="submit"
         disabled={isPending}
-        className="w-full sm:w-auto sm:self-end rounded-md bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:bg-primary-hover hover:shadow active:translate-y-0 active:bg-primary-active focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:bg-gray-100 disabled:text-gray-400 disabled:shadow-none"
+        className="w-full sm:w-auto sm:self-end rounded-md bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:bg-primary-hover hover:shadow active:translate-y-0 active:bg-primary-active focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:bg-gray-100 disabled:text-gray-400 disabled:shadow-none dark:disabled:bg-gray-800 dark:disabled:text-gray-600"
       >
         {isPending ? "Salvando…" : "Salvar alterações"}
       </button>

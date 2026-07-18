@@ -48,8 +48,8 @@ export default async function ConfiguracoesPage() {
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-6 px-4 py-8 md:py-10">
       <div>
-        <h1 className="font-display text-2xl font-extrabold text-gray-900">Configurações da loja</h1>
-        <p className="mt-1 text-sm text-gray-500">Identidade visual, link público e QR code da sua vitrine.</p>
+        <h1 className="font-display text-2xl font-extrabold text-gray-900 dark:text-gray-50">Configurações da loja</h1>
+        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Identidade visual, link público e QR code da sua vitrine.</p>
       </div>
 
       <SettingsForm

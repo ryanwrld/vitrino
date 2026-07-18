@@ -35,25 +35,25 @@ export function PhotoPreview({ urls, activeIndex, onClose, onChange }: PhotoPrev
         aria-hidden="true"
       />
       
-      <aside className="fixed inset-y-0 right-0 z-50 w-full max-w-[480px] bg-white shadow-2xl animate-slide-left flex flex-col">
-        <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3 sm:px-6 sm:py-4">
-          <h2 className="font-display text-lg font-bold text-gray-900">
+      <aside className="fixed inset-y-0 right-0 z-50 w-full max-w-[480px] bg-white shadow-2xl animate-slide-left flex flex-col dark:bg-gray-900">
+        <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3 sm:px-6 sm:py-4 dark:border-gray-800">
+          <h2 className="font-display text-lg font-bold text-gray-900 dark:text-gray-50">
             Foto {activeIndex + 1} de {urls.length}
           </h2>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-full p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+            className="rounded-full p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition-colors dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-50"
           >
             <X className="h-5 w-5" />
           </button>
         </div>
         
-        <div className="relative flex-1 bg-gray-50/50 flex items-center justify-center p-2 sm:p-6">
+        <div className="relative flex-1 bg-gray-50/50 flex items-center justify-center p-2 sm:p-6 dark:bg-gray-925/40">
           {urls.length > 1 && (
             <button
               onClick={() => onChange((activeIndex - 1 + urls.length) % urls.length)}
-              className="absolute left-4 z-10 hidden sm:flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-gray-900 shadow hover:scale-110 transition-transform"
+              className="absolute left-4 z-10 hidden sm:flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-gray-900 shadow hover:scale-110 transition-transform dark:bg-gray-800/90 dark:text-gray-50"
             >
               <ChevronLeft className="h-6 w-6" />
             </button>
@@ -74,7 +74,7 @@ export function PhotoPreview({ urls, activeIndex, onClose, onChange }: PhotoPrev
           {urls.length > 1 && (
             <button
               onClick={() => onChange((activeIndex + 1) % urls.length)}
-              className="absolute right-4 z-10 hidden sm:flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-gray-900 shadow hover:scale-110 transition-transform"
+              className="absolute right-4 z-10 hidden sm:flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-gray-900 shadow hover:scale-110 transition-transform dark:bg-gray-800/90 dark:text-gray-50"
             >
               <ChevronRight className="h-6 w-6" />
             </button>
@@ -82,7 +82,7 @@ export function PhotoPreview({ urls, activeIndex, onClose, onChange }: PhotoPrev
         </div>
 
         {urls.length > 1 && (
-          <div className="border-t border-gray-100 p-4 bg-white flex items-center justify-start md:justify-center gap-2 overflow-x-auto">
+          <div className="border-t border-gray-100 p-4 bg-white flex items-center justify-start md:justify-center gap-2 overflow-x-auto dark:border-gray-800 dark:bg-gray-900">
             {urls.map((u, i) => (
               <button
                 key={u}

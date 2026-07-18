@@ -93,9 +93,9 @@ export function SizeGrid({ control, productId }: SizeGridProps) {
   }
 
   return (
-    <div className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-5">
-      <h2 className="font-display font-bold text-gray-900">Tamanhos</h2>
-      <p className="text-xs text-gray-500">
+    <div className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-gray-900">
+      <h2 className="font-display font-bold text-gray-900 dark:text-gray-50">Tamanhos</h2>
+      <p className="text-xs text-gray-500 dark:text-gray-400">
         Toque em um tamanho para adicioná-lo. Toque de novo para marcar disponível.
       </p>
 
@@ -114,8 +114,8 @@ export function SizeGrid({ control, productId }: SizeGridProps) {
               aria-pressed={included}
               className={cn(
                 "flex min-h-11 min-w-11 items-center justify-center rounded-lg border text-base transition-colors duration-150",
-                !included && "border-gray-300 bg-white text-gray-900 hover:border-primary",
-                included && !available && "border-gray-200 bg-gray-100 text-gray-400 line-through",
+                !included && "border-gray-300 bg-white text-gray-900 hover:border-primary dark:border-gray-700 dark:bg-gray-900 dark:text-gray-50",
+                included && !available && "border-gray-200 bg-gray-100 text-gray-400 line-through dark:border-gray-800 dark:bg-gray-800 dark:text-gray-600",
                 included && available && "border-primary bg-primary text-white"
               )}
             >
@@ -129,7 +129,7 @@ export function SizeGrid({ control, productId }: SizeGridProps) {
         type="button"
         onClick={handleMarkAllEsgotado}
         disabled={isPending}
-        className="w-fit rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-900 transition-all duration-150 hover:bg-gray-100 active:bg-gray-200 active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 disabled:opacity-60"
+        className="w-fit rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-900 transition-all duration-150 hover:bg-gray-100 active:bg-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-50 dark:hover:bg-gray-800 dark:active:bg-gray-700 active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 disabled:opacity-60"
       >
         {isPending ? "Marcando…" : "Marcar tudo como esgotado"}
       </button>

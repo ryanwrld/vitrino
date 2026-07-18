@@ -76,21 +76,21 @@ export function AuthLayout({
           </div>
 
           {/* Feature highlights */}
-          <ul className="flex flex-col gap-3">
+          <ul className="flex flex-col gap-4">
             {[
-              { icon: "📦", text: "Catálogo completo com fotos e tamanhos" },
-              { icon: "🔗", text: "Vitrine pública com link único e QR Code" },
-              { icon: "💬", text: "Pedido automático via WhatsApp em 1 toque" },
-            ].map(({ icon, text }) => (
-              <li key={text} className="flex items-center gap-3">
-                <span
-                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-base"
-                  style={{ backgroundColor: "rgba(255,255,255,0.12)" }}
-                  aria-hidden="true"
-                >
-                  {icon}
+              "Catálogo completo com fotos e tamanhos",
+              "Vitrine pública com link único e QR Code",
+              "Pedido automático via WhatsApp em 1 toque",
+            ].map((text) => (
+              <li key={text} className="flex items-start gap-3">
+                {/* items-start (não items-center) + mesma text-sm/leading-relaxed
+                    do texto ao lado: o "•" fica preso à primeira linha, em vez de
+                    flutuar centralizado contra a altura toda do item quando ele
+                    quebra em 2 linhas (era o caso de "Pedido automático..."). */}
+                <span className="shrink-0 text-sm leading-relaxed text-white/60" aria-hidden="true">
+                  •
                 </span>
-                <span className="text-sm font-medium text-white/90">{text}</span>
+                <span className="text-sm font-medium leading-relaxed text-white/90">{text}</span>
               </li>
             ))}
           </ul>

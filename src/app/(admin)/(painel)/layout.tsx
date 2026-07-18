@@ -33,9 +33,9 @@ export default async function PainelLayout({ children }: { children: ReactNode }
   }
 
   return (
-    <div className="flex min-h-dvh flex-col md:flex-row">
+    <div className="admin-scope flex min-h-dvh flex-col md:flex-row">
       <AdminSidebar storeName={storeName} storeSlug={storeSlug} />
-      <main className="flex min-h-dvh flex-1 flex-col bg-gray-50">
+      <main className="flex min-h-dvh flex-1 flex-col bg-gray-50 dark:bg-gray-925">
         <AdminHeader storeName={storeName} />
         {children}
       </main>

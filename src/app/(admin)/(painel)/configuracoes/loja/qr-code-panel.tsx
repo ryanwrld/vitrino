@@ -67,14 +67,14 @@ export function QrCodePanel({ publicUrl }: QrCodePanelProps) {
   }
 
   return (
-    <div className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-5">
-      <div className="flex items-center gap-2 text-gray-900">
+    <div className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-gray-900">
+      <div className="flex items-center gap-2 text-gray-900 dark:text-gray-50">
         <QrCode className="h-5 w-5" />
         <h2 className="font-display font-bold">QR code</h2>
       </div>
 
       <div className="flex flex-col items-start gap-4 mt-2">
-        <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50/50 p-6 flex items-center justify-center">
+        <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50/50 p-6 flex items-center justify-center dark:border-gray-700 dark:bg-gray-925/40">
           <canvas ref={canvasRef} width={240} height={240} className="rounded-md shadow-sm" />
         </div>
 
@@ -82,7 +82,7 @@ export function QrCodePanel({ publicUrl }: QrCodePanelProps) {
           type="button"
           onClick={handleDownload}
           disabled={!qrReady}
-          className="flex items-center gap-2 rounded-md border border-gray-300 bg-white p-3 text-sm font-semibold text-gray-900 transition-all duration-150 hover:bg-gray-100 active:bg-gray-200 active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 disabled:opacity-60"
+          className="flex items-center gap-2 rounded-md border border-gray-300 bg-white p-3 text-sm font-semibold text-gray-900 transition-all duration-150 hover:bg-gray-100 active:bg-gray-200 active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 disabled:opacity-60 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-50 dark:hover:bg-gray-800 dark:active:bg-gray-700"
         >
           <Download className="h-4 w-4" aria-hidden="true" />
           Baixar PNG
@@ -90,7 +90,7 @@ export function QrCodePanel({ publicUrl }: QrCodePanelProps) {
       </div>
 
       <div className="flex flex-col gap-1">
-        <label htmlFor="publicUrl" className="text-sm font-medium text-gray-700">
+        <label htmlFor="publicUrl" className="text-sm font-medium text-gray-700 dark:text-gray-300">
           URL pública
         </label>
         <div className="flex items-center gap-2">
@@ -99,14 +99,14 @@ export function QrCodePanel({ publicUrl }: QrCodePanelProps) {
             type="text"
             value={publicUrl}
             readOnly
-            className="flex-1 rounded-md border border-gray-200 bg-gray-50 px-3 h-11 text-base text-gray-900 outline-none"
+            className="flex-1 rounded-md border border-gray-200 bg-gray-50 px-3 h-11 text-base text-gray-900 outline-none dark:border-gray-800 dark:bg-gray-925/40 dark:text-gray-50"
           />
           <button
             type="button"
             onClick={handleCopy}
             disabled={isCopying}
             aria-label="Copiar"
-            className="flex items-center gap-2 rounded-md bg-primary p-3 text-sm font-semibold text-white transition-all duration-150 hover:bg-primary-hover active:bg-primary-active active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 disabled:bg-gray-100 disabled:text-gray-400 disabled:pointer-events-none"
+            className="flex items-center gap-2 rounded-md bg-primary p-3 text-sm font-semibold text-white transition-all duration-150 hover:bg-primary-hover active:bg-primary-active active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 disabled:bg-gray-100 disabled:text-gray-400 disabled:pointer-events-none dark:disabled:bg-gray-800 dark:disabled:text-gray-600"
           >
             <Copy className="h-4 w-4" aria-hidden="true" />
             Copiar

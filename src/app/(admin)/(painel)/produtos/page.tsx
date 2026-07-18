@@ -87,8 +87,8 @@ export default async function ProdutosPage({
     <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 px-4 py-8 md:py-10">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h1 className="font-display text-2xl font-extrabold text-gray-900">Produtos</h1>
-          <p className="mt-1 text-sm text-gray-500">
+          <h1 className="font-display text-2xl font-extrabold text-gray-900 dark:text-gray-50">Produtos</h1>
+          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
             {totalCount ?? 0} {(totalCount ?? 0) === 1 ? "produto cadastrado" : "produtos cadastrados"}
           </p>
         </div>
@@ -103,7 +103,7 @@ export default async function ProdutosPage({
       {hasAnyProduct && (
         <div className="flex flex-col gap-2">
           <ProductToolbar currentParams={params} />
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-gray-500 dark:text-gray-400">
             {products.length} {products.length === 1 ? "produto" : "produtos"}
           </p>
         </div>

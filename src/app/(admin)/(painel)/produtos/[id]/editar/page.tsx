@@ -90,14 +90,16 @@ export default async function EditarProdutoPage({ params }: PageProps) {
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 py-8 md:py-10">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <Link href="/produtos" className="text-sm text-gray-500 transition-colors duration-150 hover:text-gray-900">
+          <Link href="/produtos" className="text-sm text-gray-500 transition-colors duration-150 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50">
             ← Voltar
           </Link>
-          <h1 className="mt-2 font-display text-2xl font-extrabold text-gray-900">Editar produto</h1>
+          <h1 className="mt-2 font-display text-2xl font-extrabold text-gray-900 dark:text-gray-50">Editar produto</h1>
         </div>
         <span
           className={`mt-1 inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-            product.status === "published" ? "bg-success-bg text-success-fg" : "bg-gray-100 text-gray-600"
+            product.status === "published"
+              ? "bg-success-bg text-success-fg dark:bg-success-solid/15"
+              : "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400"
           }`}
         >
           {product.status === "published" ? "Publicado" : "Rascunho"}

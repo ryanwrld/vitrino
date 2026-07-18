@@ -13,11 +13,11 @@ export default async function NovoProdutoPage() {
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 py-8 md:py-10">
       <div>
-        <Link href="/produtos" className="text-sm text-gray-500 transition-colors duration-150 hover:text-gray-900">
+        <Link href="/produtos" className="text-sm text-gray-500 transition-colors duration-150 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50">
           ← Voltar
         </Link>
-        <h1 className="mt-2 font-display text-2xl font-extrabold text-gray-900">Novo produto</h1>
-        <p className="mt-1 text-sm text-gray-500">
+        <h1 className="mt-2 font-display text-2xl font-extrabold text-gray-900 dark:text-gray-50">Novo produto</h1>
+        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
           Preencha os detalhes — o produto aparece na vitrine assim que for publicado.
         </p>
       </div>

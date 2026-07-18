@@ -1,5 +1,19 @@
 @import "tailwindcss";
 
+/*
+ * Dark mode fica restrito ao painel admin (dashboard/produtos/configurações)
+ * — a vitrine pública mantém paleta de marca fixa por decisão de produto.
+ * O next-themes aplica a classe "dark" no <html> (padrão da lib, evita FOUC
+ * via script bloqueante), mas o seletor abaixo exige TAMBÉM um ancestral
+ * `.admin-scope` (renderizado só em `(painel)/layout.tsx`) para que a
+ * variante `dark:` tenha qualquer efeito. Isso significa: mesmo que um
+ * componente compartilhado com a vitrine pública (ex.: EmptyState) ganhe
+ * classes `dark:` no futuro, elas ficam inertes fora do painel — a
+ * blindagem é estrutural via CSS, não uma convenção que dependa de nunca
+ * esquecer de omitir `dark:` em arquivos compartilhados.
+ */
+@custom-variant dark (&:where(.dark .admin-scope, .dark .admin-scope *));
+
 @theme {
   /* Azul de marca — #0D21A1 e blue-600 (marca, nao alterar) */
   --color-blue-50:  #EEF0FC;
@@ -25,6 +39,11 @@
   --color-gray-700: #40445C;
   --color-gray-800: #292C3D;
   --color-gray-900: #14151F;
+  /* Só pra fundo de tela cheia em dark mode — mais escuro que gray-900 (cards)
+     sem chegar em preto puro (gray-950), que fica reservado como extremo de
+     marca. Preto puro como canvas de área grande lê como "invertido às
+     pressas", não como hierarquia de superfícies desenhada de propósito. */
+  --color-gray-925: #0A0B12;
   --color-gray-950: #000000;
 
   /* Aliases semanticos de marca */
@@ -40,7 +59,12 @@
   --color-success-solid: #1FA860;
   --color-success-solid-hover: #128049;
   --color-error-bg: #FDECEE;
-  --color-error-fg: #86172A;
+  /* Igual a --color-error-solid: o maroon escuro anterior (#86172A) tinha
+     contraste técnico ótimo (~9.7:1) mas lia como opaco/sem vida em texto de
+     erro no claro. #D82A44 ainda passa AA em fundo branco (~4.8:1) e é o
+     mesmo vermelho já usado no escuro — um só vermelho de erro nos dois
+     temas, mais vívido nos dois. */
+  --color-error-fg: var(--color-error-solid);
   --color-error-solid: #D82A44;
   --color-error-solid-hover: #AE1F35;
   --color-warning-bg: #FDF3E4;
@@ -91,10 +115,111 @@
   color-scheme: light;
 }
 
+/*
+ * Escopado ao painel admin — ver @custom-variant dark acima.
+ * Os tokens semânticos *-fg (success/error/warning) são calibrados pra
+ * contraste em fundo claro (texto escuro sobre bg-*-bg claro). Em vez de
+ * cada componente lembrar de escrever manualmente `dark:text-*-solid`
+ * (fácil de esquecer — foi exatamente isso que faltou nas mensagens de
+ * erro de validação), redefinimos o token *-fg aqui: qualquer `text-*-fg`
+ * já nasce correto nos dois temas, sem variante dark: por chamada.
+ */
+.dark .admin-scope {
+  color-scheme: dark;
+  --color-success-fg: var(--color-success-solid);
+  --color-error-fg: var(--color-error-solid);
+  --color-warning-fg: var(--color-warning-solid);
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+/*
+ * Fundo de html/body para o "rubber-band" do iOS Safari (e o overscroll
+ * equivalente em Android/desktop): esticar o scroll além do topo/fim da
+ * página revela o fundo de html/body, nunca o de um elemento interno como
+ * o <main> do painel — sem isso, esse respiro sempre aparece branco puro,
+ * mesmo dentro do painel (fundo real: gray-50 no claro, gray-925 no
+ * escuro), destoando do resto da tela. `:has(.admin-scope)` detecta que a
+ * página atual é do painel sem precisar de uma classe extra em cada
+ * layout; a vitrine pública e as páginas de auth (sem .admin-scope) NÃO são
+ * afetadas por esta regra — o branco padrão de `body` acima já bate com o
+ * bg-white delas, e devem seguir de fora do escopo dark (ver
+ * @custom-variant dark acima).
+ */
+html:has(.admin-scope),
+body:has(.admin-scope) {
+  background: var(--color-gray-50);
+}
+.dark:has(.admin-scope),
+.dark body:has(.admin-scope) {
+  background: var(--color-gray-925);
+}
+
+/*
+ * Autofill do navegador (credencial salva, ex.: login/e-mail) pinta o
+ * próprio fundo do <input> por cima de qualquer `background-color` do site
+ * — nenhum `bg-white`/`dark:bg-gray-900` sozinho vence essa pintura nativa
+ * em Chrome/Safari (WebKit/Blink). Pior: essa cor nativa reage ao
+ * `prefers-color-scheme` do SISTEMA OPERACIONAL, não ao `color-scheme`
+ * calculado da página — então um campo de login (fora do `.admin-scope`,
+ * que NUNCA deveria escurecer) aparecia cinza sempre que o SISTEMA
+ * OPERACIONAL/navegador estava em modo escuro (não a classe `.dark` do
+ * `<html>` em si — nenhuma regra dá `color-scheme: dark` fora do
+ * `.admin-scope`, então não adianta mexer nessa classe achando que resolve
+ * isso), mesmo com `:root { color-scheme: light }` já forçando o resto da
+ * página a ficar claro.
+ *
+ * Fix: o truque padrão de `box-shadow` inset gigante "repinta" o fundo por
+ * cima da decoração nativa em WebKit/Blink (`background-color` sozinho não
+ * funciona nesses dois — inclusive é como o Safari ignora silenciosamente
+ * um `background-color` puro em campo autofilled); Firefox (`:autofill`,
+ * sem prefixo) já respeita `background-color` direto, sem precisar do
+ * truque. Fora do painel (login/cadastro/vitrine pública), sempre força as
+ * cores claras — igual branco no claro e no escuro, sem exceção, por design
+ * (mesmo espírito do teste dark-mode-contrast.test.ts). Dentro do painel em
+ * modo escuro, mantemos a paleta escura em vez de repetir o mesmo "flash
+ * claro" só que ao contrário.
+ *
+ * `!important` em cada declaração (verificado via revisão adversarial
+ * cross-browser, 2026-07-17): sem `!important`, esse bloco só vence as
+ * utilities do Tailwind v4 por estar fora de `@layer` — mas `!important`
+ * DENTRO de uma `@layer` inverte essa prioridade e vence mesmo assim. Hoje
+ * nenhum input de auth usa um modificador `!` do Tailwind (`!bg-white`
+ * etc.), mas blindar agora custa zero e evita que esse bug cinza-chapado
+ * reapareça silenciosamente se alguém adicionar um `!bg-*` no futuro sem
+ * tocar neste arquivo.
+ */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-text-fill-color: var(--color-gray-900) !important;
+  caret-color: var(--color-gray-900) !important;
+  -webkit-box-shadow: 0 0 0px 1000px var(--background) inset !important;
+  box-shadow: 0 0 0px 1000px var(--background) inset !important;
+  transition: background-color 600000s ease-in-out 0s, color 600000s ease-in-out 0s !important;
+}
+input:autofill {
+  background-color: var(--background) !important;
+  color: var(--color-gray-900) !important;
+}
+
+.dark .admin-scope input:-webkit-autofill,
+.dark .admin-scope input:-webkit-autofill:hover,
+.dark .admin-scope input:-webkit-autofill:focus,
+.dark .admin-scope input:-webkit-autofill:active {
+  -webkit-text-fill-color: var(--color-gray-50) !important;
+  caret-color: var(--color-gray-50) !important;
+  -webkit-box-shadow: 0 0 0px 1000px var(--color-gray-900) inset !important;
+  box-shadow: 0 0 0px 1000px var(--color-gray-900) inset !important;
+}
+.dark .admin-scope input:autofill {
+  background-color: var(--color-gray-900) !important;
+  color: var(--color-gray-50) !important;
 }
 
 /*

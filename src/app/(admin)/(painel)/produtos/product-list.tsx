@@ -89,9 +89,9 @@ export function ProductList({ products }: ProductListProps) {
           return (
             <li
               key={product.id}
-              className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-3 shadow-sm"
+              className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-3 shadow-sm dark:border-gray-800 dark:bg-gray-900"
             >
-              <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-gray-100">
+              <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
                 {product.coverUrl ? (
                   <Image
                     src={product.coverUrl}
@@ -102,17 +102,17 @@ export function ProductList({ products }: ProductListProps) {
                   />
                 ) : (
                   <div className="flex h-full w-full items-center justify-center">
-                    <ImageOff className="h-6 w-6 text-gray-400" aria-hidden="true" />
+                    <ImageOff className="h-6 w-6 text-gray-400 dark:text-gray-500" aria-hidden="true" />
                   </div>
                 )}
               </div>
 
               <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-                <span className="truncate font-display font-medium text-gray-900">{product.name}</span>
-                {secondaryLine && <span className="truncate text-xs text-gray-500">{secondaryLine}</span>}
+                <span className="truncate font-display font-medium text-gray-900 dark:text-gray-50">{product.name}</span>
+                {secondaryLine && <span className="truncate text-xs text-gray-500 dark:text-gray-400">{secondaryLine}</span>}
                 <span
                   className={`flex items-center gap-1 text-xs transition-colors duration-150 ${
-                    product.disponivel ? "text-success-fg" : "text-gray-500"
+                    product.disponivel ? "text-success-fg" : "text-gray-500 dark:text-gray-400"
                   }`}
                 >
                   <span
@@ -124,10 +124,10 @@ export function ProductList({ products }: ProductListProps) {
               </div>
 
               <div className="flex shrink-0 flex-col items-end gap-1">
-                <span className="text-sm font-medium text-gray-900">{formatBRLPrice(product.price)}</span>
+                <span className="text-sm font-medium text-gray-900 dark:text-gray-50">{formatBRLPrice(product.price)}</span>
                 <span
                   className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-                    product.status === "published" ? "bg-success-bg text-success-fg" : "bg-gray-100 text-gray-600"
+                    product.status === "published" ? "bg-success-bg text-success-fg dark:bg-success-solid/15" : "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400"
                   }`}
                 >
                   {product.status === "published" ? "Publicado" : "Rascunho"}
@@ -138,7 +138,7 @@ export function ProductList({ products }: ProductListProps) {
                 <Link
                   href={`/produtos/${product.id}/editar`}
                   aria-label={`Editar ${product.name}`}
-                  className="flex h-11 w-11 items-center justify-center rounded-lg text-gray-500 transition-colors duration-150 hover:bg-gray-100 hover:text-gray-900"
+                  className="flex h-11 w-11 items-center justify-center rounded-lg text-gray-500 transition-colors duration-150 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-50"
                 >
                   <Pencil className="h-5 w-5" aria-hidden="true" />
                 </Link>
@@ -146,7 +146,7 @@ export function ProductList({ products }: ProductListProps) {
                   type="button"
                   onClick={() => openDeleteDialog(product)}
                   aria-label={`Excluir ${product.name}`}
-                  className="flex h-11 w-11 items-center justify-center rounded-lg text-error-solid transition-colors duration-150 hover:bg-error-bg"
+                  className="flex h-11 w-11 items-center justify-center rounded-lg text-error-solid transition-colors duration-150 hover:bg-error-bg dark:hover:bg-error-solid/15"
                 >
                   <Trash2 className="h-5 w-5" aria-hidden="true" />
                 </button>
@@ -156,17 +156,17 @@ export function ProductList({ products }: ProductListProps) {
         })}
       </ul>
 
-      <dialog ref={dialogRef} className="rounded-lg p-6 shadow-lg backdrop:bg-black/45 backdrop:backdrop-blur-[2px]">
+      <dialog ref={dialogRef} className="rounded-lg bg-white p-6 text-gray-900 shadow-lg backdrop:bg-black/45 backdrop:backdrop-blur-[2px] dark:bg-gray-900 dark:text-gray-50">
         <div className="animate-scale-in">
-          <h2 className="font-display text-xl font-medium text-gray-900">Excluir {deleteTarget?.name}?</h2>
-          <p className="mt-2 max-w-sm text-sm text-gray-500">
+          <h2 className="font-display text-xl font-medium text-gray-900 dark:text-gray-50">Excluir {deleteTarget?.name}?</h2>
+          <p className="mt-2 max-w-sm text-sm text-gray-500 dark:text-gray-400">
             Isso vai remover o produto e todas as fotos da sua vitrine. Essa ação não pode ser desfeita.
           </p>
           <form method="dialog" className="mt-4 flex gap-3">
             <button
               type="submit"
               onClick={() => setDeleteTarget(null)}
-              className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-900 transition-all duration-150 hover:bg-gray-100 active:bg-gray-200 active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2"
+              className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-900 transition-all duration-150 hover:bg-gray-100 active:bg-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-50 dark:hover:bg-gray-800 dark:active:bg-gray-700 active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2"
             >
               Cancelar
             </button>

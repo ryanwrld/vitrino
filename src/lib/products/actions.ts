@@ -256,7 +256,11 @@ function parseProductFormData(formData: FormData): { error: string } | { data: P
  * são só nome/marca/preço — os demais (line/sole/category/fulfillment/
  * description) ficam `null` quando vazios, permitindo o rascunho rápido que
  * D-09 exige. `status` nasce `'draft'` por padrão (coluna `default 'draft'`
- * da migration 0003) — nenhum produto entra publicado.
+ * da migration 0003) a menos que `intent="publish"` (botão "Publicar" do
+ * form, D-10 revisado): mesma coluna e mesmos dois valores que
+ * `publishProduct`/`unpublishProduct` já escrevem, só definida no INSERT em
+ * vez de precisar de um segundo UPDATE logo depois — evita a volta de criar
+ * -> salvar -> reabrir editar só pra achar o botão de publicar.
  *
  * NÃO toca em `product_sizes`/`product_photos` aqui — essas são fatias
  * separadas (Plans 03-03/03-04).
@@ -273,6 +277,8 @@ export async function saveProduct(formData: FormData): Promise<ProductActionResu
     return { error: owned.error };
   }
 
+  const status = formData.get("intent") === "publish" ? "published" : "draft";
+
   const { data: product, error: insertError } = await owned.supabase
     .from("products")
     .insert({
@@ -287,6 +293,7 @@ export async function saveProduct(formData: FormData): Promise<ProductActionResu
       price: fields.price,
       description: fields.description,
       hide_when_sold_out: fields.hideWhenSoldOut,
+      status,
     })
     .select("id")
     .single();
@@ -344,6 +351,14 @@ export async function saveProduct(formData: FormData): Promise<ProductActionResu
  *
  * NÃO mexe em `product_photos` aqui — fotos têm suas próprias actions
  * dedicadas (`addProductPhotos`/`updatePhotoOrder`/`removePhoto`, Plan 03-04).
+ *
+ * `intent="publish"` (botão "Publicar" do form, D-10 revisado) inclui
+ * `status: 'published'` no mesmo UPDATE dos campos — publica um rascunho já
+ * existente numa ação só, sem precisar de uma segunda chamada a
+ * `publishProduct`. Sem `intent="publish"`, `status` nunca é incluído no
+ * objeto de update — um produto já publicado que só teve campos salvos
+ * continua publicado, e despublicar continua sendo obra exclusiva de
+ * `unpublishProduct` (botão "Voltar para rascunho", ação separada).
  */
 export async function updateProduct(productId: string, formData: FormData): Promise<ProductActionResult> {
   const parsedFields = parseProductFormData(formData);
@@ -370,6 +385,7 @@ export async function updateProduct(productId: string, formData: FormData): Prom
       price: fields.price,
       description: fields.description,
       hide_when_sold_out: fields.hideWhenSoldOut,
+      ...(formData.get("intent") === "publish" ? { status: "published" as const } : {}),
     })
     .eq("id", productId);
 
