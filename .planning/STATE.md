@@ -1,20 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-current_phase: 06
-current_phase_name: última fase do milestone
-status: completed
-stopped_at: Milestone v1.0 completo (6/6 fases) — pronto para /gsd-complete-milestone
-last_updated: "2026-07-15T21:23:45.131Z"
-last_activity: 2026-07-15
-last_activity_desc: Milestone v1.0 completed and archived
+milestone: v1.1
+milestone_name: Dashboard de Tendência
+status: planning
+last_updated: "2026-07-21T23:27:16.939Z"
+last_activity: 2026-07-21
 progress:
-  total_phases: 6
-  completed_phases: 6
-  total_plans: 34
-  completed_plans: 34
-  percent: 100
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Estado do Projeto
@@ -188,10 +184,10 @@ Arquivo de retomada: Nenhum
 
 ## Current Position
 
-Phase: Milestone v1.0 complete
+Phase: Not started (defining requirements)
 Plan: —
-Status: Awaiting next milestone
-Last activity: 2026-07-16 - Completed quick task 260716-fl8: Aplicar novo design system visual ao Vitrino
+Status: Defining requirements
+Last activity: 2026-07-21 — Milestone v1.1 started
 
 ## Operator Next Steps
 

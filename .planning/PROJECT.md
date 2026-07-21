@@ -15,6 +15,21 @@ O cliente final consegue escolher um modelo e tamanho na vitrine e disparar uma 
 - **Success metric**: Nº de revendedores que criam a vitrine e recebem pelo menos 1 pedido via WhatsApp através dela
 - **Strategy notes**: Lançamento pensado como validação — poucos revendedores (dezenas) nos primeiros meses, sem pressão de escala imediata
 
+## Current Milestone: v1.1 Dashboard de Tendência
+
+**Goal:** Trocar o dashboard estático/acumulado (Fase 6) por um painel que reage sozinho ao movimento real da loja — sem nenhuma configuração ou ação manual do revendedor pra existir.
+
+**Target features:**
+- Placar do dia (visualizações, cliques em "Pedir agora", taxa de conversão) — sempre hoje, dinâmico
+- Feed de atividade recente cronológico, com teto de exibição + "Ver mais" (substitui "Produtos recentes")
+- Cards Disponíveis/Esgotados substituindo "Total de produtos" e "Acessos" (métrica all-time removida)
+- Ranking "Mais visualizados"/"Cliques no WhatsApp" por TENDÊNCIA (período atual vs. período anterior de mesma duração — 7/15/30 dias), não soma acumulada
+- Ranking pondera % de crescimento com volume (evita produto pequeno furar na frente de um grande só por percentual)
+- Ranking exibe marca/linha e status de estoque (Disponível/Esgotado) por item, com destaque + atalho de ação quando um produto está "em alta" e esgotado ao mesmo tempo
+- Estado vazio dedicado do dashboard pro dia 1 (loja sem produtos ainda)
+
+**Key context:** Todo o escopo foi validado por um mockup navegável extenso na conversa (protótipo em Artifact, iterado com o usuário) antes desta fase de planejamento — decisões de nudge/nudge-baseado-em-clique, "avise-me quando chegar" e "compartilhar catálogo" foram propostas, testadas no mockup e explicitamente descartadas pelo usuário; não devem ser reintroduzidas sem nova validação.
+
 ## Requirements
 
 ### Validated
@@ -31,6 +46,12 @@ O cliente final consegue escolher um modelo e tamanho na vitrine e disparar uma 
 - [ ] Configuração de WhatsApp (número com validação/formatação, template de mensagem com variáveis)
 - [ ] Vitrine pública (sem login) com filtros por marca, solado e modalidade
 - [ ] Link personalizável (slug único) + QR Code para download
+- [ ] Placar do dia (visualizações, cliques, taxa de conversão) sempre relativo a hoje
+- [ ] Feed de atividade recente cronológico com teto de exibição e "Ver mais"
+- [ ] Cards Disponíveis/Esgotados no lugar de "Total de produtos"/"Acessos" (all-time)
+- [ ] Ranking "Mais visualizados"/"Cliques no WhatsApp" por tendência (período atual vs. anterior), com filtro 7/15/30 dias
+- [ ] Ranking com marca/linha e status de estoque visível por item, e destaque de "em alta + esgotado" com atalho de ação
+- [ ] Estado vazio do dashboard para loja sem produtos cadastrados
 
 ### Out of Scope
 
@@ -40,6 +61,9 @@ O cliente final consegue escolher um modelo e tamanho na vitrine e disparar uma 
 - Múltiplos catálogos por revendedor (pronta entrega + sob encomenda separados) — nice to have futuro
 - Analytics avançado — contagem simples de eventos (pageview, clique) é suficiente no MVP
 - Notificação por email de produto esgotado — roadmap futuro
+- Nudge "isso já vendeu?" baseado em heurística de cliques recentes — explorado e descartado no mockup v1.1: heurística não validada, risco de virar ruído/interrupção forçada em loja de alto tráfego
+- "Avise-me quando chegar" (captura de contato + fila de envio manual por lead) — explorado e descartado: cria trabalho manual que cresce junto com o sucesso da loja, sem validação de demanda real
+- "Compartilhar catálogo atualizado" (geração de imagem/texto pra colar no grupo) — explorado e prototipado (Canvas funcional), mas descartado nesta rodada em favor do ranking de tendência; pode ser retomado como milestone futuro se a dor de "printar e mandar no grupo" persistir
 
 ## Context
 
@@ -141,4 +165,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-07-15 — Fase 6 (Métricas e Dashboard) completa — milestone v1.0 finalizado (6/6 fases)_
+_Last updated: 2026-07-21 — início do milestone v1.1 (Dashboard de Tendência), escopo validado via mockup navegável_
