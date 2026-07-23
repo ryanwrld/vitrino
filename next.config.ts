@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
   // celular real na mesma Wi-Fi) sem o Next bloquear os recursos de dev
   // (HMR) por origem cruzada — sem isso o JS não hidrata no celular e o
   // <form> cai no submit nativo GET, vazando credenciais na URL.
-  allowedDevOrigins: ["172.20.10.12", "192.168.100.116", "192.168.1.242"],
+  allowedDevOrigins: ["172.20.10.12", "192.168.100.116", "192.168.1.242", "192.168.1.198", "192.168.1.142", "192.168.0.30"],
   // Server Actions limitam o corpo a 1MB por padrão — separado do limite de
   // 5MB por foto já validado em `validatePhotoFile`. Até 5 fotos comprimidas
   // a ~1MB cada (browser-image-compression, meta não-garantida) + overhead
