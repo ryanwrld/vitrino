@@ -3,10 +3,19 @@ import { updateSession } from "@/lib/supabase/middleware";
 
 /**
  * Único ponto de entrada de middleware do projeto. Escopo estritamente
- * limitado a `/admin/:path*` — NUNCA um matcher catch-all com allowlist
- * interna (Antipadrão #1 do 01-RESEARCH.md; CVE-2025-29927 é o precedente).
+ * limitado às rotas reais do painel admin, listadas explicitamente no
+ * matcher — NUNCA um matcher catch-all com allowlist/denylist interna em
+ * código (Antipadrão #1 do 01-RESEARCH.md; CVE-2025-29927 é o precedente).
  *
- * A rota pública `/loja/[slug]` (e qualquer outra fora de `/admin`) deve
+ * `/admin/:path*` (valor original) NUNCA bateu com nenhuma rota real: o
+ * painel inteiro vive em route groups (`(admin)`, `(painel)`), que o
+ * Next.js resolve para caminhos na raiz (`/login`, `/dashboard`,
+ * `/produtos`, ...) — nenhuma URL do projeto começa com `/admin/`. Na
+ * prática isso fazia o refresh de sessão de `updateSession()` nunca
+ * rodar, apesar de `src/lib/supabase/server.ts` assumir (no comentário do
+ * `setAll`) que ele sempre roda — sessões podiam expirar em silêncio.
+ *
+ * A rota pública `/loja/[slug]` (e qualquer outra fora desta lista) deve
  * ser inalcançável por este middleware por construção, não por exceção.
  */
 export async function middleware(request: NextRequest) {
@@ -14,5 +23,16 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*'],
+  matcher: [
+    "/login",
+    "/cadastro",
+    "/esqueci-senha",
+    "/redefinir-senha",
+    "/onboarding",
+    "/dashboard",
+    "/produtos",
+    "/produtos/:path*",
+    "/configuracoes",
+    "/configuracoes/:path*",
+  ],
 };

@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { resolveSupabaseCredentials } from "@/lib/supabase/env";
 
 /**
  * Cliente Supabase para uso em Server Components, Server Actions e Route
@@ -8,13 +9,18 @@ import { cookies } from "next/headers";
  * Nunca usar `getSession()` sozinho para decisões de gate (middleware/guard
  * de rota) — sempre `getUser()`, que revalida o token contra o servidor
  * Supabase (ver 01-RESEARCH.md, Padrão 1).
+ *
+ * Credenciais resolvidas via `resolveSupabaseCredentials()` — NUNCA
+ * `process.env.NEXT_PUBLIC_SUPABASE_URL` direto aqui: sob teste (Vitest),
+ * isso apontava silenciosamente para produção (ver comentário do módulo).
  */
 export async function createClient() {
   const cookieStore = await cookies();
+  const { url, anonKey } = resolveSupabaseCredentials();
 
   return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    url,
+    anonKey,
     {
       cookies: {
         getAll: () => cookieStore.getAll(),
