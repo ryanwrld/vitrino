@@ -52,4 +52,5 @@ next-env.d.ts
 /.claude/.gsd-profile
 /.claude/gsd-file-manifest.json
 /.claude/gsd-install-state.json
+/.claude/skills/
 /skills-lock.json
