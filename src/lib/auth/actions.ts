@@ -4,30 +4,16 @@ import { redirect } from "next/navigation";
 import { isAuthRetryableFetchError } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
 import { signInSchema, signUpSchema } from "@/lib/validation/auth";
-import { slugify } from "@/lib/slug/slugify";
+import { ensureStoreForUser } from "@/lib/auth/ensure-store";
 
 export type AuthActionResult = { error: string } | void;
 
 /**
- * Gera um slug único para a loja a partir do local-part do email do
- * revendedor + sufixo aleatório curto, normalizado para lowercase
- * (Alternativa Considerada no 01-RESEARCH.md: lowercase no save em vez de
- * `citext`). A UI de customização de slug chega na Fase 2 — aqui só
- * garantimos um valor único desde o cadastro (constraint UNIQUE já existe
- * na migration do Plan 02).
- */
-function generateStoreSlug(email: string): string {
-  const base = slugify(email.split("@")[0]) || "loja";
-  const suffix = Math.random().toString(36).slice(2, 8);
-  return `${base}-${suffix}`;
-}
-
-/**
  * Cadastro (AUTH-01): cria o usuário no Supabase Auth (D-01 — acesso
  * imediato, sem verificação de email), grava a linha `stores` (slug único
- * auto-gerado) e a linha `store_settings` (onboarding_completed_at NULL),
- * e redireciona para o wizard de onboarding (D-04) — nunca direto para o
- * Dashboard.
+ * auto-gerado, com retry em `ensureStoreForUser` se colidir) e a linha
+ * `store_settings` (onboarding_completed_at NULL), e redireciona para o
+ * wizard de onboarding (D-04) — nunca direto para o Dashboard.
  */
 export async function signUpAction(formData: FormData): Promise<AuthActionResult> {
   const parsed = signUpSchema.safeParse({
@@ -53,25 +39,14 @@ export async function signUpAction(formData: FormData): Promise<AuthActionResult
     return { error: signUpError?.message ?? "Não foi possível criar a conta. Tente novamente." };
   }
 
-  const slug = generateStoreSlug(parsed.data.email);
-  const storeName = parsed.data.email.split("@")[0];
+  // Se isto falhar aqui (colisão de slug esgotando os retries, hiccup de
+  // rede/DB), o usuário já está autenticado e vai cair em `/onboarding` no
+  // próximo login — `ensureStoreForUser` roda de novo lá e se autocura
+  // (ver onboarding/page.tsx), nunca mais uma conta presa permanentemente.
+  const result = await ensureStoreForUser(supabase, signUpData.user.id, parsed.data.email);
 
-  const { data: store, error: storeError } = await supabase
-    .from("stores")
-    .insert({ owner_id: signUpData.user.id, name: storeName, slug })
-    .select("id")
-    .single();
-
-  if (storeError || !store) {
-    return { error: "Conta criada, mas não foi possível preparar sua loja. Tente novamente." };
-  }
-
-  const { error: settingsError } = await supabase
-    .from("store_settings")
-    .insert({ store_id: store.id, onboarding_completed_at: null });
-
-  if (settingsError) {
-    return { error: "Conta criada, mas não foi possível concluir a configuração inicial. Tente novamente." };
+  if ("error" in result) {
+    return { error: `Conta criada, mas ${result.error.charAt(0).toLowerCase()}${result.error.slice(1)}` };
   }
 
   redirect("/onboarding");

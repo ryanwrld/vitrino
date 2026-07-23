@@ -1,0 +1,81 @@
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/lib/database.types";
+import { slugify } from "@/lib/slug/slugify";
+
+const MAX_SLUG_ATTEMPTS = 5;
+const UNIQUE_VIOLATION = "23505";
+
+function generateStoreSlug(email: string): string {
+  const base = slugify(email.split("@")[0]) || "loja";
+  const suffix = Math.random().toString(36).slice(2, 8);
+  return `${base}-${suffix}`;
+}
+
+/**
+ * Garante que o usuário autenticado tem `stores`/`store_settings` — chamada
+ * tanto no cadastro (caminho feliz) quanto no topo de `/onboarding`
+ * (self-heal). Existe porque `auth.signUp()` pode ter sucesso e o insert de
+ * `stores` falhar logo depois (colisão do slug aleatório, hiccup
+ * transitório de rede/DB), deixando um usuário autenticado sem loja — sem
+ * este helper, esse usuário ficava permanentemente preso: `saveOnboarding`
+ * só sabia fazer `UPDATE`, nunca `INSERT`, então "tente novamente" nunca
+ * resolvia.
+ *
+ * Retry de slug (até `MAX_SLUG_ATTEMPTS`) só no caso de violação de
+ * constraint UNIQUE (23505) — qualquer outro erro de banco propaga
+ * imediatamente, nunca mascarado por uma nova tentativa.
+ */
+export async function ensureStoreForUser(
+  supabase: SupabaseClient<Database>,
+  userId: string,
+  email: string
+): Promise<{ storeId: string } | { error: string }> {
+  const { data: existingStore } = await supabase.from("stores").select("id").eq("owner_id", userId).single();
+
+  let storeId = existingStore?.id ?? null;
+
+  if (!storeId) {
+    const storeName = email.split("@")[0];
+    let lastError: { code?: string; message: string } | null = null;
+
+    for (let attempt = 0; attempt < MAX_SLUG_ATTEMPTS && !storeId; attempt++) {
+      const slug = generateStoreSlug(email);
+      const { data, error } = await supabase.from("stores").insert({ owner_id: userId, name: storeName, slug }).select("id").single();
+
+      if (data) {
+        storeId = data.id;
+        break;
+      }
+
+      lastError = error;
+      if (error?.code !== UNIQUE_VIOLATION) {
+        break;
+      }
+    }
+
+    if (!storeId) {
+      return { error: lastError?.message ?? "Não foi possível preparar sua loja. Tente novamente." };
+    }
+  }
+
+  // `store_settings` pode faltar mesmo com `stores` já existindo (a falha
+  // parcial original também podia acontecer nesse segundo insert) —
+  // verifica/repara independentemente de `stores` ter acabado de ser criada.
+  const { data: existingSettings } = await supabase
+    .from("store_settings")
+    .select("store_id")
+    .eq("store_id", storeId)
+    .single();
+
+  if (!existingSettings) {
+    const { error: settingsError } = await supabase
+      .from("store_settings")
+      .insert({ store_id: storeId, onboarding_completed_at: null });
+
+    if (settingsError) {
+      return { error: "Não foi possível concluir a configuração inicial. Tente novamente." };
+    }
+  }
+
+  return { storeId };
+}
