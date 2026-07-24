@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, Home, List, Settings, LogOut, ExternalLink } from "lucide-react";
+import { Menu, X, Home, List, Settings, LogOut, ExternalLink, Bell } from "lucide-react";
 import { signOutAction } from "@/lib/auth/actions";
 import { LogoMark } from "@/components/logo-mark";
 
@@ -177,21 +177,30 @@ export function AdminSidebar({
           <Menu className="h-6 w-6" aria-hidden="true" />
         </button>
 
-        <Link
-          href="/configuracoes/loja"
-          className={`flex items-center gap-2.5 rounded-md transition-colors duration-150`}
-        >
-          <div className="flex min-w-0 flex-col leading-tight text-right">
-            <span className="truncate text-sm font-semibold text-gray-900 dark:text-gray-50">{storeName ?? "Sua loja"}</span>
-            <span className="text-xs text-gray-500 dark:text-gray-400">revendedor</span>
-          </div>
-          <div
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white"
-            style={{ backgroundColor: "#0D21A1" }}
+        <div className="flex items-center gap-1">
+          <Link
+            href="/dashboard/atividade"
+            aria-label="Ver notificações"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-gray-500 transition-colors duration-150 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-50"
           >
-            {initials}
-          </div>
-        </Link>
+            <Bell className="h-5 w-5" aria-hidden="true" />
+          </Link>
+          <Link
+            href="/configuracoes/loja"
+            className={`flex items-center gap-2.5 rounded-md transition-colors duration-150`}
+          >
+            <div className="flex min-w-0 flex-col leading-tight text-right">
+              <span className="truncate text-sm font-semibold text-gray-900 dark:text-gray-50">{storeName ?? "Sua loja"}</span>
+              <span className="text-xs text-gray-500 dark:text-gray-400">revendedor</span>
+            </div>
+            <div
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white"
+              style={{ backgroundColor: "#0D21A1" }}
+            >
+              {initials}
+            </div>
+          </Link>
+        </div>
       </div>
       <dialog
         ref={dialogRef}

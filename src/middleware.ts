@@ -30,6 +30,7 @@ export const config = {
     "/redefinir-senha",
     "/onboarding",
     "/dashboard",
+    "/dashboard/:path*",
     "/produtos",
     "/produtos/:path*",
     "/configuracoes",

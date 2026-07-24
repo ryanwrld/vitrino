@@ -4,7 +4,6 @@ import { redirect } from "next/navigation";
 import {
   AlertTriangle,
   CheckCircle2,
-  ChevronDown,
   Eye,
   ImageOff,
   MessageCircle,
@@ -22,7 +21,9 @@ import {
   type TrendRankingItem,
 } from "@/lib/dashboard/metrics";
 import { formatBRLPrice } from "@/lib/currency/brl";
+import { formatRelativeTime } from "@/lib/dashboard/format-relative-time";
 import { DashboardAutoRefresh } from "./dashboard-auto-refresh";
+import { Greeting } from "./greeting";
 
 /**
  * Dashboard v1.1 "Dashboard de Tendência" (MTR-03..MTR-11), substituindo o
@@ -47,27 +48,24 @@ function parsePeriod(raw: string | undefined): Period {
   return (VALID_PERIODS as readonly number[]).includes(parsed) ? (parsed as Period) : 7;
 }
 
-function parseFeedLimit(raw: string | undefined): number {
-  const parsed = Number(raw);
-  return Number.isFinite(parsed) && parsed >= 5 ? Math.floor(parsed / 5) * 5 : 5;
-}
-
-function formatRelativeTime(iso: string): string {
-  const diffMs = Date.now() - new Date(iso).getTime();
-  const minutes = Math.floor(diffMs / 60000);
-  if (minutes < 1) return "agora mesmo";
-  if (minutes < 60) return `há ${minutes} min`;
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `há ${hours}h`;
-  const days = Math.floor(hours / 24);
-  return `há ${days}d`;
-}
+/**
+ * Dashboard é atalho de acesso rápido pro dia a dia, não um histórico
+ * completo — teto fixo de 15 itens, sem paginação/"Ver mais" (esse
+ * mecanismo fazia o card crescer a cada clique e desalinhar a altura com
+ * a coluna estreita Disponíveis/Esgotados ao lado). Altura travada com
+ * scroll interno SEM barra visível (`[scrollbar-width:none]` +
+ * `[&::-webkit-scrollbar]:hidden`) — rola por toque/roda do mouse
+ * normalmente, só não expõe o indicador visual. Quem quiser o histórico
+ * completo sem teto usa o sino de notificações no cabeçalho
+ * (`/dashboard/atividade`, paginação real por offset).
+ */
+const ACTIVITY_FEED_LIMIT = 15;
 
 /** Sparkline inline via SVG puro — sem lib de gráfico, sem client JS. Trecho
  * final do período (~20% dos dias) ganha destaque em `text-primary`; o
  * resto fica em tom neutro (`text-gray-300`/`dark:text-gray-700`), seguindo
  * o mesmo princípio de "período atual em destaque" de um stat-tile comum. */
-function Sparkline({ values }: { values: number[] }) {
+function Sparkline({ values, days }: { values: number[]; days: number }) {
   const w = 84;
   const h = 28;
   const pad = 4;
@@ -86,7 +84,8 @@ function Sparkline({ values }: { values: number[] }) {
   const [ex, ey] = points[points.length - 1];
 
   return (
-    <svg viewBox={`0 0 ${w} ${h}`} width={w} height={h} aria-hidden="true" className="shrink-0">
+    <svg viewBox={`0 0 ${w} ${h}`} width={w} height={h} role="img" aria-label={`Tendência dos últimos ${days} dias`} className="shrink-0">
+      <title>{`Tendência dos últimos ${days} dias`}</title>
       <path d={area} className="fill-primary/10 dark:fill-blue-300/15" />
       <path d={line} fill="none" stroke="currentColor" strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" className="text-gray-300 dark:text-gray-700" />
       <path d={tail} fill="none" stroke="currentColor" strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" className="text-primary dark:text-blue-300" />
@@ -100,15 +99,17 @@ function RankingList({
   items,
   metricLabel,
   MetricIcon,
+  days,
 }: {
   title: string;
   items: (TrendRankingItem & { coverUrl: string | null })[];
   metricLabel: string;
   MetricIcon: typeof Eye;
+  days: number;
 }) {
   return (
-    <section className="flex flex-col gap-3 rounded-lg border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-gray-900">
-      <h2 className="font-display font-bold text-gray-900 dark:text-gray-50">{title}</h2>
+    <div className="flex flex-col gap-3">
+      <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">{title}</h3>
       {items.length > 0 ? (
         <ul className="flex flex-col gap-2">
           {items.map((item) => {
@@ -125,10 +126,9 @@ function RankingList({
                       </div>
                     )}
                   </div>
-                  <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-                    <span className="truncate font-display text-sm font-medium text-gray-900 dark:text-gray-50">{item.name}</span>
+                  <div className="flex min-w-0 flex-1 flex-col gap-1">
                     <div className="flex items-center gap-2">
-                      {item.secondary && <span className="truncate text-xs text-gray-500 dark:text-gray-400">{item.secondary}</span>}
+                      <span className="truncate font-display text-sm font-medium text-gray-900 dark:text-gray-50">{item.name}</span>
                       <span
                         className={`shrink-0 rounded-full px-1.5 py-px text-[10px] font-bold ${
                           item.disponivel
@@ -139,9 +139,13 @@ function RankingList({
                         {item.disponivel ? "Disponível" : "Esgotado"}
                       </span>
                     </div>
-                    <span className="text-xs text-gray-400 dark:text-gray-500">{formatBRLPrice(item.price)}</span>
+                    <span className="truncate text-xs text-gray-500 dark:text-gray-400">
+                      {item.secondary}
+                      {item.secondary ? " · " : ""}
+                      {formatBRLPrice(item.price)}
+                    </span>
                   </div>
-                  <Sparkline values={item.trend} />
+                  <Sparkline values={item.trend} days={days} />
                   <div className="flex shrink-0 flex-col items-end gap-0.5">
                     <span className="flex items-center gap-1 text-sm font-medium text-gray-900 dark:text-gray-50">
                       <MetricIcon className="h-3.5 w-3.5 text-gray-400 dark:text-gray-500" aria-hidden="true" />
@@ -179,20 +183,19 @@ function RankingList({
           <span className="text-sm text-gray-500 dark:text-gray-400">Troque a janela de dias acima ou aguarde mais movimento na vitrine.</span>
         </div>
       )}
-    </section>
+    </div>
   );
 }
 
 export default async function DashboardPage({
   searchParams,
 }: {
-  searchParams: Promise<{ periodo?: string; feedLimit?: string }>;
+  searchParams: Promise<{ periodo?: string }>;
 }) {
   await requireCompletedOnboarding();
 
   const params = await searchParams;
   const periodo = parsePeriod(params.periodo);
-  const feedLimit = parseFeedLimit(params.feedLimit);
 
   const supabase = await createClient();
   const { data: userData } = await supabase.auth.getUser();
@@ -211,7 +214,7 @@ export default async function DashboardPage({
 
   if (produtos.length === 0) {
     return (
-      <div className="mx-auto flex min-h-dvh w-full max-w-4xl flex-col gap-6 px-4 py-10">
+      <div className="flex min-h-dvh w-full flex-col gap-6 px-4 py-8 sm:px-6 lg:px-10 lg:py-10">
         <div>
           <h1 className="font-display text-2xl font-extrabold text-gray-900 dark:text-gray-50">Dashboard</h1>
           <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Visão geral da sua vitrine.</p>
@@ -240,7 +243,7 @@ export default async function DashboardPage({
 
   const [today, feed, maisVisualizados, cliquesWhatsapp] = await Promise.all([
     queryTodayStats(supabase, store.id),
-    queryRecentActivity(supabase, store.id, feedLimit),
+    queryRecentActivity(supabase, store.id, ACTIVITY_FEED_LIMIT),
     queryTrendRanking(supabase, store.id, "views", periodo),
     queryTrendRanking(supabase, store.id, "clicks", periodo),
   ]);
@@ -257,12 +260,9 @@ export default async function DashboardPage({
   const feedIcon = (item: ActivityFeedItem) => (item.type === "click" ? MessageCircle : Eye);
 
   return (
-    <div className="mx-auto flex min-h-dvh w-full max-w-4xl flex-col gap-6 px-4 py-10">
+    <div className="flex min-h-dvh w-full flex-col gap-6 px-4 py-8 sm:px-6 lg:px-10 lg:py-10">
       <DashboardAutoRefresh />
-      <div>
-        <h1 className="font-display text-2xl font-extrabold text-gray-900 dark:text-gray-50">Dashboard</h1>
-        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Visão geral da sua vitrine — atualizado agora.</p>
-      </div>
+      <Greeting />
 
       {/* MTR-03: placar do dia — sempre hoje, nunca acumulado */}
       <div className="grid grid-cols-1 divide-y divide-gray-200 overflow-hidden rounded-lg border border-gray-200 bg-white dark:divide-gray-800 dark:border-gray-800 dark:bg-gray-900 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
@@ -280,103 +280,122 @@ export default async function DashboardPage({
         </div>
       </div>
 
-      {/* MTR-04: feed de atividade recente, com teto + "Ver mais" */}
-      <section className="flex flex-col gap-3 rounded-lg border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-gray-900">
-        <h2 className="font-display font-bold text-gray-900 dark:text-gray-50">Atividade recente</h2>
-        {feed.items.length > 0 ? (
-          <>
-            <ul className="flex flex-col gap-1">
-              {feed.items.map((item, index) => {
-                const Icon = feedIcon(item);
-                return (
-                  <li key={`${item.type}-${item.productId}-${item.createdAt}-${index}`} className="flex items-start gap-3 border-b border-gray-100 py-2 last:border-none dark:border-gray-800">
-                    <span
-                      className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full ${
-                        item.type === "click"
-                          ? "bg-success-bg text-success-fg dark:bg-success-solid/15"
-                          : "bg-warning-bg text-warning-fg dark:bg-warning-solid/15"
-                      }`}
-                    >
-                      <Icon className="h-3.5 w-3.5" aria-hidden="true" />
-                    </span>
-                    <span className="text-sm text-gray-700 dark:text-gray-300">
-                      {item.type === "click" ? (
-                        <>
-                          Alguém clicou em <b className="font-semibold text-gray-900 dark:text-gray-50">&quot;Pedir agora&quot;</b> — {item.productName}
-                        </>
-                      ) : (
-                        <>
-                          <b className="font-semibold text-gray-900 dark:text-gray-50">{item.count} visualizaç{item.count > 1 ? "ões" : "ão"}</b> nova{item.count > 1 ? "s" : ""} — {item.productName}
-                        </>
-                      )}
-                      <span className="block text-xs text-gray-400 dark:text-gray-500">{formatRelativeTime(item.createdAt)}</span>
-                    </span>
-                  </li>
-                );
-              })}
+      {/* Grid assimétrico (2/3 + 1/3, referência de layout tipo bento) —
+          feed de atividade é o widget mais alto/denso, então fica na
+          coluna larga; Disponíveis/Esgotados são só contadores, cabem
+          empilhados na coluna estreita ao lado, sem disputar espaço com
+          os rankings abaixo. Colapsa pra 1 coluna abaixo de lg (mobile-first). */}
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+        {/* MTR-04: feed de atividade recente, com teto + "Ver mais"/"Ver menos" */}
+        <section className="flex flex-col gap-3 rounded-lg border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-gray-900 lg:col-span-2">
+          <h2 className="font-display font-bold text-gray-900 dark:text-gray-50">Atividade recente</h2>
+          {feed.items.length > 0 ? (
+            <ul className="flex max-h-[14rem] flex-col gap-1 overflow-y-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                {feed.items.map((item, index) => {
+                  const Icon = feedIcon(item);
+                  return (
+                    <li key={`${item.type}-${item.productId}-${item.createdAt}-${index}`} className="flex items-start gap-3 border-b border-gray-100 py-2 last:border-none dark:border-gray-800">
+                      <span
+                        className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full ${
+                          item.type === "click"
+                            ? "bg-success-bg text-success-fg dark:bg-success-solid/15"
+                            : "bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400"
+                        }`}
+                      >
+                        <Icon className="h-3.5 w-3.5" aria-hidden="true" />
+                      </span>
+                      <span className="text-sm text-gray-700 dark:text-gray-300">
+                        {item.type === "click" ? (
+                          <>
+                            Alguém clicou em <b className="font-semibold text-gray-900 dark:text-gray-50">&quot;Pedir agora&quot;</b> — {item.productName}
+                          </>
+                        ) : (
+                          <>
+                            <b className="font-semibold text-gray-900 dark:text-gray-50">{item.count} visualizaç{item.count > 1 ? "ões" : "ão"}</b> nova{item.count > 1 ? "s" : ""} — {item.productName}
+                          </>
+                        )}
+                        <span className="block text-xs text-gray-400 dark:text-gray-500">{formatRelativeTime(item.createdAt)}</span>
+                      </span>
+                    </li>
+                  );
+                })}
             </ul>
-            {feed.hasMore && (
-              <Link
-                href={`/dashboard?periodo=${periodo}&feedLimit=${feedLimit + 5}`}
-                className="flex items-center justify-center gap-1 rounded-md border-t border-gray-100 pt-3 text-sm font-semibold text-primary dark:border-gray-800 dark:text-blue-300"
-              >
-                Ver mais <ChevronDown className="h-4 w-4" aria-hidden="true" />
-              </Link>
-            )}
-          </>
-        ) : (
-          <div className="flex flex-col gap-1 rounded-lg border border-dashed border-gray-300 px-4 py-8 text-center dark:border-gray-700">
-            <span className="font-medium text-gray-900 dark:text-gray-50">Ainda sem atividade</span>
-            <span className="text-sm text-gray-500 dark:text-gray-400">Assim que sua vitrine receber acessos ou pedidos, eles aparecem aqui.</span>
+          ) : (
+            <div className="flex flex-col gap-1 rounded-lg border border-dashed border-gray-300 px-4 py-8 text-center dark:border-gray-700">
+              <span className="font-medium text-gray-900 dark:text-gray-50">Ainda sem atividade</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">Assim que sua vitrine receber acessos ou pedidos, eles aparecem aqui.</span>
+            </div>
+          )}
+        </section>
+
+        {/* MTR-05: Disponíveis/Esgotados — sem "Total"/"Acessos" all-time.
+            Empilhados na coluna estreita (não 2 colunas lado a lado como
+            antes) pra caber ao lado do feed sem espremer. `lg:content-start`
+            impede o grid de esticar os dois cards pra preencher a altura da
+            linha inteira (que agora acompanha a coluna do feed) — sem isso
+            cada card virava um retângulo vazio gigante. */}
+        <div className="grid grid-cols-2 gap-3 lg:grid-cols-1 lg:content-start lg:gap-4">
+          <div className="flex flex-col gap-2 rounded-lg border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-gray-900">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-success-bg dark:bg-success-solid/15">
+              <CheckCircle2 className="h-5 w-5 text-success-fg" aria-hidden="true" />
+            </div>
+            <div className="flex flex-col gap-0.5">
+              <span className="font-display text-2xl font-extrabold text-gray-900 dark:text-gray-50">{disponiveis}</span>
+              <span className="text-xs text-gray-500 dark:text-gray-400">Produtos disponíveis</span>
+            </div>
           </div>
-        )}
-      </section>
-
-      {/* MTR-06..MTR-10: ranking de tendência, com filtro de período.
-          Vem ANTES dos cards Disponíveis/Esgotados de propósito: aqui mora
-          a única ação de verdade da tela ("Em alta e esgotado" + "Atualizar
-          estoque →") — o que pede decisão sobe, o que é só contagem desce. */}
-      <div className="flex flex-col gap-3">
-        <div className="inline-flex w-fit gap-1 rounded-lg bg-gray-100 p-1 dark:bg-gray-800">
-          {VALID_PERIODS.map((d) => (
-            <Link
-              key={d}
-              href={`/dashboard?periodo=${d}&feedLimit=${feedLimit}`}
-              className={`rounded-md px-3 py-1.5 text-xs font-bold ${
-                d === periodo
-                  ? "bg-white text-primary shadow-sm dark:bg-gray-900 dark:text-blue-300"
-                  : "text-gray-500 dark:text-gray-400"
-              }`}
-            >
-              {d}d
-            </Link>
-          ))}
-        </div>
-
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <RankingList title="Mais visualizados — em alta" items={maisVisualizadosWithCover} metricLabel="views" MetricIcon={Eye} />
-          <RankingList title="Cliques no WhatsApp — em alta" items={cliquesWhatsappWithCover} metricLabel="cliques" MetricIcon={MessageCircle} />
+          <div className="flex flex-col gap-2 rounded-lg border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-gray-900">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-error-bg dark:bg-error-solid/15">
+              <XCircle className="h-5 w-5 text-error-fg" aria-hidden="true" />
+            </div>
+            <div className="flex flex-col gap-0.5">
+              <span className={`font-display text-2xl font-extrabold ${esgotados > 0 ? "text-error-fg" : "text-gray-900 dark:text-gray-50"}`}>{esgotados}</span>
+              <span className="text-xs text-gray-500 dark:text-gray-400">Produtos esgotados</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* MTR-05: Disponíveis/Esgotados — sem "Total"/"Acessos" all-time */}
-      <div className="grid grid-cols-2 gap-3 md:gap-4">
-        <div className="flex flex-col gap-2 rounded-lg border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-gray-900">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-success-bg dark:bg-success-solid/15">
-            <CheckCircle2 className="h-5 w-5 text-success-fg" aria-hidden="true" />
-          </div>
-          <div className="flex flex-col gap-0.5">
-            <span className="font-display text-2xl font-extrabold text-gray-900 dark:text-gray-50">{disponiveis}</span>
-            <span className="text-xs text-gray-500 dark:text-gray-400">Produtos disponíveis</span>
+      {/* MTR-06..MTR-10: ranking de tendência, com filtro de período — linha
+          larga própria abaixo do grid assimétrico, os dois rankings lado a
+          lado (mesma ideia de "chart ao lado de lista" da referência).
+          Cabeçalho "Ranking de tendência" + filtro agora dentro de um card
+          (border/bg/rounded), igual a todo outro widget da página — antes
+          ficava boiando direto no fundo, sem contexto nem "material"
+          consistente com o resto do dashboard. O track do seletor
+          (bg-gray-100/800) fica "recuado" dentro do card branco/gray-900,
+          mesmo princípio de profundidade já usado no avatar de produto. */}
+      <div className="flex flex-col gap-3 rounded-lg border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-gray-900">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 className="font-display font-bold text-gray-900 dark:text-gray-50">Ranking de tendência</h2>
+          <div className="inline-flex w-fit gap-1 rounded-lg bg-gray-100 p-1 dark:bg-gray-800">
+            {VALID_PERIODS.map((d) => (
+              <Link
+                key={d}
+                href={`/dashboard?periodo=${d}`}
+                className={`rounded-md px-3 py-1.5 text-xs font-bold transition-colors duration-150 ${
+                  d === periodo
+                    ? "bg-white text-primary shadow-sm dark:bg-gray-900 dark:text-blue-300"
+                    : "text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
+                }`}
+              >
+                {d}d
+              </Link>
+            ))}
           </div>
         </div>
-        <div className="flex flex-col gap-2 rounded-lg border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-gray-900">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-error-bg dark:bg-error-solid/15">
-            <XCircle className="h-5 w-5 text-error-fg" aria-hidden="true" />
-          </div>
-          <div className="flex flex-col gap-0.5">
-            <span className={`font-display text-2xl font-extrabold ${esgotados > 0 ? "text-error-fg" : "text-gray-900 dark:text-gray-50"}`}>{esgotados}</span>
-            <span className="text-xs text-gray-500 dark:text-gray-400">Produtos esgotados</span>
+
+        {/* Divisor explícito como coluna própria do grid (não `divide-x` — misturar
+            `divide-x` com `gap-x` faz a borda ficar desalinhada dentro do espaço do
+            gap, em vez de esticada e centralizada; achado nas capturas do usuário).
+            `self-stretch` garante que a linha acompanhe a altura da coluna mais alta
+            mesmo se "Mais visualizados"/"Cliques no WhatsApp" tiverem números
+            diferentes de itens. */}
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-[1fr_auto_1fr]">
+          <RankingList title="Mais visualizados" items={maisVisualizadosWithCover} metricLabel="visualizações" MetricIcon={Eye} days={periodo} />
+          <div className="hidden self-stretch border-l border-gray-200 md:block dark:border-gray-800" aria-hidden="true" />
+          <div className="border-t border-gray-200 pt-6 md:border-t-0 md:pt-0 dark:border-gray-800">
+            <RankingList title="Cliques no WhatsApp" items={cliquesWhatsappWithCover} metricLabel="cliques" MetricIcon={MessageCircle} days={periodo} />
           </div>
         </div>
       </div>
